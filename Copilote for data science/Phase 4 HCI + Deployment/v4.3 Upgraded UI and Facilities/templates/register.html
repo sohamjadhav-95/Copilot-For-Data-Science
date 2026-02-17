@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Register — Data Science Copilot{% endblock %}
+{% block body %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-logo">🧪</div>
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join Data Science Copilot</p>
+
+        <div id="auth-error" class="auth-error" style="display:none;"></div>
+
+        <form id="register-form" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose a username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Min 6 characters" required
+                    minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" placeholder="Re-enter password" required>
+            </div>
+            <button type="submit" class="btn-primary" id="register-btn">
+                <span class="btn-text">Create Account</span>
+                <span class="btn-loader" style="display:none;">⏳</span>
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a href="/login">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    async function handleRegister(e) {
+        e.preventDefault();
+        const errDiv = document.getElementById('auth-error');
+        const btn = document.getElementById('register-btn');
+        const pw = document.getElementById('password').value;
+        const cpw = document.getElementById('confirm_password').value;
+
+        if (pw !== cpw) {
+            errDiv.textContent = 'Passwords do not match';
+            errDiv.style.display = 'block';
+            return;
+        }
+
+        btn.querySelector('.btn-text').style.display = 'none';
+        btn.querySelector('.btn-loader').style.display = 'inline';
+        btn.disabled = true;
+        errDiv.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: pw,
+                }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = '/dashboard';
+            } else {
+                errDiv.textContent = data.error || 'Registration failed';
+                errDiv.style.display = 'block';
+            }
+        } catch (err) {
+            errDiv.textContent = 'Network error. Please try again.';
+            errDiv.style.display = 'block';
+        } finally {
+            btn.querySelector('.btn-text').style.display = 'inline';
+            btn.querySelector('.btn-loader').style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

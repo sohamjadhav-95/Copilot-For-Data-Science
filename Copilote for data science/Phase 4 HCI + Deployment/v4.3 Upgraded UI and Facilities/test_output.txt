@@ -1,0 +1,37 @@
+﻿Keyword Classification Tests:
+  [INTENT] 'show 10 rows' -> display (keyword)
+  PASS: 'show 10 rows' -> expected=display, got=display
+  [INTENT] 'show 5 rows' -> display (keyword)
+  PASS: 'show 5 rows' -> expected=display, got=display
+  [INTENT] 'only 5' -> chat (default)
+  PASS: 'only 5' -> expected=chat, got=chat
+  [INTENT] 'what is highest value in low column' -> display (keyword)
+  PASS: 'what is highest value in low column' -> expected=display, got=display
+  [INTENT] 'what is the maximum of CLOSE' -> display (keyword)
+  PASS: 'what is the maximum of CLOSE' -> expected=display, got=display
+  [INTENT] 'visualize the data' -> visualize (keyword)
+  PASS: 'visualize the data' -> expected=visualize, got=visualize
+  [INTENT] 'create a pie chart' -> visualize (keyword)
+  PASS: 'create a pie chart' -> expected=visualize, got=visualize
+  [INTENT] 'plot scatter of OPEN vs HIGH' -> visualize (keyword)
+  PASS: 'plot scatter of OPEN vs HIGH' -> expected=visualize, got=visualize
+  [INTENT] 'delete time column' -> modify (contextual)
+  PASS: 'delete time column' -> expected=modify, got=modify
+  [INTENT] 'remove rows where CLOSE is null' -> modify (phrase)
+  PASS: 'remove rows where CLOSE is null' -> expected=modify, got=modify
+  [INTENT] 'sort by date' -> modify (keyword)
+  PASS: 'sort by date' -> expected=modify, got=modify
+  [INTENT] 'hello' -> chat (default)
+  PASS: 'hello' -> expected=chat, got=chat
+  [INTENT] 'what is machine learning' -> display (keyword)
+  FAIL: 'what is machine learning' -> expected=chat, got=display
+  12/13 passed
+
+Think Tag Cleaning:
+  Has think tags: False (should be False)
+  Has code: True (should be True)
+  [EXTRACT] Fenced code (72 chars)
+  Code extracted: True (should be True)
+  Code starts with import: True (should be True)
+
+DONE
