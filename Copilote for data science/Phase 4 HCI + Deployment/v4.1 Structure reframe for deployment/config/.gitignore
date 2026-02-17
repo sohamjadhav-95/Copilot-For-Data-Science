@@ -1,0 +1,25 @@
+# Ignore API key and environment secrets
+config/api_key.txt
+
+# Ignore compiled Python files
+__pycache__/
+*.py[cod]
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore logs or temp output
+*.log
+*.tmp
+
+# Ignore user shortcuts and system launch files
+Launch Copilot.lnk
+
+# Ignore virtual environment if used
+venv/
+env/
+.venv/
+
+# Optional: ignore dataset (if large or private)
+data/
