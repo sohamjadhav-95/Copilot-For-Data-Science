@@ -743,13 +743,38 @@ YOUR BEHAVIOR:
 # =====================================================================
 
 def generate_result_summary(user_input, operation):
-    """Generate a brief, contextual summary of what was done."""
-    summaries = {
-        "display": f"Here are the results for: *{user_input}* — see the results panel →",
-        "visualize": f"Chart created for: *{user_input}* — see the results panel →",
-        "modify": f"Dataset modified: *{user_input}* — preview in results panel →",
+    """Generate a varied, personality-driven summary of what was done."""
+    import random
+    short = user_input if len(user_input) <= 50 else user_input[:47] + "..."
+
+    pools = {
+        "display": [
+            f"Done! I pulled up the data for **{short}** — check the results panel 👉",
+            f"Here's what I found 🔍 — your results for **{short}** are ready on the right →",
+            f"Got it! **{short}** — results are loaded in the panel →",
+            f"All set! I ran that query for you — take a look at the results panel 📊",
+            f"Your data is ready! **{short}** — see the results on the right →",
+        ],
+        "visualize": [
+            f"Your chart is ready! 📊 **{short}** — take a look on the right →",
+            f"I created that visualization for you 🎨 — see the results panel →",
+            f"Here's your chart! **{short}** — check the results panel 📈",
+            f"Visualization done! I plotted **{short}** for you — see the right panel →",
+            f"Chart's up! 🖼️ **{short}** — it's in the results panel →",
+        ],
+        "modify": [
+            f"All done! ✅ I applied **{short}** — preview is on the right →",
+            f"Changes saved! ✏️ **{short}** — check the preview in results →",
+            f"Done! I updated the dataset for you — **{short}** — see the results panel →",
+            f"Modification complete! **{short}** — preview is ready on the right ✅",
+            f"Got it done! ✅ **{short}** — your updated data is in the results panel →",
+        ],
     }
-    return summaries.get(operation, f"Done: *{user_input}* — see results panel →")
+    fallback = [
+        f"Done! **{short}** — see the results panel →",
+        f"All set! **{short}** — check the results on the right →",
+    ]
+    return random.choice(pools.get(operation, fallback))
 
 
 # =====================================================================

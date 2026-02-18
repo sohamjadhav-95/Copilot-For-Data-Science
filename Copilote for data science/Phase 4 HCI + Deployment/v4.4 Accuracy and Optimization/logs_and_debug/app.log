@@ -228,3 +228,93 @@
 {"timestamp": "2026-02-18T17:16:18.074652+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: draw lineplot for xau vs jpy index over thime"}
 {"timestamp": "2026-02-18T17:16:19.012784+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1306 chars)"}
 {"timestamp": "2026-02-18T17:16:19.557515+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:22:51.010091+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:23:05.770362+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:23:23.345101+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:23:45.013140+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:24:20.204242+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:24:47.157958+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:24:55.351468+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:28:06.620003+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:28:09.657768+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:28:42.654935+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:28:57.898333+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:29:17.606216+00:00", "level": "INFO", "logger": "copilot.app", "message": "[register] New user: testuser"}
+{"timestamp": "2026-02-18T17:29:19.813143+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser uploaded BTCUSDm_M1_Cleaned.csv (97310x7)"}
+{"timestamp": "2026-02-18T17:29:21.987230+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show first 5 rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:29:21.987230+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show first 5 rows' -> Intent: display"}
+{"timestamp": "2026-02-18T17:29:21.996272+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show first 5 rows"}
+{"timestamp": "2026-02-18T17:29:23.168150+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (264 chars)"}
+{"timestamp": "2026-02-18T17:29:23.283272+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #1: display — show first 5 rows"}
+{"timestamp": "2026-02-18T17:29:27.497457+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show 1 rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:29:27.498484+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show 1 rows' -> Intent: display"}
+{"timestamp": "2026-02-18T17:29:27.618754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show 1 rows' -> 'show first 1 rows'"}
+{"timestamp": "2026-02-18T17:29:27.618754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show 1 rows' -> 'show first 1 rows'"}
+{"timestamp": "2026-02-18T17:29:27.627015+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show first 1 rows"}
+{"timestamp": "2026-02-18T17:29:27.950789+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (354 chars)"}
+{"timestamp": "2026-02-18T17:29:28.036918+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #2: display — show first 1 rows"}
+{"timestamp": "2026-02-18T17:29:30.220000+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show 2 rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:29:30.220992+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show 2 rows' -> Intent: display"}
+{"timestamp": "2026-02-18T17:29:30.317218+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show 2 rows' -> 'show first 2 rows'"}
+{"timestamp": "2026-02-18T17:29:30.317844+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show 2 rows' -> 'show first 2 rows'"}
+{"timestamp": "2026-02-18T17:29:30.329129+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show first 2 rows"}
+{"timestamp": "2026-02-18T17:29:30.657905+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (344 chars)"}
+{"timestamp": "2026-02-18T17:29:30.747725+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #3: display — show first 2 rows"}
+{"timestamp": "2026-02-18T17:29:32.901341+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show 3 rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:29:32.902342+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show 3 rows' -> Intent: display"}
+{"timestamp": "2026-02-18T17:29:33.128721+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show 3 rows' -> 'show first 3 rows'"}
+{"timestamp": "2026-02-18T17:29:33.129731+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show 3 rows' -> 'show first 3 rows'"}
+{"timestamp": "2026-02-18T17:29:33.142061+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show first 3 rows"}
+{"timestamp": "2026-02-18T17:29:33.435170+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (354 chars)"}
+{"timestamp": "2026-02-18T17:29:33.523840+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #4: display — show first 3 rows"}
+{"timestamp": "2026-02-18T17:31:29.399733+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:31:32.450465+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:31:44.003856+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser uploaded 2026-02-18T17-25_export.csv (200x12)"}
+{"timestamp": "2026-02-18T17:31:49.930008+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show data' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:31:49.933478+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show data' -> Intent: display"}
+{"timestamp": "2026-02-18T17:31:49.948781+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show data"}
+{"timestamp": "2026-02-18T17:31:50.340216+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (266 chars)"}
+{"timestamp": "2026-02-18T17:31:50.360141+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #5: display — show data"}
+{"timestamp": "2026-02-18T17:32:05.048309+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'what is maximum spread gone' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:32:05.050301+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is maximum spread gone' -> Intent: display"}
+{"timestamp": "2026-02-18T17:32:05.278617+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'what is maximum spread gone' -> 'show the maximum spread of the data that was previously shown'"}
+{"timestamp": "2026-02-18T17:32:05.279612+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'what is maximum spread gone' -> 'show the maximum spread of the data that was previously shown'"}
+{"timestamp": "2026-02-18T17:32:05.294830+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show the maximum spread of the data that was previously shown"}
+{"timestamp": "2026-02-18T17:32:05.867890+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (629 chars)"}
+{"timestamp": "2026-02-18T17:32:05.890419+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #6: display — show the maximum spread of the data that was previously shown"}
+{"timestamp": "2026-02-18T17:32:22.421234+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'when' -> chat (AI)"}
+{"timestamp": "2026-02-18T17:32:22.426060+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'when' -> Intent: chat"}
+{"timestamp": "2026-02-18T17:32:22.558209+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'when' -> 'When is the maximum spread gone'"}
+{"timestamp": "2026-02-18T17:32:22.559934+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'when' -> 'When is the maximum spread gone'"}
+{"timestamp": "2026-02-18T17:32:45.473070+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'analyzing the 'index_spread' column in relation to the 'timestamp' column.' -> display (AI)"}
+{"timestamp": "2026-02-18T17:32:45.476263+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'analyzing the 'index_spread' column in relation to the 'timestamp' column.' -> Intent: display"}
+{"timestamp": "2026-02-18T17:32:45.492625+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: analyzing the 'index_spread' column in relation to the 'timestamp' column."}
+{"timestamp": "2026-02-18T17:32:46.309464+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (797 chars)"}
+{"timestamp": "2026-02-18T17:32:46.336104+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #7: display — analyzing the 'index_spread' column in relation to the 'timestamp' column."}
+{"timestamp": "2026-02-18T17:33:00.385565+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'give that timestamp in proper format' -> display (AI)"}
+{"timestamp": "2026-02-18T17:33:00.389940+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'give that timestamp in proper format' -> Intent: display"}
+{"timestamp": "2026-02-18T17:33:00.600434+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'give that timestamp in proper format' -> 'Give the timestamp from analyzing the 'index_spread' column in relation to the 'timestamp' column in a proper format.'"}
+{"timestamp": "2026-02-18T17:33:00.602469+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'give that timestamp in proper format' -> 'Give the timestamp from analyzing the 'index_spread' column in relation to the 'timestamp' column in a proper format.'"}
+{"timestamp": "2026-02-18T17:33:00.621438+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Give the timestamp from analyzing the 'index_spread' column in relation to the 'timestamp' column in a proper format."}
+{"timestamp": "2026-02-18T17:33:01.264610+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (819 chars)"}
+{"timestamp": "2026-02-18T17:33:01.287729+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #8: display — Give the timestamp from analyzing the 'index_spread' column in relation to the '..."}
+{"timestamp": "2026-02-18T17:33:22.828859+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'create pie chart for Long JPY and short JPY %' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:33:22.834439+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'create pie chart for Long JPY and short JPY %' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:33:22.853353+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: create pie chart for Long JPY and short JPY %"}
+{"timestamp": "2026-02-18T17:33:23.676659+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1007 chars)"}
+{"timestamp": "2026-02-18T17:33:24.084626+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:33:24.099562+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #9: visualize — create pie chart for Long JPY and short JPY %"}
+{"timestamp": "2026-02-18T17:33:38.591610+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'what is main insight of this pie chart' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:33:38.594447+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is main insight of this pie chart' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:33:38.611709+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: what is main insight of this pie chart"}
+{"timestamp": "2026-02-18T17:33:40.133134+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1002 chars)"}
+{"timestamp": "2026-02-18T17:33:40.406903+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:33:40.423624+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #10: visualize — what is main insight of this pie chart"}
+{"timestamp": "2026-02-18T17:33:48.985185+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'tell me' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:33:49.033103+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'tell me' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:33:49.309602+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'tell me' -> 'Tell me the main insight of the pie chart for Long JPY and short JPY %.'"}
+{"timestamp": "2026-02-18T17:33:49.311515+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'tell me' -> 'Tell me the main insight of the pie chart for Long JPY and short JPY %.'"}
+{"timestamp": "2026-02-18T17:33:49.328883+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Tell me the main insight of the pie chart for Long JPY and short JPY %."}
+{"timestamp": "2026-02-18T17:33:50.618130+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1802 chars)"}
+{"timestamp": "2026-02-18T17:33:50.829352+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:33:50.848725+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #11: visualize — Tell me the main insight of the pie chart for Long JPY and short JPY %."}

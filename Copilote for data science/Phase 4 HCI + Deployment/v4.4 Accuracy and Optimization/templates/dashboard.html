@@ -72,6 +72,16 @@
                 <button class="suggestion-btn" onclick="sendSuggestion('Create a scatter plot')">Scatter plot</button>
             </div>
         </div>
+
+        <!-- Code Activity Bucket -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-title" style="cursor:pointer;" onclick="toggleCodePanel()">
+                🧬 Code Activity <span id="code-toggle-icon" style="float:right;">▸</span>
+            </h3>
+            <div class="code-activity-list" id="code-activity-list" style="display:none;">
+                <p class="muted-text" id="code-empty-msg">No code generated yet</p>
+            </div>
+        </div>
     </aside>
 
     <!-- Main Content — Split Panel -->
@@ -130,6 +140,24 @@
         </div>
     </main>
 </div>
+
+<!-- Code Viewer Modal -->
+<div class="code-modal-overlay" id="code-modal-overlay" onclick="closeCodeModal(event)">
+    <div class="code-modal" onclick="event.stopPropagation()">
+        <div class="code-modal-header">
+            <div>
+                <h3 id="code-modal-label">Code Snippet</h3>
+                <span class="code-modal-meta" id="code-modal-meta"></span>
+            </div>
+            <div class="code-modal-actions">
+                <button class="btn-ghost" onclick="copyCode()">📋 Copy</button>
+                <button class="btn-ghost" onclick="closeCodeModal()">✕</button>
+            </div>
+        </div>
+        <pre class="code-modal-body"><code id="code-modal-code"></code></pre>
+    </div>
+</div>
+
 {% endblock %}
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>

@@ -20,7 +20,7 @@ from config import (
     UPLOAD_FOLDER, MODIFIED_FOLDER, MAX_CONTENT_LENGTH, JWT_EXPIRY_HOURS,
 )
 from database import db
-from database.models import User, ChatSession, Message, Activity
+from database.models import User, ChatSession, Message, Activity, CodeSnippet
 from engines import (
     classify_intent, build_data_context, resolve_query,
     generate_display_code, generate_chart_code, generate_modify_code,
@@ -355,7 +355,7 @@ def register_routes(app):
         _log_activity(request.current_user.id, intent, user_input)
 
         try:
-            result = _process_intent(intent, resolved_input, df, file_path, ctx, sess, conversation_history)
+            result = _process_intent(intent, resolved_input, df, file_path, ctx, sess, conversation_history, user_id=request.current_user.id)
         except Exception as e:
             log_error(e, context=f"_process_intent failed for intent={intent}, input={user_input}")
             result = {
@@ -386,23 +386,70 @@ def register_routes(app):
             .order_by(Activity.created_at.desc()).limit(50).all()
         return jsonify({"activities": [a.to_dict() for a in acts]})
 
+    # ── Code Snippets API ─────────────────────────────────────────────
+
+    @app.route("/api/code-snippets")
+    @login_required
+    def api_code_snippets():
+        snippets = CodeSnippet.query.filter_by(user_id=request.current_user.id)\
+            .order_by(CodeSnippet.created_at.desc()).limit(100).all()
+        return jsonify({"snippets": [s.to_dict() for s in snippets]})
+
+    @app.route("/api/code-snippets/<int:snippet_id>")
+    @login_required
+    def api_code_snippet_detail(snippet_id):
+        snippet = CodeSnippet.query.get_or_404(snippet_id)
+        if snippet.user_id != request.current_user.id:
+            return jsonify({"error": "Forbidden"}), 403
+        return jsonify({"snippet": snippet.to_dict()})
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CODE SNIPPET SAVING
+# ═══════════════════════════════════════════════════════════════════════
+
+def _save_code_snippet(user_id, session_id, user_input, operation, code):
+    """Save generated code snippet to CodeSnippet table."""
+    if not user_id or not code:
+        return
+    try:
+        # Generate a short label from the user query
+        label = user_input[:80].strip()
+        if len(user_input) > 80:
+            label += "..."
+        snippet = CodeSnippet(
+            user_id=user_id,
+            session_id=session_id,
+            label=label,
+            operation=operation,
+            code=code,
+        )
+        db.session.add(snippet)
+        db.session.commit()
+        app_logger.info(f"[CODE] Saved snippet #{snippet.id}: {operation} — {label}")
+    except Exception as e:
+        app_logger.warning(f"[CODE] Failed to save snippet: {e}")
+        db.session.rollback()
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # INTENT PROCESSING — All operations go through AI
 # ═══════════════════════════════════════════════════════════════════════
 
-def _process_intent(intent, user_input, df, file_path, ctx, sess, conversation_history=None):
+def _process_intent(intent, user_input, df, file_path, ctx, sess, conversation_history=None, user_id=None):
     """Process user intent — fully AI-driven for all operations."""
     history = conversation_history or []
+    uid = user_id
+    sid = sess.id if sess else None
 
     if intent == "undo":
         return _handle_undo(file_path, sess)
     elif intent == "display":
-        return _handle_display(user_input, df, file_path, ctx, history)
+        return _handle_display(user_input, df, file_path, ctx, history, user_id=uid, session_id=sid)
     elif intent == "visualize":
-        return _handle_visualize(user_input, df, file_path, ctx, history)
+        return _handle_visualize(user_input, df, file_path, ctx, history, user_id=uid, session_id=sid)
     elif intent == "modify":
-        return _handle_modify(user_input, df, file_path, ctx, history)
+        return _handle_modify(user_input, df, file_path, ctx, history, user_id=uid, session_id=sid)
     else:  # chat
         resp = generate_chat_response(user_input, ctx, history)
         return {"content": resp}
@@ -423,7 +470,7 @@ def _handle_undo(file_path, sess):
             "result_data": "Successfully undone the last change.", "result_title": "↩️ Undo"}
 
 
-def _handle_display(user_input, df, file_path, ctx, history=None):
+def _handle_display(user_input, df, file_path, ctx, history=None, user_id=None, session_id=None):
     """AI generates code, executes it safely, returns result."""
     app_logger.info(f"[DISPLAY] AI code generation for: {user_input}")
     raw = generate_display_code(user_input, file_path, ctx, history)
@@ -452,22 +499,27 @@ def _handle_display(user_input, df, file_path, ctx, history=None):
         if isinstance(rdf, pd.DataFrame):
             summary = generate_result_summary(user_input, "display")
             log_interaction(user_input, "display", user_input, "dataframe", True)
+            # Save code snippet
+            _save_code_snippet(user_id, session_id, user_input, "display", code)
             return {
                 "content": summary,
                 "result_type": "dataframe",
                 "result_data": rdf.to_json(orient="split"),
                 "result_title": f"Results: {user_input}",
+                "code": code,
             }
         else:
             log_interaction(user_input, "display", user_input, "text", True, "scalar result")
+            _save_code_snippet(user_id, session_id, user_input, "display", code)
             return {"content": f"Result: {rdf}", "result_type": "text",
-                    "result_data": str(rdf), "result_title": f"Results: {user_input}"}
+                    "result_data": str(rdf), "result_title": f"Results: {user_input}",
+                    "code": code}
 
     log_interaction(user_input, "display", user_input, None, False, "all attempts failed")
     return {"content": "I couldn't process that request. Could you rephrase it?"}
 
 
-def _handle_visualize(user_input, df, file_path, ctx, history=None):
+def _handle_visualize(user_input, df, file_path, ctx, history=None, user_id=None, session_id=None):
     """AI generates chart code, executes safely, captures figure as base64."""
     app_logger.info(f"[VIZ] AI chart code generation for: {user_input}")
     raw = generate_chart_code(user_input, file_path, ctx, history)
@@ -480,11 +532,13 @@ def _handle_visualize(user_input, df, file_path, ctx, history=None):
     if b64:
         summary = generate_result_summary(user_input, "visualize")
         log_interaction(user_input, "visualize", user_input, "chart", True)
+        _save_code_snippet(user_id, session_id, user_input, "visualize", code)
         return {
             "content": summary,
             "result_type": "chart",
             "result_data": b64,
             "result_title": f"Chart: {user_input}",
+            "code": code,
         }
 
     log_interaction(user_input, "visualize", user_input, None, False, "chart generation failed")
@@ -522,7 +576,7 @@ def _exec_chart_code(code, user_input, file_path, ctx):
     return None
 
 
-def _handle_modify(user_input, df, file_path, ctx, history=None):
+def _handle_modify(user_input, df, file_path, ctx, history=None, user_id=None, session_id=None):
     """AI generates modification code, executes safely, returns preview."""
     # Create backup
     backup_dir = os.path.join(MODIFIED_FOLDER, "backups")
@@ -564,11 +618,13 @@ def _handle_modify(user_input, df, file_path, ctx, history=None):
 
         summary = generate_result_summary(user_input, "modify")
         log_interaction(user_input, "modify", user_input, "dataframe", True)
+        _save_code_snippet(user_id, session_id, user_input, "modify", code)
         return {
             "content": summary,
             "result_type": "dataframe",
             "result_data": preview,
             "result_title": f"Modified: {user_input}",
+            "code": code,
         }
 
     log_interaction(user_input, "modify", user_input, None, False, "all attempts failed")

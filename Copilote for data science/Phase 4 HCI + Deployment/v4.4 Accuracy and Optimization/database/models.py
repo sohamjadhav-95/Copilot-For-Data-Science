@@ -64,3 +64,23 @@ class Activity(db.Model):
     def to_dict(self):
         return {"id": self.id, "action": self.action, "details": self.details,
                 "created_at": self.created_at.isoformat()}
+
+
+class CodeSnippet(db.Model):
+    __tablename__ = "code_snippets"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    session_id = db.Column(db.Integer, db.ForeignKey("chat_sessions.id"), nullable=True)
+    label = db.Column(db.String(255), nullable=False)           # auto-generated from user query
+    operation = db.Column(db.String(30), nullable=False)        # display / visualize / modify
+    code = db.Column(db.Text, nullable=False)                   # the generated Python code
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    user = db.relationship("User", backref=db.backref("code_snippets", lazy=True, cascade="all, delete-orphan"))
+
+    def to_dict(self):
+        return {
+            "id": self.id, "label": self.label, "operation": self.operation,
+            "code": self.code, "session_id": self.session_id,
+            "created_at": self.created_at.isoformat(),
+        }
