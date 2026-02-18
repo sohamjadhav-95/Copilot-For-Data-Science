@@ -318,3 +318,270 @@
 {"timestamp": "2026-02-18T17:33:50.618130+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1802 chars)"}
 {"timestamp": "2026-02-18T17:33:50.829352+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
 {"timestamp": "2026-02-18T17:33:50.848725+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #11: visualize — Tell me the main insight of the pie chart for Long JPY and short JPY %."}
+{"timestamp": "2026-02-18T17:37:51.914492+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:38:00.116413+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:40:35.956488+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:40:40.253149+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:40:49.921012+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser uploaded 2026-02-18T17-25_export.csv (200x12)"}
+{"timestamp": "2026-02-18T17:40:58.408498+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show any columns' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:40:58.413658+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show any columns' -> Intent: display"}
+{"timestamp": "2026-02-18T17:40:58.431409+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show any columns"}
+{"timestamp": "2026-02-18T17:41:01.719796+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (253 chars)"}
+{"timestamp": "2026-02-18T17:41:01.749697+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #12: display — show any columns"}
+{"timestamp": "2026-02-18T17:41:23.327269+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'last 3' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:41:23.329289+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'last 3' -> Intent: display"}
+{"timestamp": "2026-02-18T17:41:23.487476+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'last 3' -> 'show the last 3 columns'"}
+{"timestamp": "2026-02-18T17:41:23.491074+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'last 3' -> 'show the last 3 columns'"}
+{"timestamp": "2026-02-18T17:41:23.509659+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show the last 3 columns"}
+{"timestamp": "2026-02-18T17:41:24.049122+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (577 chars)"}
+{"timestamp": "2026-02-18T17:41:24.073273+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #13: display — show the last 3 columns"}
+{"timestamp": "2026-02-18T17:41:57.027529+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'last 3 cloumns' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:41:57.032635+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'last 3 cloumns' -> Intent: display"}
+{"timestamp": "2026-02-18T17:41:57.208886+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'last 3 cloumns' -> 'show the last 3 columns'"}
+{"timestamp": "2026-02-18T17:41:57.211588+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'last 3 cloumns' -> 'show the last 3 columns'"}
+{"timestamp": "2026-02-18T17:41:57.235361+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show the last 3 columns"}
+{"timestamp": "2026-02-18T17:41:57.617216+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (346 chars)"}
+{"timestamp": "2026-02-18T17:41:57.643345+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #14: display — show the last 3 columns"}
+{"timestamp": "2026-02-18T17:42:11.356737+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'sorry rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:42:11.360059+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'sorry rows' -> Intent: display"}
+{"timestamp": "2026-02-18T17:42:11.539056+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'sorry rows' -> 'show the last 3 rows'"}
+{"timestamp": "2026-02-18T17:42:11.541078+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'sorry rows' -> 'show the last 3 rows'"}
+{"timestamp": "2026-02-18T17:42:11.559646+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: show the last 3 rows"}
+{"timestamp": "2026-02-18T17:42:11.918893+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (342 chars)"}
+{"timestamp": "2026-02-18T17:42:11.940797+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #15: display — show the last 3 rows"}
+{"timestamp": "2026-02-18T17:42:37.160084+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot both indexes over time' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:42:37.163619+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot both indexes over time' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:42:37.663288+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'plot both indexes over time' -> 'Plot both indexes over time for the last 3 rows.'"}
+{"timestamp": "2026-02-18T17:42:37.702598+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'plot both indexes over time' -> 'Plot both indexes over time for the last 3 rows.'"}
+{"timestamp": "2026-02-18T17:42:37.800091+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot both indexes over time for the last 3 rows."}
+{"timestamp": "2026-02-18T17:42:39.035877+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1366 chars)"}
+{"timestamp": "2026-02-18T17:42:39.714459+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:42:39.730082+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #16: visualize — Plot both indexes over time for the last 3 rows."}
+{"timestamp": "2026-02-18T17:42:47.770248+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'for whole data' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:42:47.773759+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'for whole data' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:42:47.947904+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'for whole data' -> 'show all columns for the whole data'"}
+{"timestamp": "2026-02-18T17:42:47.950441+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'for whole data' -> 'show all columns for the whole data'"}
+{"timestamp": "2026-02-18T17:42:47.970917+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: show all columns for the whole data"}
+{"timestamp": "2026-02-18T17:42:48.741284+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1141 chars)"}
+{"timestamp": "2026-02-18T17:42:49.456497+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:42:49.473336+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #17: visualize — show all columns for the whole data"}
+{"timestamp": "2026-02-18T17:43:04.089687+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot both indexes over time of whole data' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T17:43:04.092240+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot both indexes over time of whole data' -> Intent: visualize"}
+{"timestamp": "2026-02-18T17:43:04.108407+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: plot both indexes over time of whole data"}
+{"timestamp": "2026-02-18T17:43:05.053219+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1250 chars)"}
+{"timestamp": "2026-02-18T17:43:05.858984+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T17:43:05.873382+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #18: visualize — plot both indexes over time of whole data"}
+{"timestamp": "2026-02-18T17:43:26.292334+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'what is max index spread and on which time' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:43:26.297327+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is max index spread and on which time' -> Intent: display"}
+{"timestamp": "2026-02-18T17:43:26.312474+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: what is max index spread and on which time"}
+{"timestamp": "2026-02-18T17:43:27.033158+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (817 chars)"}
+{"timestamp": "2026-02-18T17:43:27.054518+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #19: display — what is max index spread and on which time"}
+{"timestamp": "2026-02-18T17:43:39.353745+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'what is this data about' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:43:39.356745+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is this data about' -> Intent: display"}
+{"timestamp": "2026-02-18T17:43:39.709198+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'what is this data about' -> 'What is the data that was used to show the last 3 rows, plot both indexes over time, show all columns for the whole data, plot both indexes over time of whole data, and calculate the max index spread and the time it occurred about?'"}
+{"timestamp": "2026-02-18T17:43:39.710707+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'what is this data about' -> 'What is the data that was used to show the last 3 rows, plot both indexes over time, show all columns for the whole data, plot both indexes over time of whole data, and calculate the max index spread and the time it occurred about?'"}
+{"timestamp": "2026-02-18T17:43:39.729030+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: What is the data that was used to show the last 3 rows, plot both indexes over time, show all columns for the whole data, plot both indexes over time of whole data, and calculate the max index spread and the time it occurred about?"}
+{"timestamp": "2026-02-18T17:43:40.536878+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1193 chars)"}
+{"timestamp": "2026-02-18T17:43:40.638789+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #20: display — What is the data that was used to show the last 3 rows, plot both indexes over t..."}
+{"timestamp": "2026-02-18T17:44:10.785410+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'tell me summery of data' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:44:10.787495+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'tell me summery of data' -> Intent: display"}
+{"timestamp": "2026-02-18T17:44:11.037785+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'tell me summery of data' -> 'Provide a summary of the data that includes information about the indexes over time for the whole data.'"}
+{"timestamp": "2026-02-18T17:44:11.039344+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'tell me summery of data' -> 'Provide a summary of the data that includes information about the indexes over time for the whole data.'"}
+{"timestamp": "2026-02-18T17:44:11.057164+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Provide a summary of the data that includes information about the indexes over time for the whole data."}
+{"timestamp": "2026-02-18T17:44:11.724672+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (933 chars)"}
+{"timestamp": "2026-02-18T17:44:11.756688+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #21: display — Provide a summary of the data that includes information about the indexes over t..."}
+{"timestamp": "2026-02-18T17:44:17.066067+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'in words' -> display (AI)"}
+{"timestamp": "2026-02-18T17:44:17.069063+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'in words' -> Intent: display"}
+{"timestamp": "2026-02-18T17:44:17.194431+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'in words' -> 'describe the summary of the data in words'"}
+{"timestamp": "2026-02-18T17:44:17.196420+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'in words' -> 'describe the summary of the data in words'"}
+{"timestamp": "2026-02-18T17:44:17.213621+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: describe the summary of the data in words"}
+{"timestamp": "2026-02-18T17:44:18.214087+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1419 chars)"}
+{"timestamp": "2026-02-18T17:44:18.362335+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #22: display — describe the summary of the data in words"}
+{"timestamp": "2026-02-18T17:46:58.228954+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Delete last row from data' -> modify (keyword)"}
+{"timestamp": "2026-02-18T17:46:58.294712+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Delete last row from data' -> Intent: modify"}
+{"timestamp": "2026-02-18T17:46:58.567107+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'Delete last row from data' -> 'Delete the last row from the data that was previously summarized and described in words.'"}
+{"timestamp": "2026-02-18T17:46:58.569633+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'Delete last row from data' -> 'Delete the last row from the data that was previously summarized and described in words.'"}
+{"timestamp": "2026-02-18T17:46:58.593164+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Backup created: backup_20260218_231658.csv"}
+{"timestamp": "2026-02-18T17:46:59.071063+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (507 chars)"}
+{"timestamp": "2026-02-18T17:46:59.072661+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Executing AI-generated code..."}
+{"timestamp": "2026-02-18T17:46:59.130287+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #23: modify — Delete the last row from the data that was previously summarized and described i..."}
+{"timestamp": "2026-02-18T17:47:12.873545+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'last column' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:47:12.875991+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'last column' -> Intent: display"}
+{"timestamp": "2026-02-18T17:47:13.096747+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'last column' -> 'Show the data for the last column of the data that was previously updated after deleting the last row.'"}
+{"timestamp": "2026-02-18T17:47:13.097743+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'last column' -> 'Show the data for the last column of the data that was previously updated after deleting the last row.'"}
+{"timestamp": "2026-02-18T17:47:13.120224+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show the data for the last column of the data that was previously updated after deleting the last row."}
+{"timestamp": "2026-02-18T17:47:13.640526+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (394 chars)"}
+{"timestamp": "2026-02-18T17:47:13.663324+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #24: display — Show the data for the last column of the data that was previously updated after..."}
+{"timestamp": "2026-02-18T17:47:22.217719+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'delete that' -> display (keyword)"}
+{"timestamp": "2026-02-18T17:47:22.221114+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'delete that' -> Intent: display"}
+{"timestamp": "2026-02-18T17:47:22.572678+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'delete that' -> 'Delete the last column from the data that was previously updated by deleting the last row.'"}
+{"timestamp": "2026-02-18T17:47:22.576208+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'delete that' -> 'Delete the last column from the data that was previously updated by deleting the last row.'"}
+{"timestamp": "2026-02-18T17:47:22.597486+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Delete the last column from the data that was previously updated by deleting the last row."}
+{"timestamp": "2026-02-18T17:47:22.955438+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (382 chars)"}
+{"timestamp": "2026-02-18T17:47:22.979287+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #25: display — Delete the last column from the data that was previously updated by deleting the..."}
+{"timestamp": "2026-02-18T17:54:08.700126+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:54:17.695900+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:54:33.479055+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:54:42.972671+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:58:27.827261+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:58:41.298473+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:59:01.753038+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T17:59:12.823005+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:00:20.951206+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:00:24.697123+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:00:42.474822+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser uploaded 2026-02-18T17-25_export.csv (200x12)"}
+{"timestamp": "2026-02-18T18:00:52.327365+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'what is data about' -> chat (AI)"}
+{"timestamp": "2026-02-18T18:00:52.330873+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is data about' -> Intent: chat"}
+{"timestamp": "2026-02-18T18:01:03.110504+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show 5 rows' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:01:03.147294+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show 5 rows' -> Intent: display"}
+{"timestamp": "2026-02-18T18:01:03.570541+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show 5 rows' -> 'Show 5 rows of the financial trading dataset related to USDJPY and US30 exchange rates and stock market index, including timestamp information.'"}
+{"timestamp": "2026-02-18T18:01:03.572320+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show 5 rows' -> 'Show 5 rows of the financial trading dataset related to USDJPY and US30 exchange rates and stock market index, including timestamp information.'"}
+{"timestamp": "2026-02-18T18:01:03.587625+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show 5 rows of the financial trading dataset related to USDJPY and US30 exchange rates and stock market index, including timestamp information."}
+{"timestamp": "2026-02-18T18:01:04.177805+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (766 chars)"}
+{"timestamp": "2026-02-18T18:01:04.208766+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #26: display — Show 5 rows of the financial trading dataset related to USDJPY and US30 exchange..."}
+{"timestamp": "2026-02-18T18:01:26.153575+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot US 30 index vs Jpy index' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T18:01:26.155572+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot US 30 index vs Jpy index' -> Intent: visualize"}
+{"timestamp": "2026-02-18T18:01:26.533435+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'plot US 30 index vs Jpy index' -> 'Plot the US30 index versus the USDJPY exchange rate from the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:01:26.535414+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'plot US 30 index vs Jpy index' -> 'Plot the US30 index versus the USDJPY exchange rate from the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:01:26.550265+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot the US30 index versus the USDJPY exchange rate from the financial trading dataset."}
+{"timestamp": "2026-02-18T18:01:27.786535+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1287 chars)"}
+{"timestamp": "2026-02-18T18:01:28.379452+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T18:01:28.392988+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #27: visualize — Plot the US30 index versus the USDJPY exchange rate from the financial trading d..."}
+{"timestamp": "2026-02-18T18:02:02.623018+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'on which data and time max and min spread goes' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:02:02.625907+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'on which data and time max and min spread goes' -> Intent: display"}
+{"timestamp": "2026-02-18T18:02:02.641667+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: on which data and time max and min spread goes"}
+{"timestamp": "2026-02-18T18:02:03.407670+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (839 chars)"}
+{"timestamp": "2026-02-18T18:02:03.436656+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #28: display — on which data and time max and min spread goes"}
+{"timestamp": "2026-02-18T18:02:14.626273+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'tell me in simple format' -> display (AI)"}
+{"timestamp": "2026-02-18T18:02:14.631044+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'tell me in simple format' -> Intent: display"}
+{"timestamp": "2026-02-18T18:02:14.879287+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'tell me in simple format' -> 'Provide the maximum and minimum spread of the USDJPY exchange rate and the US30 index in a simple format, based on the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:02:14.883378+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'tell me in simple format' -> 'Provide the maximum and minimum spread of the USDJPY exchange rate and the US30 index in a simple format, based on the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:02:14.900695+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Provide the maximum and minimum spread of the USDJPY exchange rate and the US30 index in a simple format, based on the financial trading dataset."}
+{"timestamp": "2026-02-18T18:02:15.515826+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (642 chars)"}
+{"timestamp": "2026-02-18T18:02:15.652587+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #29: display — Provide the maximum and minimum spread of the USDJPY exchange rate and the US30..."}
+{"timestamp": "2026-02-18T18:02:23.546939+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'tell me time' -> display (AI)"}
+{"timestamp": "2026-02-18T18:02:23.551981+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'tell me time' -> Intent: display"}
+{"timestamp": "2026-02-18T18:02:23.757986+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'tell me time' -> 'Tell me the time when the maximum and minimum spread of the USDJPY exchange rate occurs in the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:02:23.760634+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'tell me time' -> 'Tell me the time when the maximum and minimum spread of the USDJPY exchange rate occurs in the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:02:23.777292+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Tell me the time when the maximum and minimum spread of the USDJPY exchange rate occurs in the financial trading dataset."}
+{"timestamp": "2026-02-18T18:02:24.457244+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (885 chars)"}
+{"timestamp": "2026-02-18T18:02:24.641280+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #30: display — Tell me the time when the maximum and minimum spread of the USDJPY exchange rate..."}
+{"timestamp": "2026-02-18T18:03:04.319430+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot flips occured' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T18:03:04.324478+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot flips occured' -> Intent: visualize"}
+{"timestamp": "2026-02-18T18:03:04.598780+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'plot flips occured' -> 'Plot the number of times the US 30 index and JPY index crossed each other, based on the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:03:04.601137+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'plot flips occured' -> 'Plot the number of times the US 30 index and JPY index crossed each other, based on the financial trading dataset.'"}
+{"timestamp": "2026-02-18T18:03:04.618944+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot the number of times the US 30 index and JPY index crossed each other, based on the financial trading dataset."}
+{"timestamp": "2026-02-18T18:03:05.888689+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1813 chars)"}
+{"timestamp": "2026-02-18T18:03:06.493495+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[VIZ] Code exec failed: unsupported operand type(s) for |: 'float' and 'bool'"}
+{"timestamp": "2026-02-18T18:03:10.624057+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:03:11.453811+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:03:11.585534+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot flips occured' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T18:03:11.588081+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot flips occured' -> Intent: visualize"}
+{"timestamp": "2026-02-18T18:03:13.922689+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'plot flips occured' -> 'Plot the times when flips occurred in the US30 index versus the USDJPY exchange rate.'"}
+{"timestamp": "2026-02-18T18:03:13.925236+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'plot flips occured' -> 'Plot the times when flips occurred in the US30 index versus the USDJPY exchange rate.'"}
+{"timestamp": "2026-02-18T18:03:13.949350+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot the times when flips occurred in the US30 index versus the USDJPY exchange rate."}
+{"timestamp": "2026-02-18T18:03:15.060567+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1442 chars)"}
+{"timestamp": "2026-02-18T18:03:15.874158+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T18:03:15.895058+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #31: visualize — Plot the times when flips occurred in the US30 index versus the USDJPY exchange..."}
+{"timestamp": "2026-02-18T18:03:34.536866+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show last cloumn' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:03:34.540389+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show last cloumn' -> Intent: display"}
+{"timestamp": "2026-02-18T18:03:34.781092+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show last cloumn' -> 'Show the last column of the table containing the times when flips occurred in the US30 index versus the USDJPY exchange rate.'"}
+{"timestamp": "2026-02-18T18:03:34.783661+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show last cloumn' -> 'Show the last column of the table containing the times when flips occurred in the US30 index versus the USDJPY exchange rate.'"}
+{"timestamp": "2026-02-18T18:03:34.800537+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show the last column of the table containing the times when flips occurred in the US30 index versus the USDJPY exchange rate."}
+{"timestamp": "2026-02-18T18:03:35.277025+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (540 chars)"}
+{"timestamp": "2026-02-18T18:03:35.355765+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DISPLAY] Code exec failed: [Errno 2] No such file or directory: 'E:\\\\Projects\\\\Copilot-For-Data-Science\\\\Copilot for data science\\\\Phase 4 HCI + Deployment\\\\v4.4 Accuracy and Optimization\\\\uploads\\\\1\\\\2026-02-18T17-25_export.csv'"}
+{"timestamp": "2026-02-18T18:03:35.899830+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (803 chars)"}
+{"timestamp": "2026-02-18T18:03:35.902832+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[SAFETY] Blocked unsafe code: Dangerous pattern detected: os.path"}
+{"timestamp": "2026-02-18T18:03:35.908815+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DISPLAY] Fixed code also failed: Code blocked: Dangerous pattern detected: os.path"}
+{"timestamp": "2026-02-18T18:03:40.897404+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:03:41.174593+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-02-18T18:03:48.598989+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show last cloumn' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:03:48.601927+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show last cloumn' -> Intent: display"}
+{"timestamp": "2026-02-18T18:03:51.564982+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show last cloumn' -> 'Show the last column of the results for the times when flips occurred in the US30 dataset.'"}
+{"timestamp": "2026-02-18T18:03:51.567029+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show last cloumn' -> 'Show the last column of the results for the times when flips occurred in the US30 dataset.'"}
+{"timestamp": "2026-02-18T18:03:51.586711+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show the last column of the results for the times when flips occurred in the US30 dataset."}
+{"timestamp": "2026-02-18T18:03:52.150156+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (670 chars)"}
+{"timestamp": "2026-02-18T18:03:52.179243+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #32: display — Show the last column of the results for the times when flips occurred in the US3..."}
+{"timestamp": "2026-02-18T18:03:56.782313+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'delete it' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:03:56.785406+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'delete it' -> Intent: display"}
+{"timestamp": "2026-02-18T18:03:56.969011+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'delete it' -> 'Delete the last column of the results for the times when flips occurred in the US30.'"}
+{"timestamp": "2026-02-18T18:03:56.970032+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'delete it' -> 'Delete the last column of the results for the times when flips occurred in the US30.'"}
+{"timestamp": "2026-02-18T18:03:56.989040+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Delete the last column of the results for the times when flips occurred in the US30."}
+{"timestamp": "2026-02-18T18:03:57.571504+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (561 chars)"}
+{"timestamp": "2026-02-18T18:03:57.595025+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #33: display — Delete the last column of the results for the times when flips occurred in the U..."}
+{"timestamp": "2026-02-18T18:04:56.579621+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'give modified data now' -> modify (AI)"}
+{"timestamp": "2026-02-18T18:04:56.583809+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'give modified data now' -> Intent: modify"}
+{"timestamp": "2026-02-18T18:04:56.840689+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'give modified data now' -> 'Give the modified data after deleting the last column of the results for the time when flips occurred in the US30.'"}
+{"timestamp": "2026-02-18T18:04:56.843214+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'give modified data now' -> 'Give the modified data after deleting the last column of the results for the time when flips occurred in the US30.'"}
+{"timestamp": "2026-02-18T18:04:56.863823+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Backup created: backup_20260218_233456.csv"}
+{"timestamp": "2026-02-18T18:04:57.461300+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (499 chars)"}
+{"timestamp": "2026-02-18T18:04:57.462362+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Executing AI-generated code..."}
+{"timestamp": "2026-02-18T18:04:57.528685+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #34: modify — Give the modified data after deleting the last column of the results for the tim..."}
+{"timestamp": "2026-02-18T18:05:37.110794+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'create chart of summery of all columns and give me' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T18:05:37.114447+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'create chart of summery of all columns and give me' -> Intent: visualize"}
+{"timestamp": "2026-02-18T18:05:37.136236+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: create chart of summery of all columns and give me"}
+{"timestamp": "2026-02-18T18:05:39.398365+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (3517 chars)"}
+{"timestamp": "2026-02-18T18:05:45.898915+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T18:05:45.917133+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #35: visualize — create chart of summery of all columns and give me"}
+{"timestamp": "2026-02-18T18:05:53.203917+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'a table' -> visualize (keyword)"}
+{"timestamp": "2026-02-18T18:05:53.206925+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'a table' -> Intent: visualize"}
+{"timestamp": "2026-02-18T18:05:53.441168+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'a table' -> 'Create a table of the modified data after deleting the last column.'"}
+{"timestamp": "2026-02-18T18:05:53.443157+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'a table' -> 'Create a table of the modified data after deleting the last column.'"}
+{"timestamp": "2026-02-18T18:05:53.466375+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Create a table of the modified data after deleting the last column."}
+{"timestamp": "2026-02-18T18:05:53.497824+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 1 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99268, Requested 2199. Please try again in 21m7.488s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:05:53.500163+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-02-18T18:05:56.530225+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 2 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99265, Requested 2199. Please try again in 21m4.896s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:05:56.531223+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 6s..."}
+{"timestamp": "2026-02-18T18:06:03.252907+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-02-18T18:06:16.090633+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1980 chars)"}
+{"timestamp": "2026-02-18T18:06:18.217683+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-02-18T18:06:18.235476+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #36: visualize — Create a table of the modified data after deleting the last column."}
+{"timestamp": "2026-02-18T18:06:37.540457+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b:free: empty response (attempt 1)"}
+{"timestamp": "2026-02-18T18:06:41.802395+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openrouter/openai/gpt-oss-120b:free attempt 2 failed: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'openai/gpt-oss-120b:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'OpenInference', 'is_byok': False}}, 'user_id': 'user_39pXoHe4Yocx6gUAkJdroR6Rvom'}"}
+{"timestamp": "2026-02-18T18:06:41.804527+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 6s..."}
+{"timestamp": "2026-02-18T18:06:48.521738+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: openrouter -> groq"}
+{"timestamp": "2026-02-18T18:06:48.712548+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'explain data in 5 lines' -> display (AI)"}
+{"timestamp": "2026-02-18T18:06:48.717154+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'explain data in 5 lines' -> Intent: display"}
+{"timestamp": "2026-02-18T18:06:48.896561+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'explain data in 5 lines' -> 'Explain the modified data after deleting the last column in 5 lines.'"}
+{"timestamp": "2026-02-18T18:06:48.899335+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'explain data in 5 lines' -> 'Explain the modified data after deleting the last column in 5 lines.'"}
+{"timestamp": "2026-02-18T18:06:48.921828+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Explain the modified data after deleting the last column in 5 lines."}
+{"timestamp": "2026-02-18T18:06:48.964407+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 1 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99577, Requested 1354. Please try again in 13m24.384s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:06:48.969444+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-02-18T18:06:52.014126+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 2 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99574, Requested 1354. Please try again in 13m21.792s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:06:52.016143+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 6s..."}
+{"timestamp": "2026-02-18T18:06:58.252606+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-02-18T18:07:06.744358+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1047 chars)"}
+{"timestamp": "2026-02-18T18:07:06.763983+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #37: display — Explain the modified data after deleting the last column in 5 lines."}
+{"timestamp": "2026-02-18T18:08:08.965530+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'show rows of original data' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:08:09.005024+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'show rows of original data' -> Intent: display"}
+{"timestamp": "2026-02-18T18:08:11.971136+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'show rows of original data' -> 'Show rows of the original data (before any deletions or modifications).'"}
+{"timestamp": "2026-02-18T18:08:11.972712+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'show rows of original data' -> 'Show rows of the original data (before any deletions or modifications).'"}
+{"timestamp": "2026-02-18T18:08:11.991527+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show rows of the original data (before any deletions or modifications)."}
+{"timestamp": "2026-02-18T18:08:19.492504+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (293 chars)"}
+{"timestamp": "2026-02-18T18:08:19.504660+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #38: display — Show rows of the original data (before any deletions or modifications)."}
+{"timestamp": "2026-02-18T18:08:54.610972+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'give data summery in few lines' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:08:54.648033+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'give data summery in few lines' -> Intent: display"}
+{"timestamp": "2026-02-18T18:09:00.305051+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openrouter/openai/gpt-oss-120b:free attempt 1 failed: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'openai/gpt-oss-120b:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'OpenInference', 'is_byok': False}}, 'user_id': 'user_39pXoHe4Yocx6gUAkJdroR6Rvom'}"}
+{"timestamp": "2026-02-18T18:09:00.307655+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-02-18T18:09:04.356195+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: openrouter -> groq"}
+{"timestamp": "2026-02-18T18:09:04.545326+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'give data summery in few lines' -> 'Explain the modified data in 5 lines.'"}
+{"timestamp": "2026-02-18T18:09:04.548325+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'give data summery in few lines' -> 'Explain the modified data in 5 lines.'"}
+{"timestamp": "2026-02-18T18:09:04.568486+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Explain the modified data in 5 lines."}
+{"timestamp": "2026-02-18T18:09:04.606785+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 1 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99420, Requested 1352. Please try again in 11m7.008s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:09:04.609790+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-02-18T18:09:07.666399+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 2 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99417, Requested 1352. Please try again in 11m4.416s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:09:07.677030+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 6s..."}
+{"timestamp": "2026-02-18T18:09:14.371048+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-02-18T18:09:39.020932+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (2177 chars)"}
+{"timestamp": "2026-02-18T18:09:39.116609+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #39: display — Explain the modified data in 5 lines."}
+{"timestamp": "2026-02-18T18:10:33.192659+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'give sum of all spread' -> display (keyword)"}
+{"timestamp": "2026-02-18T18:10:33.195664+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'give sum of all spread' -> Intent: display"}
+{"timestamp": "2026-02-18T18:10:38.136127+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b:free: empty response (attempt 1)"}
+{"timestamp": "2026-02-18T18:10:39.417841+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: openrouter -> groq"}
+{"timestamp": "2026-02-18T18:10:39.629254+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: give sum of all spread"}
+{"timestamp": "2026-02-18T18:10:39.662032+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 1 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99310, Requested 1356. Please try again in 9m35.424s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:10:39.664037+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-02-18T18:10:42.763380+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] groq/llama-3.3-70b-versatile attempt 2 failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01jfyz850seysss91w8rxnh6qy` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 99307, Requested 1356. Please try again in 9m32.832s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"}
+{"timestamp": "2026-02-18T18:10:42.799191+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 6s..."}
+{"timestamp": "2026-02-18T18:10:49.431836+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-02-18T18:10:54.126071+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (589 chars)"}

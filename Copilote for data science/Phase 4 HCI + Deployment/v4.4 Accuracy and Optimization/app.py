@@ -403,6 +403,24 @@ def register_routes(app):
             return jsonify({"error": "Forbidden"}), 403
         return jsonify({"snippet": snippet.to_dict()})
 
+    # ── Download Modified CSV ─────────────────────────────────────────
+
+    @app.route("/api/download-modified")
+    @login_required
+    def api_download_modified():
+        session_id = request.args.get("session_id", type=int)
+        if not session_id:
+            return jsonify({"error": "session_id required"}), 400
+        sess = ChatSession.query.get_or_404(session_id)
+        if sess.user_id != request.current_user.id:
+            return jsonify({"error": "Forbidden"}), 403
+        fp = sess.file_path
+        if not fp or not os.path.exists(fp):
+            return jsonify({"error": "File not found"}), 404
+        from flask import send_file
+        return send_file(fp, as_attachment=True,
+                         download_name=f"modified_{os.path.basename(fp)}")
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # CODE SNIPPET SAVING
@@ -621,10 +639,11 @@ def _handle_modify(user_input, df, file_path, ctx, history=None, user_id=None, s
         _save_code_snippet(user_id, session_id, user_input, "modify", code)
         return {
             "content": summary,
-            "result_type": "dataframe",
+            "result_type": "modify",
             "result_data": preview,
             "result_title": f"Modified: {user_input}",
             "code": code,
+            "file_path": file_path,
         }
 
     log_interaction(user_input, "modify", user_input, None, False, "all attempts failed")

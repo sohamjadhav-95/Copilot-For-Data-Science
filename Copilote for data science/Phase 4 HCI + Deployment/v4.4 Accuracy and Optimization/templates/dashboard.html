@@ -4,11 +4,15 @@
 <!-- Top Navigation -->
 <nav class="topnav">
     <div class="nav-brand">
-        <span class="nav-logo">🧪</span>
+        <span class="nav-logo">🤴</span>
         <span class="nav-title">Data Science Copilot</span>
     </div>
     <div class="nav-right">
-        <span class="nav-user">👤 {{ user.username }}</span>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">
+            <span class="toggle-icon" id="theme-icon">🌙</span>
+            <span id="theme-label">Dark</span>
+        </button>
+        <span class="nav-user">🦉 {{ user.username }}</span>
         <button class="btn-ghost" onclick="handleLogout()">Logout</button>
     </div>
 </nav>
@@ -88,7 +92,7 @@
     <main class="main-content">
         <!-- Welcome Screen (shown before file upload) -->
         <div class="welcome-screen" id="welcome-screen">
-            <div class="welcome-logo">🧪</div>
+            <div class="welcome-logo">🤴</div>
             <h1 class="welcome-title">Data Science Copilot</h1>
             <p class="welcome-subtitle">Upload a CSV file to start chatting with your data</p>
             <div class="feature-cards">

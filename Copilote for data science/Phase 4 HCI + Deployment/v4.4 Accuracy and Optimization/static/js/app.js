@@ -8,8 +8,32 @@ let currentSessionId = null;
 let currentDataset = null;
 let codeSnippetsCache = [];
 
+// ── Theme Toggle ─────────────────────────────────────────────────────
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('copilot-theme', next);
+    updateThemeButton(next);
+}
+
+function updateThemeButton(theme) {
+    const icon = document.getElementById('theme-icon');
+    const label = document.getElementById('theme-label');
+    if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
+    if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('copilot-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeButton(saved);
+}
+
 // ── Init ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     loadSessions();
     loadCodeSnippets();
 });
@@ -238,6 +262,7 @@ function getStatusChip(resultType) {
     const chips = {
         'dataframe': { icon: '📊', label: 'Data loaded in results', cls: 'chip-display' },
         'chart': { icon: '📈', label: 'Chart created', cls: 'chip-visualize' },
+        'modify': { icon: '✅', label: 'Data modified — preview ready', cls: 'chip-modify' },
         'text': { icon: '💡', label: 'Result ready', cls: 'chip-text' },
     };
     return chips[resultType] || { icon: '✅', label: 'Done', cls: 'chip-default' };
@@ -294,6 +319,8 @@ function appendResult(title, type, data) {
     let content = '';
     if (type === 'chart') {
         content = `<img src="data:image/png;base64,${data}" alt="${title}">`;
+    } else if (type === 'modify') {
+        content = buildModifyPreview(title, data);
     } else if (type === 'dataframe') {
         content = buildTable(data);
     } else {
@@ -341,6 +368,51 @@ function clearResults() {
             <p>📋 Results will appear here</p>
             <p class="muted-text">Ask a question in the chat panel</p>
         </div>`;
+}
+
+// ── Modify Output Preview ────────────────────────────────────────────
+function buildModifyPreview(title, jsonData) {
+    let tableHtml = buildTable(jsonData);
+    return `
+        <div class="modify-preview">
+            <div class="modify-preview-header">
+                <span class="modify-preview-icon">📁</span>
+                <span class="modify-preview-title">Output Data Preview</span>
+                <div class="modify-preview-actions">
+                    <button class="btn-icon" onclick="downloadModified()" title="Download modified CSV">
+                        ⬇️
+                    </button>
+                    <button class="btn-icon" onclick="this.closest('.modify-preview').querySelector('.modify-table-wrap').classList.toggle('expanded')" title="Expand">
+                        🔍
+                    </button>
+                </div>
+            </div>
+            <div class="modify-table-wrap">
+                ${tableHtml}
+            </div>
+        </div>`;
+}
+
+async function downloadModified() {
+    if (!currentSessionId) return;
+    try {
+        const res = await fetch(`/api/download-modified?session_id=${currentSessionId}`);
+        if (!res.ok) {
+            alert('Download failed');
+            return;
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `modified_data.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    } catch (err) {
+        alert('Download failed: ' + err.message);
+    }
 }
 
 // ── Code Activity Panel ──────────────────────────────────────────────

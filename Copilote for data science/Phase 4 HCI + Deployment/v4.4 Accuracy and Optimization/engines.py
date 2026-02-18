@@ -380,12 +380,41 @@ def _keyword_classify(user_input, conversation_history=None):
     if any(kw in text for kw in modify_single):
         return "modify"
 
-    # Display (broad — catches most data queries)
+    # ─── CHAT PRIORITY: catch conversational/descriptive queries BEFORE display ───
+    # These phrases indicate the user wants a TEXT explanation, not a table/code output
+    chat_phrases = [
+        "in words", "in plain", "in simple", "in english", "in text",
+        "tell me about", "tell me summary", "tell me what",
+        "explain", "what is this data",
+        "what does this data", "what kind of data", "what type of data",
+        "what is the data", "describe this data", "describe the data",
+        "can you explain", "what can you tell",
+        "help me understand", "summarize in", "summary in",
+        "overview of", "brief about", "brief of",
+        "give me summary", "give me overview", "provide summary", "provide overview",
+        "in detail", "in brief", "in short",
+        "about this dataset", "about the dataset", "about this data",
+        "about my data", "what do you see", "what do you think",
+        "your thoughts", "your analysis", "analyze this",
+        "insights about", "insight about", "observations",
+    ]
+    if any(phrase in text for phrase in chat_phrases):
+        return "chat"
+
+    # Pure conversational — greetings, thanks, questions without data-action intent
+    chat_starters = ["hi", "hello", "hey", "thanks", "thank you", "ok", "okay",
+                     "great", "nice", "good", "cool", "awesome", "sure", "yes", "no",
+                     "who are you", "what can you do", "how are you",
+                     "what are you", "help"]
+    if text in chat_starters or any(text.startswith(s + " ") for s in ["hi", "hello", "hey"]):
+        return "chat"
+
+    # Display (broad — catches most data queries that need CODE execution)
     display_kw = ["show", "display", "head", "tail", "first", "last", "describe",
                   "info", "statistics", "stats", "rows", "columns", "shape",
                   "preview", "sample", "summary", "dtypes", "types", "count",
                   "unique", "null", "missing", "print", "view", "look",
-                  "how many", "how much", "insight",
+                  "how many", "how much",
                   "maximum", "minimum", "average", "mean", "total", "sum",
                   "max", "min", "top", "bottom", "largest", "smallest",
                   "highest", "lowest", "find", "get", "list",
@@ -393,11 +422,11 @@ def _keyword_classify(user_input, conversation_history=None):
     if any(kw in text for kw in display_kw):
         return "display"
 
-    # Question words + data-related context
+    # Question words + data-related context → display (needs code to compute)
     q_words = ["what", "which", "where", "when", "how"]
-    data_words = ["column", "row", "value", "data", "dataset", "table", "field",
+    data_words = ["column", "row", "value", "table", "field",
                   "close", "open", "high", "low", "price", "date", "time",
-                  "day", "movement", "difference", "record", "entry",
+                  "day", "movement", "record", "entry",
                   "pct", "change", "index", "timestamp"]
     if any(qw in text for qw in q_words) and any(dw in text for dw in data_words):
         return "display"
@@ -723,18 +752,24 @@ DATASET INFORMATION:
 {ctx}
 
 YOUR BEHAVIOR:
-- Be conversational, helpful, and concise (3-5 sentences max).
-- If the user asks about the data, answer based on the dataset context above.
-- Suggest relevant analyses or visualizations the user could try.
-- If the user seems confused, guide them with specific commands they can use.
+- Be conversational, helpful, and thorough.
+- When the user asks for a summary, overview, or description of the data, give a **detailed** answer:
+  - Mention the number of rows and columns.
+  - List key column names and their types (numeric vs categorical).
+  - Point out notable patterns: missing values, date ranges, value distributions.
+  - Suggest 2-3 specific analyses they could try next.
+- For general data science questions, explain clearly with examples.
+- Use **bold** for key terms and column names.
+- Use bullet points or numbered lists for structured answers.
 - Do NOT generate code or tables — just explain in natural language.
-- If the dataset has interesting patterns you notice, mention them."""}
+- Keep responses informative but concise (5-8 sentences for summaries, 3-5 for quick questions).
+- If the dataset has interesting patterns you notice from the context, mention them proactively."""}
     ]
     if conversation_history:
         messages.extend(format_history_as_messages(conversation_history))
     messages.append({"role": "user", "content": user_input})
 
-    result = _ai_call_messages(messages, model=get_model("primary"), temperature=0.7, max_tokens=500)
+    result = _ai_call_messages(messages, model=get_model("primary"), temperature=0.7, max_tokens=800)
     return result if result else "I'm here to help! Tell me what you'd like to know about your data, or try asking me to show some rows, create a chart, or analyze patterns."
 
 
