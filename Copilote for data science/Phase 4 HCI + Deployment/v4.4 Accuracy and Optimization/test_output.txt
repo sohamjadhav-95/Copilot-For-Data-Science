@@ -1,0 +1,94 @@
+﻿py : [22:40:01] INFO 
+   copilot.app: 
+[INTENT] 'show 10 
+rows' -> display 
+(keyword)
+At line:1 char:32
++ $env:PYTHONIOENCODI
+NG='utf-8'; py 
+test_fixes.py 2>&1 | 
+Out-File -File ...
++                    
+            
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([22:40:   
+ 01] INFO...splay    
+ (keyword):Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+[22:40:01] INFO    
+copilot.interaction: 
+[display] 
+query='show 10 rows' 
+| result=keyword_clas
+sification | OK
+[22:40:01] INFO    
+copilot.app: 
+[INTENT] 'create a 
+pie chart' -> 
+visualize (keyword)
+[22:40:01] INFO    
+copilot.interaction: 
+[visualize] 
+query='create a pie 
+chart' | result=keywo
+rd_classification | 
+OK
+[22:40:01] WARNING 
+copilot.app: 
+[SAFETY] Blocked 
+unsafe code: 
+Dangerous pattern 
+detected: import os
+[22:40:01] ERROR   
+copilot.errors: 
+[ValueError] 
+Dangerous pattern 
+detected: import os 
+| context=Code 
+validation failed 
+during test os import
+=== KEYWORD CLASSIFICATION ===
+  PASS: "show 10 rows" -> display (expected display)
+  PASS: "show 5 rows" -> display (expected display)
+  PASS: "what is max of low" -> display (expected display)
+  PASS: "describe" -> display (expected display)
+  PASS: "columns" -> display (expected display)
+  PASS: "on which day the largest movement happened" -> display (expected display)
+  PASS: "what is maximum high to low difference in a day" -> display (expected display)
+  PASS: "what is main insight of the data" -> display (expected display)
+  PASS: "create a pie chart" -> visualize (expected visualize)
+  PASS: "plot close over time" -> visualize (expected visualize)
+  PASS: "delete time column" -> modify (expected modify)
+  PASS: "add column" -> modify (expected modify)
+  PASS: "sort by close" -> modify (expected modify)
+  PASS: "undo" -> undo (expected undo)
+  PASS: "hello" -> chat (expected chat)
+  PASS: "tell me in words" -> chat (expected chat)
+
+  Score: 16/16
+
+=== FULL CLASSIFY_INTENT ===
+  PASS: "show 10 rows" -> display (expected display)
+  PASS: "create a pie chart" -> visualize (expected visualize)
+
+=== SAFE EXEC BUILTINS ===
+  all(): PASS
+  any(): PASS
+  hasattr(): PASS
+
+=== RESTRICTED IMPORTS ===
+  import time: PASS
+  import os (should block): PASS
+
+=== MODEL CONFIG ===
+  Groq primary: llama-3.3-70b-versatile - PASS
+  Groq coder:   llama-3.3-70b-versatile - PASS
+
+DONE

@@ -1,5 +1,5 @@
-# engines.py -- AI-powered engines with conversation memory (resilient multi-model)
-import re, json, base64, io, traceback
+# engines.py -- AI-powered engines with local templates + minimal API calls
+import re, json, base64, io, traceback, time
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -10,74 +10,84 @@ from api_config import client, MODEL_NAME, MODEL_LITE, MODEL_CODER
 
 
 # =====================================================================
-# RESILIENT AI CALL HELPERS
+# RESILIENT AI CALL (with retry + model fallback)
 # =====================================================================
 
-def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_tokens=300):
-    """Make an AI call with automatic model fallback.
-    Tries: specified model -> MODEL_NAME -> returns None on total failure."""
+def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_tokens=300, retries=2):
+    """AI call with retry + automatic model fallback."""
     models_to_try = []
     if model and model != MODEL_NAME:
         models_to_try.append(model)
     models_to_try.append(MODEL_NAME)
 
     for m in models_to_try:
-        try:
-            completion = client.chat.completions.create(
-                model=m,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_content},
-                ],
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            result = completion.choices[0].message.content
-            if result and result.strip():
-                return _clean_think_tags(result.strip())
-            print(f"  [AI] {m}: empty response, trying next...")
-        except Exception as e:
-            print(f"  [AI] {m} failed: {e}")
+        for attempt in range(retries):
+            try:
+                completion = client.chat.completions.create(
+                    model=m,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_content},
+                    ],
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                )
+                result = completion.choices[0].message.content
+                if result and result.strip():
+                    return _clean_think_tags(result.strip())
+                print(f"  [AI] {m}: empty response (attempt {attempt+1})")
+            except Exception as e:
+                err_str = str(e).lower()
+                print(f"  [AI] {m} attempt {attempt+1} failed: {e}")
+                # If rate limited, wait before retry
+                if "rate" in err_str or "429" in err_str or "limit" in err_str:
+                    wait = 3 * (attempt + 1)
+                    print(f"  [AI] Rate limited, waiting {wait}s...")
+                    time.sleep(wait)
+                elif attempt < retries - 1:
+                    time.sleep(1)
     return None
 
 
-def _ai_call_messages(messages, model=None, temperature=0.2, max_tokens=300):
-    """Make an AI call with message list and automatic model fallback."""
+def _ai_call_messages(messages, model=None, temperature=0.2, max_tokens=300, retries=2):
+    """AI call with message list, retry + model fallback."""
     models_to_try = []
     if model and model != MODEL_NAME:
         models_to_try.append(model)
     models_to_try.append(MODEL_NAME)
 
     for m in models_to_try:
-        try:
-            completion = client.chat.completions.create(
-                model=m, messages=messages,
-                temperature=temperature, max_tokens=max_tokens,
-            )
-            result = completion.choices[0].message.content
-            if result and result.strip():
-                return _clean_think_tags(result.strip())
-            print(f"  [AI] {m}: empty response, trying next...")
-        except Exception as e:
-            print(f"  [AI] {m} failed: {e}")
+        for attempt in range(retries):
+            try:
+                completion = client.chat.completions.create(
+                    model=m, messages=messages,
+                    temperature=temperature, max_tokens=max_tokens,
+                )
+                result = completion.choices[0].message.content
+                if result and result.strip():
+                    return _clean_think_tags(result.strip())
+            except Exception as e:
+                err_str = str(e).lower()
+                if "rate" in err_str or "429" in err_str or "limit" in err_str:
+                    time.sleep(3 * (attempt + 1))
+                elif attempt < retries - 1:
+                    time.sleep(1)
     return None
 
 
 def _clean_think_tags(text):
-    """Remove <think>...</think> tags that qwen3-coder adds."""
+    """Remove <think>...</think> tags from qwen3-coder."""
     if not text:
         return text
-    # Remove think blocks (can be multi-line)
     cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
     return cleaned if cleaned else text
 
 
 # =====================================================================
-# CONVERSATION HISTORY HELPERS
+# CONVERSATION HISTORY
 # =====================================================================
 
 def format_history(messages, max_messages=10):
-    """Format recent messages into a conversation string for AI context."""
     if not messages:
         return ""
     recent = messages[-max_messages:]
@@ -92,136 +102,120 @@ def format_history(messages, max_messages=10):
 
 
 def format_history_as_messages(messages, max_messages=10):
-    """Format recent messages as OpenAI-style message list."""
     if not messages:
         return []
     recent = messages[-max_messages:]
-    result = []
-    for m in recent:
-        role = m.get("role", "user")
-        content = m.get("content", "")
-        if role == "assistant" and len(content) > 300:
-            content = content[:300] + "..."
-        result.append({"role": role, "content": content})
-    return result
+    return [{"role": m.get("role", "user"),
+             "content": m.get("content", "")[:300]} for m in recent]
 
 
 # =====================================================================
-# AI INTENT CLASSIFICATION (with strong keyword fallback)
+# INTENT CLASSIFICATION (keyword-first, AI only if ambiguous)
 # =====================================================================
 
 def classify_intent(user_input, conversation_history=None):
-    """AI-first intent classification. Falls back to robust keywords if AI fails."""
-    # First try AI classification
-    history_str = format_history(conversation_history) if conversation_history else ""
+    """Keyword-first intent classification. AI only if ambiguous."""
+    # Try keywords first (FREE, instant, reliable)
+    intent = _keyword_classify(user_input, conversation_history)
+    if intent != "chat":
+        return intent
 
-    sys_prompt = """You are an intent classifier for a data science app. The user works with a CSV dataset.
-Classify into exactly ONE category. Reply with ONLY that single word, nothing else.
+    # For short ambiguous inputs with history, try AI
+    if conversation_history and len(user_input.split()) <= 4:
+        history_str = format_history(conversation_history)
+        raw = _ai_call(
+            "Classify intent: display, visualize, modify, undo, or chat. Reply with ONLY one word.",
+            f"Context:\n{history_str}\n\nNew: {user_input}",
+            model=MODEL_LITE, temperature=0.0, max_tokens=10, retries=1
+        )
+        if raw:
+            for intent in ["display", "visualize", "modify", "undo"]:
+                if intent in raw.lower():
+                    print(f"  [INTENT] '{user_input}' -> {intent} (AI)")
+                    return intent
 
-Categories:
-- display: see/show/query data, statistics, find values, compare, describe, count, head, tail
-- visualize: chart, plot, graph, histogram, scatter, pie, heatmap, trend, draw
-- modify: change/delete/add/drop/rename/sort/fill/clean/transform data
-- undo: undo or revert changes
-- chat: greeting, general question, or anything not about data operations
-
-Consider conversation history for follow-ups (e.g. "only 5" after "show rows" = display).
-Reply with ONLY one word."""
-
-    user_msg = user_input
-    if history_str:
-        user_msg = f"Conversation:\n{history_str}\n\nNew message: {user_input}"
-
-    raw = _ai_call(sys_prompt, user_msg, model=MODEL_LITE, temperature=0.0, max_tokens=15)
-    if raw:
-        raw_lower = raw.lower().strip().strip(".")
-        for intent in ["display", "visualize", "modify", "undo", "chat"]:
-            if intent in raw_lower:
-                print(f"  [INTENT] '{user_input}' -> {intent} (AI)")
-                return intent
-        print(f"  [INTENT] AI returned unexpected: '{raw}', using keyword fallback")
-
-    # Keyword fallback (robust)
-    return _keyword_classify(user_input, conversation_history)
+    return "chat"
 
 
 def _keyword_classify(user_input, conversation_history=None):
-    """Robust keyword-based intent classification."""
+    """Robust keyword classification."""
     text = user_input.lower().strip()
 
     # Undo
     if any(kw in text for kw in ["undo", "revert", "rollback", "go back", "restore"]):
-        print(f"  [INTENT] '{user_input}' -> undo (keyword)")
+        print(f"  [INTENT] '{user_input}' -> undo (kw)")
         return "undo"
 
-    # Visualize (check before display/modify since "show chart" should be visualize)
+    # Visualize
     viz_kw = ["plot", "chart", "graph", "histogram", "scatter", "visualize",
               "pie", "heatmap", "boxplot", "box plot", "distribution", "trend",
               "draw", "diagram", "bar graph", "line graph", "area chart",
-              "candlestick", "correlation"]
+              "candlestick", "correlation", "lineplot"]
     if any(kw in text for kw in viz_kw):
-        print(f"  [INTENT] '{user_input}' -> visualize (keyword)")
+        print(f"  [INTENT] '{user_input}' -> visualize (kw)")
         return "visualize"
 
-    # Modify
+    # Modify phrases
     modify_phrases = ["add column", "remove column", "delete column", "drop column",
                       "rename column", "fill missing", "fill null", "create column",
-                      "drop rows", "remove rows", "delete rows", "drop na", "dropna", "fillna"]
+                      "drop rows", "remove rows", "delete rows", "drop na",
+                      "dropna", "fillna", "sort by", "sort the"]
     if any(kw in text for kw in modify_phrases):
         print(f"  [INTENT] '{user_input}' -> modify (phrase)")
         return "modify"
 
-    modify_context = ["delete", "remove", "drop", "add", "change", "update", "filter"]
-    context_words = ["column", "col", "row", "field", "missing", "null", "na", "data"]
-    for kw in modify_context:
-        if kw in text and any(cw in text for cw in context_words):
-            print(f"  [INTENT] '{user_input}' -> modify (contextual)")
+    # Modify context
+    modify_verbs = ["delete", "remove", "drop", "add", "change", "update", "filter"]
+    context_nouns = ["column", "col", "row", "field", "missing", "null", "na"]
+    for kw in modify_verbs:
+        if kw in text and any(cw in text for cw in context_nouns):
+            print(f"  [INTENT] '{user_input}' -> modify (context)")
             return "modify"
 
     modify_single = ["modify", "rename", "replace", "clean", "merge", "transform",
-                     "convert", "sort", "normalize", "encode"]
+                     "convert", "normalize", "encode"]
     if any(kw in text for kw in modify_single):
-        print(f"  [INTENT] '{user_input}' -> modify (keyword)")
+        print(f"  [INTENT] '{user_input}' -> modify (kw)")
         return "modify"
 
-    # Display
+    # Display (broad)
     display_kw = ["show", "display", "head", "tail", "first", "last", "describe",
                   "info", "statistics", "stats", "rows", "columns", "shape",
                   "preview", "sample", "summary", "dtypes", "types", "count",
                   "unique", "null", "missing", "print", "view", "look",
-                  "how many", "how much",
+                  "how many", "how much", "insight",
                   "maximum", "minimum", "average", "mean", "total", "sum",
                   "max", "min", "top", "bottom", "largest", "smallest",
                   "highest", "lowest", "find", "get", "list",
-                  "compare", "difference"]
+                  "compare", "difference", "on which", "mid"]
     if any(kw in text for kw in display_kw):
-        print(f"  [INTENT] '{user_input}' -> display (keyword)")
+        print(f"  [INTENT] '{user_input}' -> display (kw)")
         return "display"
 
-    # Question words with data context -> display
-    question_words = ["what", "which", "where", "when"]
-    data_context = ["column", "row", "value", "data", "dataset", "table", "field",
-                    "close", "open", "high", "low", "price", "date", "time"]
-    if any(qw in text for qw in question_words) and any(dw in text for dw in data_context):
+    # Question words + data context
+    q_words = ["what", "which", "where", "when", "how"]
+    data_words = ["column", "row", "value", "data", "dataset", "table", "field",
+                  "close", "open", "high", "low", "price", "date", "time",
+                  "day", "movement", "difference", "record", "entry"]
+    if any(qw in text for qw in q_words) and any(dw in text for dw in data_words):
         print(f"  [INTENT] '{user_input}' -> display (question+data)")
         return "display"
 
-    # Short follow-ups with conversation context (e.g. "only 5", "10", "just 3")
+    # Follow-ups with context
     if conversation_history and len(text.split()) <= 3:
-        # Check if previous messages had data operations
-        recent = [m.get("content", "").lower() for m in (conversation_history or []) if m.get("role") == "user"]
+        recent = [m.get("content", "").lower() for m in (conversation_history or [])
+                  if m.get("role") == "user"]
         if recent:
-            last_user = recent[-1] if recent else ""
-            if any(kw in last_user for kw in ["show", "display", "head", "first", "last", "rows"]):
+            last = recent[-1]
+            if any(kw in last for kw in ["show", "display", "head", "first", "last", "rows"]):
                 print(f"  [INTENT] '{user_input}' -> display (follow-up)")
                 return "display"
-            if any(kw in last_user for kw in ["plot", "chart", "visualize"]):
+            if any(kw in last for kw in ["plot", "chart", "visualize"]):
                 print(f"  [INTENT] '{user_input}' -> visualize (follow-up)")
                 return "visualize"
 
-    # Number-only inputs after display context
-    if text.strip().isdigit() and conversation_history:
-        print(f"  [INTENT] '{user_input}' -> display (number follow-up)")
+    if text.strip().replace(" ", "").isdigit() and conversation_history:
+        print(f"  [INTENT] '{user_input}' -> display (number)")
         return "display"
 
     print(f"  [INTENT] '{user_input}' -> chat (default)")
@@ -229,32 +223,144 @@ def _keyword_classify(user_input, conversation_history=None):
 
 
 # =====================================================================
+# LOCAL CODE TEMPLATES (zero API calls!)
+# =====================================================================
+
+def _try_local_display(user_input, df, file_path):
+    """Try to generate display code locally for common patterns. Returns (code, title) or (None, None)."""
+    text = user_input.lower().strip()
+    cols = {c.lower(): c for c in df.columns}
+    num_cols = df.select_dtypes(include="number").columns.tolist()
+
+    # Find column reference in query
+    def _find_col(t):
+        for cl, real in cols.items():
+            if cl in t:
+                return real
+        return None
+
+    # show N rows / head N / first N rows
+    m = re.search(r"(?:show|display|first|head|top)\s*(\d+)\s*(?:rows?)?", text)
+    if m:
+        n = int(m.group(1))
+        return f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n_result_df = df.head({n})", f"First {n} rows"
+
+    # tail N / last N rows
+    m = re.search(r"(?:last|tail|bottom)\s*(\d+)\s*(?:rows?)?", text)
+    if m:
+        n = int(m.group(1))
+        return f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n_result_df = df.tail({n})", f"Last {n} rows"
+
+    # mid/middle N rows
+    m = re.search(r"(?:mid|middle)\s*(\d+)\s*(?:rows?)?", text)
+    if m:
+        n = int(m.group(1))
+        return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                f"mid = len(df) // 2\n_result_df = df.iloc[mid - {n//2}:mid + {max(n//2, 1)}]",
+                f"Middle {n} rows")
+
+    # N rows (just a number + rows)
+    m = re.search(r"(\d+)\s*rows?", text)
+    if m and "last" not in text and "tail" not in text:
+        n = int(m.group(1))
+        return f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n_result_df = df.head({n})", f"First {n} rows"
+
+    # describe / statistics / summary stats
+    if any(kw in text for kw in ["describe", "statistics", "summary stat", "descriptive"]):
+        return f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n_result_df = df.describe()", "Summary Statistics"
+
+    # columns / dtypes
+    if text in ["columns", "show columns", "list columns", "column names", "dtypes", "types"]:
+        return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                f"_result_df = pd.DataFrame({{'Column': df.columns, 'Type': df.dtypes.values.astype(str)}})",
+                "Columns & Types")
+
+    # shape
+    if text in ["shape", "size", "how many rows", "how big"]:
+        return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                f"_result_df = pd.DataFrame({{'Metric': ['Rows', 'Columns'], 'Value': [df.shape[0], df.shape[1]]}})",
+                "Dataset Shape")
+
+    # max of COLUMN
+    col = _find_col(text)
+    if col and col in num_cols:
+        if any(kw in text for kw in ["max", "maximum", "highest", "largest", "biggest"]):
+            return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                    f"val = df['{col}'].max()\n"
+                    f"idx = df['{col}'].idxmax()\n"
+                    f"_result_df = pd.DataFrame({{'Metric': ['Maximum {col}', 'At Row Index'], 'Value': [val, idx]}})",
+                    f"Maximum of {col}")
+
+        if any(kw in text for kw in ["min", "minimum", "lowest", "smallest"]):
+            return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                    f"val = df['{col}'].min()\n"
+                    f"idx = df['{col}'].idxmin()\n"
+                    f"_result_df = pd.DataFrame({{'Metric': ['Minimum {col}', 'At Row Index'], 'Value': [val, idx]}})",
+                    f"Minimum of {col}")
+
+        if any(kw in text for kw in ["mean", "average", "avg"]):
+            return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                    f"_result_df = pd.DataFrame({{'Metric': ['Mean {col}'], 'Value': [df['{col}'].mean()]}})",
+                    f"Average of {col}")
+
+    # missing / null count
+    if any(kw in text for kw in ["missing", "null", "na count"]):
+        return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                f"missing = df.isnull().sum()\n"
+                f"_result_df = pd.DataFrame({{'Column': missing.index, 'Missing Count': missing.values}})",
+                "Missing Values")
+
+    # unique values
+    if "unique" in text and col:
+        return (f"import pandas as pd\ndf = pd.read_csv(r'{file_path}')\n"
+                f"_result_df = pd.DataFrame({{'Unique Values': df['{col}'].unique()[:50]}})",
+                f"Unique values in {col}")
+
+    return None, None
+
+
+# =====================================================================
 # QUERY RESOLUTION
 # =====================================================================
 
 def resolve_query(user_input, conversation_history, ctx):
-    """Resolve vague/follow-up queries into clear standalone instructions."""
+    """Resolve follow-up queries. Only calls AI for very short ambiguous inputs."""
     if not conversation_history:
         return user_input
-    # If input is already clear enough, skip resolution
-    if len(user_input.split()) >= 5:
+    if len(user_input.split()) >= 4:
         return user_input
 
+    # Try local resolution first
+    text = user_input.lower().strip()
+    recent_user = [m.get("content", "") for m in conversation_history if m.get("role") == "user"]
+    if not recent_user:
+        return user_input
+
+    last = recent_user[-1].lower()
+
+    # "only N" / "just N" after show/display
+    m = re.search(r"(?:only|just)\s*(\d+)", text)
+    if m and any(kw in last for kw in ["show", "display", "head", "first", "rows"]):
+        n = m.group(1)
+        print(f"  [RESOLVE] '{user_input}' -> 'show first {n} rows' (local)")
+        return f"show first {n} rows"
+
+    # Pure number after show
+    if text.isdigit() and any(kw in last for kw in ["show", "display", "head", "first", "rows"]):
+        print(f"  [RESOLVE] '{user_input}' -> 'show first {text} rows' (local)")
+        return f"show first {text} rows"
+
+    # AI resolution (only if truly ambiguous, 1 retry)
     history_str = format_history(conversation_history)
-
     resolved = _ai_call(
-        """You resolve follow-up queries into clear standalone instructions.
-Given conversation history and a new message, rewrite it as a clear, complete instruction.
-If the message is already clear, return it unchanged.
-Return ONLY the resolved instruction, nothing else. No quotes, no explanation.""",
-        f"History:\n{history_str}\n\nNew message: {user_input}",
-        model=MODEL_LITE, temperature=0.1, max_tokens=100
+        "Resolve follow-up into a clear instruction. Return ONLY the instruction, nothing else.",
+        f"History:\n{history_str}\n\nNew: {user_input}",
+        model=MODEL_LITE, temperature=0.1, max_tokens=80, retries=1
     )
-
     if resolved and len(resolved) >= 2:
         resolved = resolved.strip('"').strip("'")
         if resolved.lower() != user_input.lower():
-            print(f"  [RESOLVE] '{user_input}' -> '{resolved}'")
+            print(f"  [RESOLVE] '{user_input}' -> '{resolved}' (AI)")
         return resolved
     return user_input
 
@@ -264,7 +370,6 @@ Return ONLY the resolved instruction, nothing else. No quotes, no explanation.""
 # =====================================================================
 
 def build_data_context(df, file_path):
-    """Build dataset context dict and string."""
     info = {
         "file_path": file_path,
         "shape": str(df.shape),
@@ -282,25 +387,23 @@ def build_data_context(df, file_path):
 
 def generate_display_code(user_input, file_path, ctx, conversation_history=None):
     history_str = format_history(conversation_history) if conversation_history else ""
-
-    sys_prompt = f"""You are a Python code generator for pandas DataFrames. Generate ONLY executable Python code.
+    sys_prompt = f"""You are a Python code generator for pandas. Generate ONLY executable code.
 
 Dataset:
 {ctx}
 
-{f"Recent conversation:{chr(10)}{history_str}" if history_str else ""}
+{f"Conversation:{chr(10)}{history_str}" if history_str else ""}
 
 RULES:
 1. import pandas as pd
 2. df = pd.read_csv(r'{file_path}')
-3. Perform the requested operation
-4. Store result in: _result_df (must be DataFrame or Series)
-5. For scalar results: _result_df = pd.DataFrame({{"Result": [value]}})
-6. Do NOT use print(). ONLY output code in ```python ... ```
-7. Use actual column names (CASE-SENSITIVE)."""
-
+3. Perform the operation
+4. Store in: _result_df (DataFrame or Series)
+5. For scalars: _result_df = pd.DataFrame({{"Result": [value]}})
+6. NO print(). Code in ```python ... ``` only.
+7. Column names are CASE-SENSITIVE."""
     return _ai_call(sys_prompt, f"Request: {user_input}",
-                    model=MODEL_CODER, temperature=0.2, max_tokens=4096)
+                    model=MODEL_CODER, temperature=0.2, max_tokens=2048)
 
 
 # =====================================================================
@@ -308,39 +411,31 @@ RULES:
 # =====================================================================
 
 def generate_chart_spec(user_input, dtypes_str, conversation_history=None):
-    """Ask AI for a JSON chart specification."""
     history_str = format_history(conversation_history) if conversation_history else ""
-
-    sys_prompt = f"""Return ONLY a valid JSON object for a chart specification.
-
+    sys_prompt = f"""Return ONLY a JSON object for a chart.
 Format: {{"chart_type":"histogram|bar|line|scatter|pie|box|heatmap|area",
- "x":"column_name_or_null", "y":"column_name_or_null",
- "title":"Chart Title", "color":"#58a6ff",
- "multiple_columns":["col1","col2"] or null}}
-
-Dataset columns: {dtypes_str}
+ "x":"col_or_null","y":"col_or_null","title":"Title","color":"#58a6ff",
+ "multiple_columns":null}}
+Columns: {dtypes_str}
 {f"Context:{chr(10)}{history_str}" if history_str else ""}
-
-Match chart type to user request. Use actual column names. Return ONLY JSON."""
-
-    raw = _ai_call(sys_prompt, user_input, model=MODEL_LITE, temperature=0.1, max_tokens=300)
+Match user's chart type. Use real column names. ONLY JSON."""
+    raw = _ai_call(sys_prompt, user_input, model=MODEL_LITE, temperature=0.1, max_tokens=200)
     if raw:
         try:
-            print(f"  [CHART-SPEC] Raw: {raw[:200]}")
             cleaned = re.sub(r"```json\s*", "", raw)
             cleaned = re.sub(r"```\s*", "", cleaned).strip()
-            start, end = cleaned.find("{"), cleaned.rfind("}")
-            if start != -1 and end != -1:
-                spec = json.loads(cleaned[start:end + 1])
-                print(f"  [CHART-SPEC] Parsed: {spec}")
+            s, e = cleaned.find("{"), cleaned.rfind("}")
+            if s != -1 and e != -1:
+                spec = json.loads(cleaned[s:e+1])
+                print(f"  [CHART-SPEC] {spec}")
                 return spec
-        except Exception as e:
-            print(f"  [CHART-SPEC] Parse error: {e}")
+        except Exception as ex:
+            print(f"  [CHART-SPEC] Parse error: {ex}")
     return None
 
 
 def _smart_chart_spec_fallback(user_input, df):
-    """When AI fails, use keywords to determine chart type."""
+    """Keyword-based chart spec (zero API calls)."""
     text = user_input.lower()
     num_cols = df.select_dtypes(include="number").columns.tolist()
     cat_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
@@ -366,7 +461,6 @@ def _smart_chart_spec_fallback(user_input, df):
     if "area" in text:
         col = num_cols[0] if num_cols else df.columns[0]
         return {"chart_type": "area", "x": col, "title": f"Area Chart of {col}", "color": "#58a6ff"}
-    # Default: best chart for data
     if len(num_cols) >= 2:
         return {"chart_type": "scatter", "x": num_cols[0], "y": num_cols[1],
                 "title": f"{num_cols[0]} vs {num_cols[1]}", "color": "#58a6ff"}
@@ -377,7 +471,7 @@ def _smart_chart_spec_fallback(user_input, df):
 
 
 def build_chart(df, spec):
-    """Build matplotlib chart from spec. Returns (base64_png, error_msg)."""
+    """Build matplotlib chart from spec."""
     try:
         ct = spec.get("chart_type", "histogram")
         x, y = spec.get("x"), spec.get("y")
@@ -483,7 +577,6 @@ def build_chart(df, spec):
 
 
 def build_auto_chart(df):
-    """Fallback: histogram of first numeric column."""
     try:
         col = df.select_dtypes(include="number").columns[0]
         return build_chart(df, {"chart_type": "histogram", "x": col,
@@ -494,23 +587,15 @@ def build_auto_chart(df):
 
 def generate_visualize_code(user_input, file_path, ctx, conversation_history=None):
     history_str = format_history(conversation_history) if conversation_history else ""
-    sys_prompt = f"""Generate ONLY executable matplotlib Python code for a chart.
-
+    sys_prompt = f"""Generate ONLY matplotlib Python code for a chart.
 Dataset:
 {ctx}
 {f"Conversation:{chr(10)}{history_str}" if history_str else ""}
-
-RULES:
-1. import pandas, matplotlib, seaborn
-2. df = pd.read_csv(r'{file_path}')
-3. Create the chart
-4. _result_fig = plt.gcf()
-5. Do NOT call plt.show()
-6. Use dark theme: plt.style.use('dark_background'), fig.patch.set_facecolor('#0d1117')
-7. Wrap code in ```python ... ```"""
-
+RULES: import pandas/matplotlib/seaborn, df = pd.read_csv(r'{file_path}'),
+create chart, _result_fig = plt.gcf(), NO plt.show(),
+dark theme, code in ```python ... ```"""
     return _ai_call(sys_prompt, f"Request: {user_input}",
-                    model=MODEL_CODER, temperature=0.2, max_tokens=4096)
+                    model=MODEL_CODER, temperature=0.2, max_tokens=2048)
 
 
 # =====================================================================
@@ -519,62 +604,43 @@ RULES:
 
 def generate_modify_code(user_input, file_path, ctx, conversation_history=None):
     history_str = format_history(conversation_history) if conversation_history else ""
-    sys_prompt = f"""Generate ONLY executable Python code to modify a DataFrame.
-
+    sys_prompt = f"""Generate ONLY Python code to modify a DataFrame.
 Dataset:
 {ctx}
 {f"Conversation:{chr(10)}{history_str}" if history_str else ""}
-
-RULES:
-1. import pandas as pd
-2. df = pd.read_csv(r'{file_path}')
-3. Apply the modification
-4. df.to_csv(r'{file_path}', index=False)
-5. _result_df = df
-6. No print(). Only code in ```python ... ```
-7. Use actual column names (CASE-SENSITIVE)."""
-
+RULES: import pandas, df = pd.read_csv(r'{file_path}'),
+modify, df.to_csv(r'{file_path}', index=False),
+_result_df = df, NO print(), code in ```python ... ```"""
     return _ai_call(sys_prompt, f"Request: {user_input}",
-                    model=MODEL_CODER, temperature=0.2, max_tokens=4096)
+                    model=MODEL_CODER, temperature=0.2, max_tokens=2048)
 
 
 # =====================================================================
-# CHAT RESPONSE
+# CHAT
 # =====================================================================
 
 def generate_chat_response(user_input, ctx="No dataset loaded.", conversation_history=None):
-    """Generate a natural conversational response with history."""
     messages = [
         {"role": "system", "content":
             f"You are a friendly Data Science assistant called 'Data Science Copilot'. "
             f"Be conversational and concise (2-4 sentences). "
-            f"If the user greets you, greet back warmly. "
-            f"If they ask about data, answer using the dataset context. "
-            f"No code, no tables.\n\nDataset:\n{ctx}"}
+            f"If asked about data, use the context. No code, no tables.\n\nDataset:\n{ctx}"}
     ]
     if conversation_history:
         messages.extend(format_history_as_messages(conversation_history))
     messages.append({"role": "user", "content": user_input})
-
     result = _ai_call_messages(messages, model=MODEL_NAME, temperature=0.7, max_tokens=300)
     return result if result else "I'm here to help! Ask me about your data or try 'show 10 rows'."
 
 
 def generate_result_summary(user_input, operation):
-    """Generate a short summary."""
-    fallbacks = {
-        "display": f"Here are the results for your query. Check the results panel ->",
-        "visualize": f"Chart generated! See the results panel ->",
-        "modify": f"Modification applied! Preview in the results panel ->",
+    """Static summary -- no API calls needed."""
+    summaries = {
+        "display": f"Displayed results for: *{user_input}* -- see the results panel ->",
+        "visualize": f"Chart generated for: *{user_input}* -- see the results panel ->",
+        "modify": f"Applied: *{user_input}* -- preview in the results panel ->",
     }
-    fb = fallbacks.get(operation, f"Done! Check the results panel ->")
-
-    result = _ai_call(
-        "Write 1 short friendly sentence about what was done. Mention 'results panel'. No code.",
-        f"User asked: '{user_input}'. Operation: {operation}.",
-        model=MODEL_LITE, temperature=0.3, max_tokens=60
-    )
-    return result if result and len(result) >= 5 else fb
+    return summaries.get(operation, f"Done: *{user_input}* -- see results panel ->")
 
 
 # =====================================================================
@@ -582,36 +648,32 @@ def generate_result_summary(user_input, operation):
 # =====================================================================
 
 def fix_code(failed_code, error, file_path, ctx):
-    sys_prompt = f"""Fix this Python code. Return ONLY the fixed code in ```python ... ```.
+    sys_prompt = f"""Fix this Python code. Return ONLY fixed code in ```python ... ```.
 Dataset: {ctx}
 Error: {error}
 Code:\n```python\n{failed_code}\n```"""
-    return _ai_call(sys_prompt, "Fix the code.", model=MODEL_CODER, temperature=0.2, max_tokens=4096)
+    return _ai_call(sys_prompt, "Fix the code.", model=MODEL_CODER, temperature=0.2, max_tokens=2048)
 
 
 def extract_code(raw):
-    """Extract Python code from AI response. Handles <think> tags."""
+    """Extract Python code from AI response."""
     if not raw:
         return None
-    # Clean think tags first
-    text = _clean_think_tags(raw)
-    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = _clean_think_tags(raw).replace("\r\n", "\n").replace("\r", "\n")
 
-    # Try fenced code blocks
+    # Fenced blocks
     for pat in [r"```python3?\s*\n(.*?)```", r"```py\s*\n(.*?)```", r"```\s*\n(.*?)```"]:
         m = re.search(pat, text, re.DOTALL | re.IGNORECASE)
         if m:
             code = m.group(1).strip()
             if code:
-                print(f"  [EXTRACT] Fenced code ({len(code)} chars)")
+                print(f"  [EXTRACT] Fenced ({len(code)} chars)")
                 return code
 
-    # Try without newline
     m = re.search(r"```python3?(.*?)```", text, re.DOTALL | re.IGNORECASE)
     if m:
         code = m.group(1).strip()
         if code:
-            print(f"  [EXTRACT] Fenced variant ({len(code)} chars)")
             return code
 
     # Fallback: lines that look like Python
@@ -629,11 +691,9 @@ def extract_code(raw):
             if stripped.startswith(("Note:", "This ", "The ", "I ", "Here ", "Output", "Explanation")):
                 break
             code_lines.append(line)
-
     if len(code_lines) >= 2:
-        code = "\n".join(code_lines).strip()
-        print(f"  [EXTRACT] Raw code ({len(code)} chars)")
-        return code
+        print(f"  [EXTRACT] Raw ({len(code_lines)} lines)")
+        return "\n".join(code_lines).strip()
 
     print(f"  [EXTRACT] Failed")
     return None

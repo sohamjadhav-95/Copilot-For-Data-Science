@@ -1,4 +1,5 @@
 # app.py — Flask backend: Authentication, API routes, Chat processing
+# v4.4: Full AI-powered copilot — all operations via AI code generation
 import os, io, shutil, base64, json
 from datetime import datetime, timezone, timedelta
 from functools import wraps
@@ -21,12 +22,13 @@ from config import (
 from database import db
 from database.models import User, ChatSession, Message, Activity
 from engines import (
-    classify_intent, build_data_context, resolve_query, _try_local_display,
-    generate_display_code, generate_chart_spec, build_chart, build_auto_chart,
-    generate_visualize_code, generate_modify_code,
+    classify_intent, build_data_context, resolve_query,
+    generate_display_code, generate_chart_code, generate_modify_code,
     generate_chat_response, generate_result_summary,
-    fix_code, extract_code, _smart_chart_spec_fallback,
+    fix_code, extract_code, _safe_exec,
 )
+from api_config import get_active_provider, switch_provider, PROVIDERS
+from logger import log_error, log_interaction, log_app_event, app_logger
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -46,10 +48,12 @@ def create_app():
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     os.makedirs(MODIFIED_FOLDER, exist_ok=True)
     os.makedirs(os.path.join(os.path.dirname(__file__), "database"), exist_ok=True)
+    os.makedirs(os.path.join(os.path.dirname(__file__), "logs_and_debug"), exist_ok=True)
 
     with app.app_context():
         db.create_all()
 
+    log_app_event("startup", f"App created, provider={get_active_provider()}")
     register_routes(app)
     return app
 
@@ -144,10 +148,10 @@ def register_routes(app):
         db.session.add(user)
         db.session.commit()
 
-        # Create user upload directory
         os.makedirs(os.path.join(UPLOAD_FOLDER, str(user.id)), exist_ok=True)
 
         _log_activity(user.id, "register", f"Registered as {username}")
+        log_app_event("register", f"New user: {username}")
         token = _make_token(user)
         resp = jsonify({"message": "Registration successful", "user": user.to_dict()})
         resp.set_cookie("token", token, httponly=True, max_age=JWT_EXPIRY_HOURS * 3600, samesite="Lax")
@@ -164,6 +168,7 @@ def register_routes(app):
             return jsonify({"error": "Invalid credentials"}), 401
 
         _log_activity(user.id, "login")
+        log_app_event("login", f"User: {user.username}")
         token = _make_token(user)
         resp = jsonify({"message": "Login successful", "user": user.to_dict()})
         resp.set_cookie("token", token, httponly=True, max_age=JWT_EXPIRY_HOURS * 3600, samesite="Lax")
@@ -196,7 +201,16 @@ def register_routes(app):
         path = os.path.join(user_dir, f.filename)
         f.save(path)
 
-        # Create a new chat session
+        try:
+            df = pd.read_csv(path)
+        except Exception as e:
+            log_error(e, context=f"Failed to parse uploaded CSV: {f.filename}")
+            try:
+                os.remove(path)
+            except OSError:
+                pass
+            return jsonify({"error": f"Could not parse CSV file: {str(e)}. Please check the file format."}), 400
+
         sess = ChatSession(
             user_id=request.current_user.id,
             filename=f.filename,
@@ -206,9 +220,8 @@ def register_routes(app):
         db.session.add(sess)
         db.session.commit()
         _log_activity(request.current_user.id, "upload", f"Uploaded {f.filename}")
+        log_app_event("upload", f"User {request.current_user.username} uploaded {f.filename} ({df.shape[0]}x{df.shape[1]})")
 
-        # Read dataset info
-        df = pd.read_csv(path)
         info = {
             "filename": f.filename,
             "rows": df.shape[0],
@@ -237,21 +250,48 @@ def register_routes(app):
         if sess.user_id != request.current_user.id:
             return jsonify({"error": "Forbidden"}), 403
         msgs = [m.to_dict() for m in sess.messages]
-        # Also return dataset info
         info = None
         if sess.file_path and os.path.exists(sess.file_path):
-            df = pd.read_csv(sess.file_path)
-            info = {
-                "filename": sess.filename,
-                "rows": df.shape[0],
-                "columns": df.shape[1],
-                "column_names": df.columns.tolist(),
-                "dtypes": {c: str(df[c].dtype) for c in df.columns},
-                "missing": int(df.isnull().sum().sum()),
-                "numeric_count": len(df.select_dtypes(include="number").columns),
-                "session_id": sess.id,
-            }
+            try:
+                df = pd.read_csv(sess.file_path)
+                info = {
+                    "filename": sess.filename,
+                    "rows": df.shape[0],
+                    "columns": df.shape[1],
+                    "column_names": df.columns.tolist(),
+                    "dtypes": {c: str(df[c].dtype) for c in df.columns},
+                    "missing": int(df.isnull().sum().sum()),
+                    "numeric_count": len(df.select_dtypes(include="number").columns),
+                    "session_id": sess.id,
+                }
+            except Exception as e:
+                log_error(e, context=f"Failed to read session CSV: {sess.file_path}")
         return jsonify({"messages": msgs, "dataset": info})
+
+    # ── Provider Switching API ────────────────────────────────────────
+
+    @app.route("/api/provider", methods=["GET"])
+    @login_required
+    def api_get_provider():
+        return jsonify({
+            "active_provider": get_active_provider(),
+            "available_providers": list(PROVIDERS.keys()),
+        })
+
+    @app.route("/api/provider", methods=["POST"])
+    @login_required
+    def api_switch_provider():
+        data = request.get_json()
+        provider = data.get("provider", "").strip().lower()
+        try:
+            new_provider = switch_provider(provider)
+            log_app_event("provider_switch", f"User {request.current_user.username} switched to {new_provider}")
+            return jsonify({
+                "message": f"Switched to {new_provider}",
+                "active_provider": new_provider,
+            })
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
 
     # ── Chat / Process ────────────────────────────────────────────────
 
@@ -271,19 +311,16 @@ def register_routes(app):
         if sess.user_id != request.current_user.id:
             return jsonify({"error": "Forbidden"}), 403
 
-        # Save user message
         user_msg = Message(session_id=session_id, role="user", content=user_input)
         db.session.add(user_msg)
         db.session.commit()
 
-        # Fetch conversation history (last 10 messages before current)
         recent_msgs = Message.query.filter_by(session_id=session_id)\
             .order_by(Message.created_at.desc()).limit(11).all()
-        recent_msgs.reverse()  # chronological order
-        # Exclude the message we just saved (last one)
+        recent_msgs.reverse()
         conversation_history = [
             {"role": m.role, "content": m.content}
-            for m in recent_msgs[:-1]  # exclude current message
+            for m in recent_msgs[:-1]
         ]
 
         file_path = sess.file_path
@@ -294,25 +331,39 @@ def register_routes(app):
             db.session.commit()
             return jsonify({"user_msg": user_msg.to_dict(), "assistant_msg": ai_msg.to_dict()})
 
-        df = pd.read_csv(file_path)
+        try:
+            df = pd.read_csv(file_path)
+        except Exception as e:
+            log_error(e, context=f"Failed to read CSV during chat: {file_path}")
+            ai_msg = Message(session_id=session_id, role="assistant",
+                             content="⚠️ Could not read the dataset file. It may be corrupted. Please re-upload.")
+            db.session.add(ai_msg)
+            db.session.commit()
+            return jsonify({"user_msg": user_msg.to_dict(), "assistant_msg": ai_msg.to_dict()})
+
         info, ctx = build_data_context(df, file_path)
 
-        # AI-first intent classification with conversation context
+        # AI-driven intent classification
         intent = classify_intent(user_input, conversation_history)
-        print(f"\n{'='*60}")
-        print(f"[CHAT] User: '{user_input}' -> Intent: {intent}")
-        print(f"{'='*60}")
+        app_logger.info(f"[CHAT] User: '{user_input}' -> Intent: {intent}")
 
-        # Resolve vague/follow-up queries into clear instructions
+        # AI-driven query resolution for follow-ups
         resolved_input = resolve_query(user_input, conversation_history, ctx)
         if resolved_input != user_input:
-            print(f"[RESOLVED] '{user_input}' -> '{resolved_input}'")
+            app_logger.info(f"[RESOLVED] '{user_input}' -> '{resolved_input}'")
 
         _log_activity(request.current_user.id, intent, user_input)
 
-        result = _process_intent(intent, resolved_input, df, file_path, ctx, sess, conversation_history)
+        try:
+            result = _process_intent(intent, resolved_input, df, file_path, ctx, sess, conversation_history)
+        except Exception as e:
+            log_error(e, context=f"_process_intent failed for intent={intent}, input={user_input}")
+            result = {
+                "content": "⚠️ Something went wrong while processing your request. "
+                           "Please try rephrasing or try a simpler query.",
+            }
+            log_interaction(user_input, intent, resolved_input, "error", False, str(e))
 
-        # Save assistant message
         ai_msg = Message(
             session_id=session_id,
             role="assistant",
@@ -337,25 +388,21 @@ def register_routes(app):
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# INTENT PROCESSING
+# INTENT PROCESSING — All operations go through AI
 # ═══════════════════════════════════════════════════════════════════════
 
 def _process_intent(intent, user_input, df, file_path, ctx, sess, conversation_history=None):
-    """Process user intent and return result dict."""
+    """Process user intent — fully AI-driven for all operations."""
     history = conversation_history or []
 
     if intent == "undo":
         return _handle_undo(file_path, sess)
-
     elif intent == "display":
         return _handle_display(user_input, df, file_path, ctx, history)
-
     elif intent == "visualize":
         return _handle_visualize(user_input, df, file_path, ctx, history)
-
     elif intent == "modify":
         return _handle_modify(user_input, df, file_path, ctx, history)
-
     else:  # chat
         resp = generate_chat_response(user_input, ctx, history)
         return {"content": resp}
@@ -371,64 +418,40 @@ def _handle_undo(file_path, sess):
     latest = os.path.join(backup_dir, backups[-1])
     shutil.copy2(latest, file_path)
     os.remove(latest)
+    log_app_event("undo", f"Reverted to {backups[-1]}")
     return {"content": "↩️ Reverted to previous version.", "result_type": "text",
             "result_data": "Successfully undone the last change.", "result_title": "↩️ Undo"}
 
 
 def _handle_display(user_input, df, file_path, ctx, history=None):
-    # Step 1: Try local code template (ZERO API calls)
-    local_code, local_title = _try_local_display(user_input, df, file_path)
-    if local_code:
-        print(f"  [DISPLAY] Local template matched: {local_title}")
-        ns = {}
-        try:
-            exec(local_code, ns)
-            rdf = ns.get("_result_df")
-            if rdf is not None:
-                if isinstance(rdf, pd.Series):
-                    rdf = rdf.to_frame()
-                if isinstance(rdf, pd.DataFrame):
-                    summary = generate_result_summary(user_input, "display")
-                    return {
-                        "content": summary,
-                        "result_type": "dataframe",
-                        "result_data": rdf.to_json(orient="split"),
-                        "result_title": f"Results: {local_title}",
-                    }
-        except Exception as e:
-            print(f"  [DISPLAY] Local template exec error: {e}")
-
-    # Step 2: AI code generation (for complex queries)
-    print(f"  [DISPLAY] Using AI for complex query...")
+    """AI generates code, executes it safely, returns result."""
+    app_logger.info(f"[DISPLAY] AI code generation for: {user_input}")
     raw = generate_display_code(user_input, file_path, ctx, history)
     code = extract_code(raw)
     if not code:
-        print(f"  [DISPLAY] Code extraction failed")
-        return {"content": "I couldn't process that query. Could you rephrase it?"}
+        app_logger.warning(f"[DISPLAY] Code extraction failed")
+        log_interaction(user_input, "display", user_input, None, False, "code extraction failed")
+        return {"content": "I couldn't generate code for that request. Could you rephrase it?"}
 
-    ns = {}
-    ok = False
-    try:
-        exec(code, ns)
-        ok = True
-    except Exception as e:
-        print(f"  [DISPLAY] Code exec failed: {e}")
-        fixed = fix_code(code, str(e), file_path, ctx)
+    ns, err = _safe_exec(code, description=f"display: {user_input}")
+
+    # If failed, try fixing the code once
+    if err:
+        app_logger.warning(f"[DISPLAY] Code exec failed: {err}")
+        fixed = fix_code(code, err, file_path, ctx)
         code = extract_code(fixed)
         if code:
-            try:
-                ns = {}
-                exec(code, ns)
-                ok = True
-            except Exception as e2:
-                print(f"  [DISPLAY] Fixed code also failed: {e2}")
+            ns, err = _safe_exec(code, description=f"display (fixed): {user_input}")
+            if err:
+                app_logger.warning(f"[DISPLAY] Fixed code also failed: {err}")
 
-    if ok and "_result_df" in ns:
+    if err is None and "_result_df" in ns:
         rdf = ns["_result_df"]
         if isinstance(rdf, pd.Series):
             rdf = rdf.to_frame()
         if isinstance(rdf, pd.DataFrame):
             summary = generate_result_summary(user_input, "display")
+            log_interaction(user_input, "display", user_input, "dataframe", True)
             return {
                 "content": summary,
                 "result_type": "dataframe",
@@ -436,64 +459,27 @@ def _handle_display(user_input, df, file_path, ctx, history=None):
                 "result_title": f"Results: {user_input}",
             }
         else:
+            log_interaction(user_input, "display", user_input, "text", True, "scalar result")
             return {"content": f"Result: {rdf}", "result_type": "text",
                     "result_data": str(rdf), "result_title": f"Results: {user_input}"}
 
-    return {"content": "I couldn't process that display request. Could you rephrase it?"}
+    log_interaction(user_input, "display", user_input, None, False, "all attempts failed")
+    return {"content": "I couldn't process that request. Could you rephrase it?"}
 
 
 def _handle_visualize(user_input, df, file_path, ctx, history=None):
-    dtypes_str = str(df.dtypes.to_dict())
+    """AI generates chart code, executes safely, captures figure as base64."""
+    app_logger.info(f"[VIZ] AI chart code generation for: {user_input}")
+    raw = generate_chart_code(user_input, file_path, ctx, history)
+    code = extract_code(raw)
     b64 = None
 
-    # Tier 1: JSON spec from AI
-    print(f"  [VIZ] Tier 1: AI chart spec...")
-    spec = generate_chart_spec(user_input, dtypes_str, history)
-    if spec:
-        b64, err = build_chart(df, spec)
-        if not b64:
-            print(f"  [VIZ] Tier 1 build failed: {err}")
-    else:
-        print(f"  [VIZ] Tier 1 returned None")
-
-    # Tier 1.5: Smart keyword fallback
-    if not b64:
-        print(f"  [VIZ] Tier 1.5: keyword fallback...")
-        spec = _smart_chart_spec_fallback(user_input, df)
-        if spec:
-            b64, err = build_chart(df, spec)
-            if not b64:
-                print(f"  [VIZ] Tier 1.5 build failed: {err}")
-
-    # Tier 2: AI code generation
-    if not b64:
-        print(f"  [VIZ] Tier 2: AI code gen...")
-        raw = generate_visualize_code(user_input, file_path, ctx, history)
-        code = extract_code(raw)
-        if code:
-            ns = {}
-            try:
-                plt.close("all")
-                exec(code, ns)
-                fig = ns.get("_result_fig", plt.gcf())
-                if fig and fig.get_axes():
-                    buf = io.BytesIO()
-                    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight", facecolor="#0d1117")
-                    buf.seek(0)
-                    b64 = base64.b64encode(buf.getvalue()).decode()
-                    print(f"  [VIZ] Tier 2 succeeded")
-                plt.close("all")
-            except Exception as e:
-                print(f"  [VIZ] Tier 2 exec failed: {e}")
-                plt.close("all")
-
-    # Tier 3: Auto chart
-    if not b64:
-        print(f"  [VIZ] Tier 3: auto chart...")
-        b64, _ = build_auto_chart(df)
+    if code:
+        b64 = _exec_chart_code(code, user_input, file_path, ctx)
 
     if b64:
         summary = generate_result_summary(user_input, "visualize")
+        log_interaction(user_input, "visualize", user_input, "chart", True)
         return {
             "content": summary,
             "result_type": "chart",
@@ -501,50 +487,83 @@ def _handle_visualize(user_input, df, file_path, ctx, history=None):
             "result_title": f"Chart: {user_input}",
         }
 
+    log_interaction(user_input, "visualize", user_input, None, False, "chart generation failed")
     return {"content": "I couldn't generate that visualization. Could you describe it differently?"}
 
 
+def _exec_chart_code(code, user_input, file_path, ctx):
+    """Execute chart code and capture as base64 PNG. Returns b64 string or None."""
+    try:
+        plt.close("all")
+        ns, err = _safe_exec(code, description=f"visualize: {user_input}")
+
+        if err:
+            app_logger.warning(f"[VIZ] Code exec failed: {err}")
+            fixed = fix_code(code, err, file_path, ctx)
+            fixed_code = extract_code(fixed)
+            if fixed_code:
+                plt.close("all")
+                ns, err = _safe_exec(fixed_code, description=f"visualize (fixed): {user_input}")
+
+        if err is None:
+            fig = ns.get("_result_fig", plt.gcf())
+            if fig and fig.get_axes():
+                buf = io.BytesIO()
+                fig.savefig(buf, format="png", dpi=150, bbox_inches="tight", facecolor="#0d1117")
+                buf.seek(0)
+                b64 = base64.b64encode(buf.getvalue()).decode()
+                plt.close("all")
+                app_logger.info(f"[VIZ] Chart generated successfully")
+                return b64
+        plt.close("all")
+    except Exception as e:
+        log_error(e, context=f"Chart code exec: {user_input}")
+        plt.close("all")
+    return None
+
+
 def _handle_modify(user_input, df, file_path, ctx, history=None):
+    """AI generates modification code, executes safely, returns preview."""
     # Create backup
     backup_dir = os.path.join(MODIFIED_FOLDER, "backups")
     os.makedirs(backup_dir, exist_ok=True)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
     shutil.copy2(file_path, os.path.join(backup_dir, f"backup_{ts}.csv"))
-    print(f"  [MODIFY] Backup created: backup_{ts}.csv")
+    app_logger.info(f"[MODIFY] Backup created: backup_{ts}.csv")
 
     raw = generate_modify_code(user_input, file_path, ctx, history)
     code = extract_code(raw)
     if not code:
-        print(f"  [MODIFY] Code extraction failed")
+        app_logger.warning(f"[MODIFY] Code extraction failed")
+        log_interaction(user_input, "modify", user_input, None, False, "code extraction failed")
         return {"content": "I couldn't generate the modification code. Could you rephrase?"}
 
-    print(f"  [MODIFY] Executing code...")
-    ns = {}
-    ok = False
-    try:
-        exec(code, ns)
-        ok = True
-        print(f"  [MODIFY] Success")
-    except Exception as e:
-        print(f"  [MODIFY] Code exec failed: {e}")
-        fixed = fix_code(code, str(e), file_path, ctx)
+    app_logger.info(f"[MODIFY] Executing AI-generated code...")
+    ns, err = _safe_exec(code, description=f"modify: {user_input}")
+    if err:
+        app_logger.warning(f"[MODIFY] Code exec failed: {err}")
+        fixed = fix_code(code, err, file_path, ctx)
         code = extract_code(fixed)
         if code:
-            try:
-                ns = {}
-                exec(code, ns)
-                ok = True
-                print(f"  [MODIFY] Fixed code succeeded")
-            except Exception as e2:
-                print(f"  [MODIFY] Fixed code also failed: {e2}")
+            ns, err = _safe_exec(code, description=f"modify (fixed): {user_input}")
+            if err:
+                app_logger.warning(f"[MODIFY] Fixed code also failed: {err}")
 
-    if ok:
-        rdf = ns.get("_result_df")
-        if isinstance(rdf, pd.DataFrame):
-            preview = rdf.head(10).to_json(orient="split")
+    if err is None:
+        # Re-read CSV to get accurate modified state
+        try:
+            preview_df = pd.read_csv(file_path).head(10)
+        except Exception:
+            rdf = ns.get("_result_df")
+            preview_df = rdf.head(10) if isinstance(rdf, pd.DataFrame) else None
+
+        if preview_df is not None:
+            preview = preview_df.to_json(orient="split")
         else:
-            preview = pd.read_csv(file_path).head(10).to_json(orient="split")
+            preview = "{}"
+
         summary = generate_result_summary(user_input, "modify")
+        log_interaction(user_input, "modify", user_input, "dataframe", True)
         return {
             "content": summary,
             "result_type": "dataframe",
@@ -552,4 +571,5 @@ def _handle_modify(user_input, df, file_path, ctx, history=None):
             "result_title": f"Modified: {user_input}",
         }
 
+    log_interaction(user_input, "modify", user_input, None, False, "all attempts failed")
     return {"content": "The modification didn't work. Could you rephrase your request?"}

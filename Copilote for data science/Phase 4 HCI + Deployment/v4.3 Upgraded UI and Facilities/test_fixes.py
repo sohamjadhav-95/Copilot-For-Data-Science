@@ -1,50 +1,81 @@
 # -*- coding: utf-8 -*-
+"""Verify local templates handle all screenshot-failing queries."""
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from engines import _keyword_classify, extract_code, _clean_think_tags
+import pandas as pd
+from engines import _keyword_classify, _try_local_display
 
-# Test keyword classification (no API needed)
-tests = [
-    ("show 10 rows", "display"),
+# Load the actual dataset
+csv_path = os.path.join(os.path.dirname(__file__), "uploads", "1", "BTCUSDm_M1_Cleaned.csv")
+if os.path.exists(csv_path):
+    df = pd.read_csv(csv_path)
+    print(f"Dataset: {df.shape[0]} rows, {list(df.columns)}")
+else:
+    print(f"CSV not found at {csv_path}")
+    sys.exit(1)
+
+# Test 1: Keyword classification for screenshot queries
+print("\n== INTENT CLASSIFICATION ==")
+queries = [
     ("show 5 rows", "display"),
-    ("only 5", "chat"),  # without history, this is chat
-    ("what is highest value in low column", "display"),
-    ("what is the maximum of CLOSE", "display"),
-    ("visualize the data", "visualize"),
+    ("show mid 2 rows", "display"),
+    ("what is max of low", "display"),
+    ("what is maximum high to low difference in a day", "display"),
+    ("on which day the largest movement happened", "display"),
+    ("show 10 rows", "display"),
     ("create a pie chart", "visualize"),
-    ("plot scatter of OPEN vs HIGH", "visualize"),
     ("delete time column", "modify"),
-    ("remove rows where CLOSE is null", "modify"),
-    ("sort by date", "modify"),
     ("hello", "chat"),
-    ("what is machine learning", "chat"),
+    ("tell me in words", "chat"),  # this is chat-like
 ]
-
-print("Keyword Classification Tests:")
-passed = 0
-for inp, expected in tests:
+for inp, expected in queries:
     got = _keyword_classify(inp)
-    ok = got == expected
-    if ok: passed += 1
-    status = "PASS" if ok else "FAIL"
-    print(f"  {status}: '{inp}' -> expected={expected}, got={got}")
-print(f"  {passed}/{len(tests)} passed")
+    ok = "PASS" if got == expected else "FAIL"
+    print(f"  {ok}: '{inp}' -> {got} (expected {expected})")
 
-# Test think tag cleaning
-print("\nThink Tag Cleaning:")
-raw = "<think>some reasoning here\nmultiline</think>\n```python\nimport pandas as pd\ndf = pd.read_csv('test.csv')\n_result_df = df.head(5)\n```"
-cleaned = _clean_think_tags(raw)
-has_think = "<think>" in cleaned
-has_code = "import pandas" in cleaned
-print(f"  Has think tags: {has_think} (should be False)")
-print(f"  Has code: {has_code} (should be True)")
+# Test 2: Local templates (zero API calls!)
+print("\n== LOCAL TEMPLATES ==")
+template_tests = [
+    "show 5 rows",
+    "show 10 rows",
+    "show mid 2 rows",
+    "what is max of low",
+    "describe",
+    "columns",
+    "shape",
+    "last 3 rows",
+    "missing values",
+]
+for inp in template_tests:
+    code, title = _try_local_display(inp, df, csv_path)
+    if code:
+        # Actually execute the code to verify it works
+        ns = {}
+        try:
+            exec(code, ns)
+            rdf = ns.get("_result_df")
+            if rdf is not None:
+                rows = len(rdf) if hasattr(rdf, '__len__') else 1
+                print(f"  PASS: '{inp}' -> '{title}' ({rows} rows)")
+            else:
+                print(f"  FAIL: '{inp}' -> code ran but no _result_df")
+        except Exception as e:
+            print(f"  FAIL: '{inp}' -> exec error: {e}")
+    else:
+        print(f"  SKIP: '{inp}' -> no local template (needs AI)")
 
-# Test code extraction after think cleanup
-code = extract_code(raw)
-print(f"  Code extracted: {code is not None} (should be True)")
-if code:
-    print(f"  Code starts with import: {code.startswith('import')} (should be True)")
+# Test 3: Queries that SHOULD go to AI
+print("\n== SHOULD USE AI (no local template) ==")
+ai_queries = [
+    "on which day the largest movement happened",
+    "what is maximum high to low difference in a day",
+    "what is main insight of the data",
+]
+for inp in ai_queries:
+    code, title = _try_local_display(inp, df, csv_path)
+    status = "CORRECT (needs AI)" if code is None else f"HAS TEMPLATE: {title}"
+    print(f"  {inp}: {status}")
 
 print("\nDONE")
