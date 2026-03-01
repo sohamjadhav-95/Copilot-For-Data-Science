@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Data Science Copilot{% endblock %}
+{% block body %}
+<!-- Top Navigation -->
+<nav class="topnav">
+    <div class="nav-brand">
+        <span class="nav-logo">🤴</span>
+        <span class="nav-title">Data Science Copilot</span>
+        <span class="mode-badge" id="mode-badge">Normal</span>
+    </div>
+    <div class="nav-right">
+        <!-- Mode Toggle -->
+        <div class="mode-toggle-container" id="mode-toggle-container">
+            <span class="mode-label" id="mode-label-normal">Normal</span>
+            <label class="mode-switch">
+                <input type="checkbox" id="mode-toggle" onchange="toggleProMode(this.checked)">
+                <span class="mode-slider"></span>
+            </label>
+            <span class="mode-label mode-label-pro" id="mode-label-pro">Pro</span>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">
+            <span class="toggle-icon" id="theme-icon">🌙</span>
+            <span id="theme-label">Dark</span>
+        </button>
+        <span class="nav-user">🦉 {{ user.username }}</span>
+        <button class="btn-ghost" onclick="handleLogout()">Logout</button>
+    </div>
+</nav>
+
+<div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">📂 Upload Dataset</h3>
+            <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+                <input type="file" id="file-input" accept=".csv" style="display:none" onchange="handleUpload(this)">
+                <p class="upload-text">📄 Click or drop CSV here</p>
+                <p class="upload-hint">Max 50 MB</p>
+            </div>
+        </div>
+
+        <!-- Dataset Info -->
+        <div class="sidebar-section" id="dataset-info" style="display:none;">
+            <h3 class="sidebar-title">📊 Dataset</h3>
+            <p class="dataset-name" id="dataset-name"></p>
+            <div class="metric-row">
+                <div class="metric-card">
+                    <h4>Rows</h4>
+                    <p id="metric-rows">—</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Cols</h4>
+                    <p id="metric-cols">—</p>
+                </div>
+            </div>
+            <div class="metric-row">
+                <div class="metric-card">
+                    <h4>Missing</h4>
+                    <p id="metric-missing">—</p>
+                </div>
+                <div class="metric-card">
+                    <h4>Numeric</h4>
+                    <p id="metric-numeric">—</p>
+                </div>
+            </div>
+            <div class="columns-list" id="columns-list"></div>
+        </div>
+
+        <!-- Past Sessions -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">💬 Sessions</h3>
+            <div class="sessions-list" id="sessions-list">
+                <p class="muted-text">No sessions yet</p>
+            </div>
+        </div>
+
+        <!-- Try These -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-title">💡 Try These</h3>
+            <div class="suggestions" id="suggestions">
+                <button class="suggestion-btn" onclick="sendSuggestion('Show first 10 rows')">Show first 10
+                    rows</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Display summary statistics')">Summary
+                    statistics</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Plot a histogram')">Plot histogram</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Create a scatter plot')">Scatter plot</button>
+            </div>
+        </div>
+
+        <!-- Code Activity Bucket -->
+        <div class="sidebar-section">
+            <h3 class="sidebar-title" style="cursor:pointer;" onclick="toggleCodePanel()">
+                🧬 Code Activity <span id="code-toggle-icon" style="float:right;">▸</span>
+            </h3>
+            <div class="code-activity-list" id="code-activity-list" style="display:none;">
+                <p class="muted-text" id="code-empty-msg">No code generated yet</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content — Split Panel -->
+    <main class="main-content">
+        <!-- Welcome Screen (shown before file upload) -->
+        <div class="welcome-screen" id="welcome-screen">
+            <div class="welcome-logo">🤴</div>
+            <h1 class="welcome-title">Data Science Copilot</h1>
+            <p class="welcome-subtitle">Upload a CSV file to start chatting with your data</p>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon" style="color:#58a6ff;">📊</div>
+                    <h3>Display</h3>
+                    <p>View rows, stats & info with natural language</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color:#a371f7;">📈</div>
+                    <h3>Visualize</h3>
+                    <p>Generate charts & plots by describing them</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="color:#f778ba;">✏️</div>
+                    <h3>Modify</h3>
+                    <p>Transform your data & auto-save to disk</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Split Panel (shown after file upload) -->
+        <div class="split-panel" id="split-panel" style="display:none;">
+            <!-- Chat Panel -->
+            <div class="panel chat-panel">
+                <div class="panel-header">💬 Chat</div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages rendered by JS -->
+                </div>
+                <div class="chat-input-area">
+                    <form id="chat-form" onsubmit="return handleChat(event)">
+                        <input type="text" id="chat-input" placeholder="Ask me anything about your data..."
+                            autocomplete="off" autofocus>
+                        <button type="submit" class="send-btn" id="send-btn">➤</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="panel results-panel">
+                <div class="panel-header">📊 Results</div>
+                <div class="results-content" id="results-content">
+                    <div class="results-empty">
+                        <p>📋 Results will appear here</p>
+                        <p class="muted-text">Ask a question in the chat panel</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- Pro Mode Panels (hidden by default) -->
+            <div class="pro-panels" id="pro-panels" style="display:none;">
+                <!-- Plan Panel -->
+                <div class="panel pro-plan-panel" id="pro-plan-panel">
+                    <div class="panel-header">
+                        📍 DAG Plan
+                        <span class="pro-plan-status" id="pro-plan-status"></span>
+                    </div>
+                    <div class="pro-plan-content" id="pro-plan-content">
+                        <div class="pro-plan-empty">
+                            <p>🎯 Enter a complex request in the chat to generate a DAG plan</p>
+                        </div>
+                    </div>
+                    <div class="pro-plan-actions" id="pro-plan-actions" style="display:none;">
+                        <button class="btn-approve" id="btn-approve" onclick="approvePlan()"><span>✓</span> Approve & Execute</button>
+                        <button class="btn-ghost btn-reject" onclick="rejectPlan()">Reject</button>
+                    </div>
+                </div>
+
+                <!-- Step Tracker -->
+                <div class="panel pro-tracker-panel" id="pro-tracker-panel">
+                    <div class="panel-header">
+                        ⏱️ Step Tracker
+                        <span class="pro-progress" id="pro-progress"></span>
+                    </div>
+                    <div class="pro-steps-list" id="pro-steps-list"></div>
+                    <div class="pro-summary" id="pro-summary" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Code Viewer Modal -->
+<div class="code-modal-overlay" id="code-modal-overlay" onclick="closeCodeModal(event)">
+    <div class="code-modal" onclick="event.stopPropagation()">
+        <div class="code-modal-header">
+            <div>
+                <h3 id="code-modal-label">Code Snippet</h3>
+                <span class="code-modal-meta" id="code-modal-meta"></span>
+            </div>
+            <div class="code-modal-actions">
+                <button class="btn-ghost" onclick="copyCode()">📋 Copy</button>
+                <button class="btn-ghost" onclick="closeCodeModal()">✕</button>
+            </div>
+        </div>
+        <pre class="code-modal-body"><code id="code-modal-code"></code></pre>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
