@@ -28,9 +28,9 @@ PROVIDERS = {
         ),
         "models": {
             # Use FAST non-thinking models for fallback (not qwen3-thinking)
-            "primary": "qwen/qwen3-235b-a22b-thinking-2507",
-            "lite": "qwen/qwen3-235b-a22b-thinking-2507",
-            "coder": "qwen/qwen3-235b-a22b-thinking-2507",
+            "primary": "openai/gpt-oss-120b:free",
+            "lite": "openai/gpt-oss-20b:free",
+            "coder": "openai/gpt-oss-120b:free",
         },
     },
 }

@@ -4,11 +4,8 @@
 {% block page_title %}Workflow Studio{% endblock %}
 
 {% block head %}
-<style>
-    body.workflow-page .page-content {
-        padding: 0 !important;
-    }
-</style>
+<!-- Add body class to activate workflow page CSS (same pattern as quick-run) -->
+<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('workflow-page'));</script>
 {% endblock %}
 
 {% block topbar_actions %}
@@ -19,18 +16,67 @@
     <span class="material-symbols-rounded">upload_file</span> Dataset
 </button>
 <input type="file" id="wf-upload" accept=".csv" style="display:none" onchange="wfHandleUpload(this)">
+
+<!-- Layout Toggle Buttons -->
+<div class="wf-layout-toggles" id="wf-layout-toggles" title="Switch layout">
+    <button class="wf-layout-btn active" id="layout-btn-1" onclick="setWfLayout(1)" title="3-column (default)">
+        <!-- Three equal columns icon -->
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+            <rect x="0" y="0" width="4" height="14" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="6" y="0" width="4" height="14" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="12" y="0" width="4" height="14" rx="1" fill="currentColor" opacity="0.9" />
+        </svg>
+    </button>
+    <button class="wf-layout-btn" id="layout-btn-2" onclick="setWfLayout(2)"
+        title="Plan+Output side by side, Graph at bottom">
+        <!-- Two top + one bottom spanning -->
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+            <rect x="0" y="0" width="7" height="8" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="9" y="0" width="7" height="8" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="0" y="10" width="16" height="4" rx="1" fill="currentColor" opacity="0.9" />
+        </svg>
+    </button>
+    <button class="wf-layout-btn" id="layout-btn-3" onclick="setWfLayout(3)"
+        title="Plan+Graph stacked left, Output right">
+        <!-- Left column with two stacked + right tall -->
+        <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+            <rect x="0" y="0" width="9" height="6" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="0" y="8" width="9" height="6" rx="1" fill="currentColor" opacity="0.9" />
+            <rect x="11" y="0" width="5" height="14" rx="1" fill="currentColor" opacity="0.9" />
+        </svg>
+    </button>
+</div>
 {% endblock %}
 
 {% block page_content %}
-<div class="workflow-studio" id="workflow-studio">
+<!-- Expand Overlay (shared) -->
+<div id="wf-panel-overlay" class="wf-overlay" style="display:none;">
+    <div class="wf-overlay-header">
+        <span class="wf-overlay-title" id="wf-overlay-title">Panel</span>
+        <button class="wf-overlay-close" onclick="closeWfOverlay()" title="Close (Esc)">
+            <span class="material-symbols-rounded">close</span>
+        </button>
+    </div>
+    <div class="wf-overlay-body" id="wf-overlay-body" style="overflow-y:auto;overflow-x:hidden;"></div>
+</div>
 
-    <!-- Left: Plan + Steps -->
-    <div class="studio-panel">
+<div class="workflow-studio wf-layout-1" id="workflow-studio">
+
+    <!-- Vertical resize handle for Layout 2 (between top panels and graph) -->
+    <div class="wf-resize-handle wf-resize-v" id="wf-resize-v-2" style="display:none;"></div>
+    <!-- Vertical resize handle for Layout 3 (between Plan and Graph in left column) -->
+    <div class="wf-resize-handle wf-resize-v" id="wf-resize-v-3" style="display:none;"></div>
+
+    <!-- ── LEFT: Plan panel ────────────── -->
+    <div class="studio-panel" id="wf-panel-plan">
         <div class="studio-panel-header">
             <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent-400);">edit_square</span>
             <span class="studio-panel-title">Plan</span>
-            <div style="margin-left:auto;">
+            <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
                 <span class="badge purple" id="wf-mode-badge">Pro</span>
+                <button class="wf-expand-btn" onclick="expandWfPanel('wf-panel-plan','Plan')" title="Expand panel">
+                    <span class="material-symbols-rounded">open_in_full</span>
+                </button>
             </div>
         </div>
 
@@ -48,7 +94,7 @@
             </div>
         </div>
 
-        <!-- Steps list -->
+        <!-- Steps list — scrollable -->
         <div class="studio-panel-scroll" id="steps-list">
             <div class="output-empty" style="height:160px;">
                 <span class="material-symbols-rounded">account_tree</span>
@@ -61,20 +107,28 @@
             <div class="plan-actions">
                 <button class="plan-btn approve-btn md-ripple" id="approve-btn" onclick="approvePlan()">
                     <span class="material-symbols-rounded" style="font-size:14px;">check_circle</span>
-                    Approve & Execute
+                    Approve &amp; Execute
                 </button>
                 <button class="plan-btn reject-btn md-ripple" onclick="rejectPlan()">Reject</button>
             </div>
         </div>
     </div>
 
-    <!-- Center: DAG / Progress -->
-    <div class="studio-center">
+    <!-- ── RESIZE HANDLE: Plan | Graph ── -->
+    <div class="wf-resize-handle wf-resize-h" id="wf-resize-plan-graph" data-left="wf-panel-plan" data-right="wf-center"
+        title="Drag to resize"></div>
+
+    <!-- ── CENTER: DAG / Progress panel ─ -->
+    <div class="studio-center" id="wf-center">
         <div class="studio-panel-header" style="border-bottom:1px solid rgba(255,255,255,0.07);">
             <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent-400);">timeline</span>
             <span class="studio-panel-title">Execution Graph</span>
             <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
                 <span id="wf-progress-label" style="font-size:0.7rem;color:rgba(255,255,255,0.35);"></span>
+                <button class="wf-expand-btn" onclick="expandWfPanel('wf-center','Execution Graph')"
+                    title="Expand panel">
+                    <span class="material-symbols-rounded">open_in_full</span>
+                </button>
             </div>
         </div>
         <div class="exec-progress" id="wf-progress-wrap" style="display:none;">
@@ -86,21 +140,28 @@
                 <span id="exec-pct-label">0%</span>
             </div>
         </div>
-        <div class="dag-canvas" id="dag-canvas">
+        <div class="dag-canvas studio-panel-scroll" id="dag-canvas">
             <span class="material-symbols-rounded">account_tree</span>
             <span>Enter a goal and generate a plan to begin</span>
         </div>
         <div class="dag-steps-linear" id="dag-linear" style="display:none;"></div>
     </div>
 
-    <!-- Right: Output -->
-    <div class="studio-panel studio-output">
+    <!-- ── RESIZE HANDLE: Graph | Output ── -->
+    <div class="wf-resize-handle wf-resize-h" id="wf-resize-graph-output" data-left="wf-center"
+        data-right="wf-panel-output" title="Drag to resize"></div>
+
+    <!-- ── RIGHT: Output panel ─────────── -->
+    <div class="studio-panel studio-output" id="wf-panel-output">
         <div class="studio-panel-header">
             <span class="material-symbols-rounded" style="font-size:16px;color:var(--violet-400);">output</span>
             <span class="studio-panel-title">Output</span>
-            <div style="margin-left:auto;">
+            <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
                 <button class="plan-btn ghost" style="height:24px;font-size:0.7rem;"
                     onclick="clearOutput()">Clear</button>
+                <button class="wf-expand-btn" onclick="expandWfPanel('wf-panel-output','Output')" title="Expand panel">
+                    <span class="material-symbols-rounded">open_in_full</span>
+                </button>
             </div>
         </div>
         <div class="output-scroll" id="output-scroll">
@@ -110,7 +171,178 @@
             </div>
         </div>
     </div>
+
 </div>
+
+<script>
+    // ── Layout toggle ──────────────────────────────────────────────────────────
+    let _wfLayout = 1;
+    function setWfLayout(n) {
+        _wfLayout = n;
+        const studio = document.getElementById('workflow-studio');
+        studio.className = studio.className.replace(/wf-layout-\d/g, '').trim() + ` wf-layout-${n}`;
+        document.querySelectorAll('.wf-layout-btn').forEach((b, i) => {
+            b.classList.toggle('active', i + 1 === n);
+        });
+        // Reset any inline flex values that may have been set by drag-resize
+        ['wf-panel-plan', 'wf-center', 'wf-panel-output'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.flex = '';
+        });
+        localStorage.setItem('wfLayout', n);
+    }
+    // Restore saved layout on load
+    (function () {
+        const saved = parseInt(localStorage.getItem('wfLayout') || '1', 10);
+        if (saved !== 1) setWfLayout(saved);
+    })();
+
+    // ── Panel expand overlay ───────────────────────────────────────────────────
+    function expandWfPanel(panelId, title) {
+        const panel = document.getElementById(panelId);
+        if (!panel) return;
+        const overlay = document.getElementById('wf-panel-overlay');
+        const body = document.getElementById('wf-overlay-body');
+        document.getElementById('wf-overlay-title').textContent = title;
+
+        // Find the scrollable content inside the panel (skip header and action bars)
+        const scrollEl = panel.querySelector('.studio-panel-scroll, .output-scroll, .dag-canvas');
+        if (scrollEl) {
+            body.innerHTML = '';
+            // Wrapper IS the scroller — clone gets overflow:visible to not conflict
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'flex:1;height:100%;overflow-y:auto;overflow-x:hidden;padding:16px;box-sizing:border-box;';
+            const clone = scrollEl.cloneNode(true);
+            clone.style.cssText = 'width:100%;overflow:visible;min-height:0;';
+            wrapper.appendChild(clone);
+            body.appendChild(wrapper);
+        }
+
+        overlay.style.display = 'flex';
+        document.addEventListener('keydown', _wfOverlayEsc);
+    }
+
+    function closeWfOverlay() {
+        document.getElementById('wf-panel-overlay').style.display = 'none';
+        document.removeEventListener('keydown', _wfOverlayEsc);
+    }
+
+    function _wfOverlayEsc(e) {
+        if (e.key === 'Escape') closeWfOverlay();
+    }
+
+    // ── Panel drag-resize (Layout 1: horizontal flex sizing) ─────────────────
+    document.querySelectorAll('.wf-resize-handle.wf-resize-h[data-left]').forEach(handle => {
+        handle.addEventListener('mousedown', e => {
+            e.preventDefault();
+            const leftEl = document.getElementById(handle.dataset.left);
+            const rightEl = document.getElementById(handle.dataset.right);
+            if (!leftEl || !rightEl) return;
+
+            const startX = e.clientX;
+            const startLeft = leftEl.getBoundingClientRect().width;
+            const startRight = rightEl.getBoundingClientRect().width;
+            const MIN = 180;
+
+            const onMove = mv => {
+                const dx = mv.clientX - startX;
+                leftEl.style.flex = `0 0 ${Math.max(MIN, startLeft + dx)}px`;
+                rightEl.style.flex = `0 0 ${Math.max(MIN, startRight - dx)}px`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    });
+
+    // ── Grid resize: Layout 2 — vertical between top row and graph ────────────
+    (function () {
+        const handle = document.getElementById('wf-resize-v-2');
+        if (!handle) return;
+        handle.addEventListener('mousedown', e => {
+            e.preventDefault();
+            const studio = document.getElementById('workflow-studio');
+            const startY = e.clientY;
+            const totalH = studio.getBoundingClientRect().height;
+            // Current top row height = grid row 1
+            const rows = window.getComputedStyle(studio).gridTemplateRows.split(' ');
+            const startTopPx = parseFloat(rows[0]) || (totalH - 240 - 6);
+            const GRAPHA_MIN = 160;
+            const TOP_MIN = 200;
+
+            const onMove = mv => {
+                const dy = mv.clientY - startY;
+                const newTop = Math.max(TOP_MIN, startTopPx + dy);
+                const newBot = Math.max(GRAPHA_MIN, totalH - newTop - 6);
+                studio.style.gridTemplateRows = `${newTop}px 6px ${newBot}px`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    })();
+
+    // ── Grid resize: Layout 3 — vertical between Plan and Graph ──────────────
+    (function () {
+        const handle = document.getElementById('wf-resize-v-3');
+        if (!handle) return;
+        handle.addEventListener('mousedown', e => {
+            e.preventDefault();
+            const studio = document.getElementById('workflow-studio');
+            const startY = e.clientY;
+            const totalH = studio.getBoundingClientRect().height;
+            const rows = window.getComputedStyle(studio).gridTemplateRows.split(' ');
+            const startTopPx = parseFloat(rows[0]) || (totalH / 2);
+            const MIN = 150;
+
+            const onMove = mv => {
+                const dy = mv.clientY - startY;
+                const newTop = Math.max(MIN, startTopPx + dy);
+                const newBot = Math.max(MIN, totalH - newTop - 6);
+                studio.style.gridTemplateRows = `${newTop}px 6px ${newBot}px`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    })();
+
+    // ── Grid resize: Layout 3 — horizontal between left col & output ─────────
+    (function () {
+        const handle = document.getElementById('wf-resize-graph-output');
+        if (!handle) return;
+        handle.addEventListener('mousedown', e => {
+            if (_wfLayout !== 3) return;
+            e.preventDefault();
+            const studio = document.getElementById('workflow-studio');
+            const startX = e.clientX;
+            const cols = window.getComputedStyle(studio).gridTemplateColumns.split(' ');
+            const startLeftPx = parseFloat(cols[0]) || 340;
+            const MIN = 200;
+
+            const onMove = mv => {
+                const dx = mv.clientX - startX;
+                const newLeft = Math.max(MIN, startLeftPx + dx);
+                studio.style.gridTemplateColumns = `${newLeft}px 6px 1fr`;
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    })();
+</script>
 {% endblock %}
 
 {% block page_scripts %}

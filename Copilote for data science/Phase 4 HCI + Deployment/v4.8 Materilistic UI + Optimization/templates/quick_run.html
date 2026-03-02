@@ -210,7 +210,6 @@
         const titleEl = document.getElementById('overlay-title');
         if (!overlay || !inner) return;
 
-        // Clone the scrollable content area
         let scrollEl;
         if (paneId === 'results-pane') {
             scrollEl = document.getElementById('results-content');
@@ -223,14 +222,20 @@
 
         // Deep clone so original stays intact
         inner.innerHTML = '';
+
+        // Wrapper div IS the scroller — avoids fighting the clone's own styles
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'flex:1;height:100%;overflow-y:auto;overflow-x:hidden;padding:16px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;';
+
         const clone = scrollEl.cloneNode(true);
-        clone.style.cssText = 'flex:1;width:100%;height:100%;padding:16px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:14px;';
-        inner.appendChild(clone);
+        // Reset overflow on clone so it doesn't block the wrapper's scroll
+        clone.style.cssText = 'flex:1;width:100%;overflow:visible;min-height:0;';
+        wrapper.appendChild(clone);
+        inner.appendChild(wrapper);
 
         overlay.style.display = 'block';
         overlay.dataset.source = paneId;
 
-        // Apply theme
         const overlayInner = document.getElementById('pane-overlay-inner');
         overlayInner.style.background = 'var(--bg-elevated)';
         overlayInner.style.border = '1px solid var(--border)';

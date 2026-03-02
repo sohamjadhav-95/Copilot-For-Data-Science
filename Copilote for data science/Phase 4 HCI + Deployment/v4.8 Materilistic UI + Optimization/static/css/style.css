@@ -1800,6 +1800,14 @@ img {
 }
 
 /* Quick Run page — split-pane layout fills full height, no body-level scroll */
+/* Workflow Studio page — fills full viewport height, no page-level scroll */
+body.workflow-page .page-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
 .quick-run-page .page-content {
   padding: 0 !important;
   overflow: hidden !important;
@@ -1994,6 +2002,7 @@ img {
 }
 
 @keyframes msgIn {
+
   from {
     opacity: 0;
     transform: translateY(6px);
@@ -2429,12 +2438,14 @@ img {
 .workflow-page .page-content {
   background: transparent;
   padding: 0 !important;
+  overflow: hidden !important;
+  /* trap scroll in panels, not page */
 }
 
 .workflow-studio {
-  display: grid;
-  grid-template-columns: 280px 1fr 340px;
+  /* Base sizing only — display/columns set by .wf-layout-N classes */
   height: calc(100vh - var(--topbar-h));
+  min-height: 500px;
   overflow: hidden;
 }
 
@@ -2466,9 +2477,13 @@ img {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.studio-panel-scroll {
+.studio-panel-scroll,
+.output-scroll {
   flex: 1;
+  min-height: 0;
+  /* critical: allows flex child to shrink and scroll */
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 12px;
 }
 
@@ -2796,8 +2811,11 @@ img {
 
 .output-scroll {
   flex: 1;
+  min-height: 0;
+  /* allow flex shrink so content scrolls within panel */
   padding: 12px;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -3000,6 +3018,7 @@ img {
 .upload-zone p {
   font-size: 0.8125rem;
   color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .upload-zone .btn {
@@ -3262,10 +3281,338 @@ img {
   background: #fff;
 }
 
+/* ── Workflow Layout Toggle Buttons ──────────────────────────────── */
+.wf-layout-toggles {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+
+.wf-layout-btn {
+  width: 30px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.wf-layout-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.wf-layout-btn.active {
+  background: var(--accent-500);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.4);
+}
+
+/* ── Workflow Expand Button ───────────────────────────────────────── */
+.wf-expand-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  transition: all var(--duration-fast);
+  flex-shrink: 0;
+}
+
+.wf-expand-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wf-expand-btn .material-symbols-rounded {
+  font-size: 15px;
+}
+
+/* ── Workflow Panel Expand Overlay ───────────────────────────────── */
+.wf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 12, 20, 0.95);
+  flex-direction: column;
+  overflow: hidden;
+  animation: wfOverlayIn 0.18s var(--ease-decel);
+}
+
+@keyframes wfOverlayIn {
+
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wf-overlay-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.wf-overlay-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+}
+
+.wf-overlay-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all var(--duration-fast);
+}
+
+.wf-overlay-close:hover {
+  background: rgba(225, 29, 72, 0.15);
+  color: #f87171;
+}
+
+.wf-overlay-close .material-symbols-rounded {
+  font-size: 18px;
+}
+
+.wf-overlay-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Workflow Resize Handle ───────────────────────────────────────── */
+.wf-resize-handle {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background var(--duration-fast);
+}
+
+.wf-resize-handle.wf-resize-h {
+  width: 6px;
+  cursor: col-resize;
+}
+
+.wf-resize-handle.wf-resize-v {
+  height: 6px;
+  cursor: row-resize;
+}
+
+.wf-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background var(--duration-fast);
+}
+
+.wf-resize-handle.wf-resize-h::after {
+  width: 2px;
+  height: 40px;
+}
+
+.wf-resize-handle.wf-resize-v::after {
+  width: 40px;
+  height: 2px;
+}
+
+.wf-resize-handle:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.wf-resize-handle:hover::after {
+  background: var(--accent-400);
+}
+
+/* ── Workflow Studio: Base Shell ─────────────────────────────────── */
+.workflow-studio {
+  /* Concrete height anchor — same pattern as quick-run-layout */
+  height: calc(100vh - var(--topbar-h));
+  width: 100%;
+  overflow: hidden;
+  background: var(--nav-bg);
+}
+
+/* Shared panel base */
+.studio-panel,
+.studio-center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Scroll containers inside panels */
+.studio-panel-scroll,
+.output-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ── Layout 1: Default 3-column ──────────────────────────────────── */
+.workflow-studio.wf-layout-1 {
+  display: flex;
+  flex-direction: row;
+}
+
+.wf-layout-1 .studio-panel {
+  flex: 0 0 280px;
+}
+
+.wf-layout-1 .studio-center {
+  flex: 1;
+}
+
+.wf-layout-1 .studio-output {
+  flex: 0 0 320px;
+}
+
+.wf-layout-1 #wf-resize-plan-graph {
+  display: flex;
+}
+
+.wf-layout-1 #wf-resize-graph-output {
+  display: flex;
+}
+
+/* ── Layout 2: Plan+Output side by side top, Graph full-width bottom ─ */
+.workflow-studio.wf-layout-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 6px 240px;
+  grid-template-areas:
+    "plan  output"
+    "vres  vres"
+    "graph graph";
+}
+
+.wf-layout-2 #wf-panel-plan {
+  grid-area: plan;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.wf-layout-2 #wf-panel-output {
+  grid-area: output;
+}
+
+.wf-layout-2 #wf-center {
+  grid-area: graph;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.wf-layout-2 #wf-resize-plan-graph {
+  display: none;
+}
+
+.wf-layout-2 #wf-resize-graph-output {
+  display: none;
+}
+
+.wf-layout-2 #wf-resize-v-2 {
+  grid-area: vres;
+  cursor: row-resize;
+  display: flex;
+}
+
+/* ── Layout 3: Plan+Graph stacked left column, Output full-height right ─ */
+.workflow-studio.wf-layout-3 {
+  display: grid;
+  grid-template-columns: 340px 6px 1fr;
+  grid-template-rows: 1fr 6px 1fr;
+  grid-template-areas:
+    "plan  hres  output"
+    "vres3 hres  output"
+    "graph hres  output";
+}
+
+.wf-layout-3 #wf-panel-plan {
+  grid-area: plan;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.wf-layout-3 #wf-center {
+  grid-area: graph;
+}
+
+.wf-layout-3 #wf-panel-output {
+  grid-area: output;
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.wf-layout-3 #wf-resize-plan-graph {
+  grid-area: hres;
+  display: none;
+}
+
+.wf-layout-3 #wf-resize-graph-output {
+  grid-area: hres;
+  cursor: col-resize;
+  display: flex;
+}
+
+.wf-layout-3 #wf-resize-v-3 {
+  grid-area: vres3;
+  cursor: row-resize;
+  display: flex;
+}
+
+/* Hide layout-specific resize handles by default */
+#wf-resize-v-2,
+#wf-resize-v-3 {
+  display: none;
+}
+
+
 /* ── Responsive ─────────────────────────────────────────────────── */
+
 @media (max-width:1100px) {
-  .workflow-studio {
-    grid-template-columns: 240px 1fr 300px;
+
+  /* workflow-studio is now flex — remove old grid override */
+  .wf-layout-1 .studio-panel:not(.studio-output) {
+    flex-basis: 220px;
+  }
+
+  .wf-layout-1 .studio-output {
+    flex-basis: 260px;
   }
 
   .content-grid.sidebar-right {
@@ -3300,12 +3647,19 @@ img {
     margin-left: var(--nav-width-collapsed);
   }
 
-  .workflow-studio {
-    grid-template-columns: 1fr;
+  /* Layout 1 collapses to single column on small screens */
+  .wf-layout-1.workflow-studio {
+    flex-direction: column;
   }
 
-  .studio-panel:not(:first-child) {
-    display: none;
+  .wf-layout-1 .studio-panel,
+  .wf-layout-1 .studio-output {
+    flex: 1;
+    min-height: 200px;
+  }
+
+  .wf-layout-1 .wf-resize-handle {
+    display: none !important;
   }
 
   .content-grid,

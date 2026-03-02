@@ -276,3 +276,118 @@
 {"timestamp": "2026-03-02T17:51:29.397558+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_invalid_zeros' completed: dataframe"}
 {"timestamp": "2026-03-02T17:51:29.423255+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
 {"timestamp": "2026-03-02T17:51:30.299276+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_updated_summary' completed: dataframe"}
+{"timestamp": "2026-03-02T17:51:30.336608+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T18:14:04.989223+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:14:08.017224+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:15:10.050905+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T18:15:12.045354+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T18:15:12.064654+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T18:15:12.064654+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T18:18:50.621481+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_7744283d78e1"}
+{"timestamp": "2026-03-02T18:19:06.241661+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_7744283d78e1' (4 nodes)"}
+{"timestamp": "2026-03-02T18:19:06.241661+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-02T18:19:06.245348+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:19:08.176147+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_zero_percentages' completed: dict"}
+{"timestamp": "2026-03-02T18:19:08.178652+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:19:09.262250+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[VALIDATOR] Type mismatch: node 'identify_high_zero_columns' expected 'artifact' but received 'scalar'. Continuing — value is usable."}
+{"timestamp": "2026-03-02T18:19:09.264775+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'identify_high_zero_columns' completed: scalar"}
+{"timestamp": "2026-03-02T18:19:09.267701+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:19:10.409840+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_invalid_zeros' completed: dataframe"}
+{"timestamp": "2026-03-02T18:19:10.636366+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:19:11.529047+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'generate_updated_summary' completed: dataframe"}
+{"timestamp": "2026-03-02T18:19:11.563382+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T18:25:27.190338+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:25:30.220316+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:27:51.130319+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:27:54.211631+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:28:26.088640+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T18:28:30.194013+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T18:28:30.218524+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T18:28:30.219762+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T18:31:48.708343+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Skipping malformed node: 'list' is not a valid OutputType"}
+{"timestamp": "2026-03-02T18:31:48.709497+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Skipping malformed node: 'str' is not a valid OutputType"}
+{"timestamp": "2026-03-02T18:31:48.710426+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: Node 'replace_zeros' depends on non-existent node 'columns_to_fix'"}
+{"timestamp": "2026-03-02T18:31:48.711442+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 3 nodes, plan_id=plan_17433bb8cff7"}
+{"timestamp": "2026-03-02T18:32:13.785578+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_17433bb8cff7' (3 nodes)"}
+{"timestamp": "2026-03-02T18:32:13.786504+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 3 nodes"}
+{"timestamp": "2026-03-02T18:32:13.787570+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:32:15.471738+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'zero_percent' completed: dict"}
+{"timestamp": "2026-03-02T18:32:15.477262+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:32:16.819314+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_zeros' completed: dataframe"}
+{"timestamp": "2026-03-02T18:32:16.850067+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T18:32:17.621800+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_stats' completed: dataframe"}
+{"timestamp": "2026-03-02T18:32:17.661577+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T18:34:12.398961+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Plot a histogram of the first numeric column' -> visualize (keyword)"}
+{"timestamp": "2026-03-02T18:34:12.400978+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Plot a histogram of the first numeric column' -> Intent: visualize"}
+{"timestamp": "2026-03-02T18:34:12.414919+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot a histogram of the first numeric column"}
+{"timestamp": "2026-03-02T18:34:14.309768+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1146 chars)"}
+{"timestamp": "2026-03-02T18:34:14.942112+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-02T18:34:14.953753+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #76: visualize — Plot a histogram of the first numeric column"}
+{"timestamp": "2026-03-02T18:49:27.033694+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T18:49:30.286897+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:01:19.815474+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:01:22.522947+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:01:37.596745+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:01:40.016557+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Display summary statistics' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:01:40.022083+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Display summary statistics' -> Intent: display"}
+{"timestamp": "2026-03-02T19:01:40.041650+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Display summary statistics"}
+{"timestamp": "2026-03-02T19:01:43.765075+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (878 chars)"}
+{"timestamp": "2026-03-02T19:01:43.823835+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #77: display — Display summary statistics"}
+{"timestamp": "2026-03-02T19:02:04.347921+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:02:06.042549+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:02:06.076108+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:02:06.079114+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T19:04:16.584716+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:04:24.901266+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:04:43.988891+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:04:45.039972+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:04:45.062517+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:04:45.065579+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T19:06:37.647354+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Skipping malformed node: 'list' is not a valid OutputType"}
+{"timestamp": "2026-03-02T19:06:37.650866+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: Node 'replace_zeros_with_median' depends on non-existent node 'identify_high_zero_columns'"}
+{"timestamp": "2026-03-02T19:06:37.653881+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_b5d863eef26c"}
+{"timestamp": "2026-03-02T19:06:48.136084+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_b5d863eef26c' (4 nodes)"}
+{"timestamp": "2026-03-02T19:06:48.140103+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-02T19:06:48.141572+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:06:49.598305+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_zero_percentages' completed: dict"}
+{"timestamp": "2026-03-02T19:06:49.601591+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:06:51.324863+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_zeros_with_median' completed: dataframe"}
+{"timestamp": "2026-03-02T19:06:51.487116+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:06:52.448571+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_updated_statistics' completed: dataframe"}
+{"timestamp": "2026-03-02T19:06:52.483111+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:06:54.041099+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'format_summary_report' completed: scalar"}
+{"timestamp": "2026-03-02T19:06:54.074232+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T19:10:40.657562+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:10:43.666209+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:13:03.278004+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:13:20.605237+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:13:23.532587+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:13:39.451965+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:13:40.383713+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:13:40.402659+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:13:40.405330+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:01.470106+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_4 → node_7 → node_4"}
+{"timestamp": "2026-03-02T19:14:01.472821+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-02T19:14:06.583803+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:14:06.602854+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:14:06.605106+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:23.886194+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_e4eab65c268e"}
+{"timestamp": "2026-03-02T19:14:26.009208+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_e4eab65c268e' (6 nodes)"}
+{"timestamp": "2026-03-02T19:14:26.013030+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-02T19:14:26.016729+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:27.487579+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dict"}
+{"timestamp": "2026-03-02T19:14:27.497124+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:28.730407+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: name 'zero_pct_dict' is not defined, retrying..."}
+{"timestamp": "2026-03-02T19:14:28.733406+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:29.395154+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dict"}
+{"timestamp": "2026-03-02T19:14:29.401683+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:30.413847+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dict"}
+{"timestamp": "2026-03-02T19:14:30.417854+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:31.515223+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: name 'median_dict' is not defined, retrying..."}
+{"timestamp": "2026-03-02T19:14:31.518894+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:32.940719+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-02T19:14:33.070479+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:34.187162+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: dataframe"}
+{"timestamp": "2026-03-02T19:14:34.233166+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:14:37.011572+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[VALIDATOR] CRITICAL: Node 'node_6' declared output_var='summary_report' but produced no output (output_type=NONE). Downstream variable reads will fail — aborting."}
+{"timestamp": "2026-03-02T19:14:37.545933+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}

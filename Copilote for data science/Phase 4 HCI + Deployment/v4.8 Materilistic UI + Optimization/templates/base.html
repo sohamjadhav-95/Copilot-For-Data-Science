@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- User identity for frontend logger (no sensitive data) -->
+    {% if user is defined and user %}
+    <meta name="dc-user-id" content="{{ user.id }}">
+    {% endif %}
     <title>{% block title %}DataCopilot{% endblock %}</title>
     <meta name="description"
         content="AI-powered data science platform for analysis, visualization, and intelligent automation">
@@ -17,6 +21,8 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Frontend logger — loaded first to capture all subsequent errors -->
+    <script src="{{ url_for('static', filename='js/logger.js') }}"></script>
     {% block head %}{% endblock %}
 </head>
 

@@ -6,7 +6,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model="qwen/qwen3-235b-a22b-thinking-2507",
+    model="openai/gpt-oss-120b:free",
     messages=[
         {"role": "user", "content": "What is meaning of life?"}
     ]

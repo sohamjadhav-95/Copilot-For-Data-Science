@@ -63,6 +63,37 @@ def _cleanup_old_executions(max_entries: int = 50) -> None:
             del _execution_store[k]
 
 
+def _serialize_node_output(output_val) -> dict:
+    """Convert a step output value to a JSON-serializable {type, data} dict."""
+    import base64 as _b64
+    try:
+        if output_val is None:
+            return {"type": "none", "data": None}
+        if isinstance(output_val, pd.DataFrame):
+            return {"type": "dataframe", "data": output_val.to_json(orient="split")}
+        if isinstance(output_val, pd.Series):
+            return {"type": "dataframe", "data": output_val.to_frame().to_json(orient="split")}
+        if isinstance(output_val, str):
+            # Try to detect valid base64 image (chart)
+            if len(output_val) > 200:
+                try:
+                    _b64.b64decode(output_val, validate=True)
+                    return {"type": "chart", "data": output_val}
+                except Exception:
+                    pass
+            return {"type": "text", "data": output_val[:2000]}
+        if isinstance(output_val, dict):
+            # Could be stats dict — format as readable text
+            lines = [f"{k}: {v}" for k, v in list(output_val.items())[:30]]
+            return {"type": "text", "data": "\n".join(lines)}
+        if isinstance(output_val, (list, tuple)):
+            return {"type": "text", "data": str(output_val)[:1000]}
+        # Scalar: bool, int, float, etc.
+        return {"type": "text", "data": str(output_val)[:500]}
+    except Exception as e:
+        return {"type": "text", "data": f"(output serialization failed: {e})"}
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # PRO ENGINE
 # ═══════════════════════════════════════════════════════════════════════
@@ -299,40 +330,17 @@ Reply with ONLY valid JSON:
         exec_error = entry.get("exec_error")
         context = entry.get("context")
 
-        # Serialize per-node outputs from ExecutionContext so frontend can render them
+        # Serialize per-node outputs using the module-level helper
         node_outputs = {}
         if context and hasattr(context, "step_outputs"):
             for node_id, output_val in context.step_outputs.items():
-                try:
-                    if output_val is None:
-                        node_outputs[node_id] = {"type": "none", "data": None}
-                    elif isinstance(output_val, pd.DataFrame):
-                        node_outputs[node_id] = {
-                            "type": "dataframe",
-                            "data": output_val.to_json(orient="split"),
-                        }
-                    elif isinstance(output_val, pd.Series):
-                        node_outputs[node_id] = {
-                            "type": "dataframe",
-                            "data": output_val.to_frame().to_json(orient="split"),
-                        }
-                    elif isinstance(output_val, str) and len(output_val) > 100 and all(
-                        c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" for c in output_val[:50]
-                    ):
-                        # Likely a base64 image artifact
-                        node_outputs[node_id] = {"type": "chart", "data": output_val}
-                    elif isinstance(output_val, dict):
-                        node_outputs[node_id] = {"type": "dict", "data": str(output_val)[:2000]}
-                    else:
-                        node_outputs[node_id] = {"type": "scalar", "data": str(output_val)[:500]}
-                except Exception:
-                    node_outputs[node_id] = {"type": "scalar", "data": str(output_val)[:200]}
+                node_outputs[node_id] = _serialize_node_output(output_val)
 
-        # Also expose artifacts (charts) from context
+        # Artifacts (charts from visualization nodes) replace step_outputs for that node
         if context and hasattr(context, "artifacts"):
             for artifact_key, artifact_val in context.artifacts.items():
                 node_id = artifact_key.replace("_artifact", "")
-                if artifact_val and isinstance(artifact_val, str):
+                if artifact_val and isinstance(artifact_val, str) and len(artifact_val) > 50:
                     node_outputs[node_id] = {"type": "chart", "data": artifact_val}
 
         return {

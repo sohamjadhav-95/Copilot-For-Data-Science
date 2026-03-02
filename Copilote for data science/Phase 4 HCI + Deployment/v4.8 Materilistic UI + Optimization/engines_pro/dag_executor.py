@@ -27,7 +27,7 @@ from engines_pro.validator import (
     evaluate_condition, validate_node_output, detect_schema_change, resolve_operand,
 )
 from models_api.model_router import router
-from logger import app_logger, log_error
+from logger import app_logger, log_error, log_workflow_node
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -321,12 +321,25 @@ class DAGExecutor:
                     node_id, node.operation or "conditional",
                     "success", model_used=meta.model_used, duration_ms=elapsed,
                 )
+                log_workflow_node(
+                    plan_id=getattr(plan, "plan_id", "unknown"),
+                    node_id=node_id, node_type=node.type.value,
+                    operation=node.operation or "conditional",
+                    status="success", execution_time_ms=elapsed,
+                )
             else:
                 failed.append(node_id)
                 context.record_history(
                     node_id, node.operation or "conditional",
                     "failed", details=meta.error or "", model_used=meta.model_used,
                     duration_ms=elapsed,
+                )
+                log_workflow_node(
+                    plan_id=getattr(plan, "plan_id", "unknown"),
+                    node_id=node_id, node_type=node.type.value,
+                    operation=node.operation or "conditional",
+                    status="failed", execution_time_ms=elapsed,
+                    error=meta.error,
                 )
                 # Check double failure for replan
                 should_replan, reason = ReplanTrigger.check_double_failure(node_id, plan.metadata)

@@ -28,7 +28,11 @@ from engines import (
     fix_code, extract_code, _safe_exec,
 )
 from api_config import get_active_provider, switch_provider, PROVIDERS
-from logger import log_error, log_interaction, log_app_event, app_logger
+from logger import (
+    log_error, log_interaction, log_app_event, app_logger,
+    log_security_event, log_performance, log_frontend_event,
+    log_workflow_execution, security_logger,
+)
 from engines_pro.pro_engine import pro_engine
 
 
@@ -56,6 +60,31 @@ def create_app():
 
     log_app_event("startup", f"App created, provider={get_active_provider()}")
     register_routes(app)
+
+    # ── Performance timing middleware (universal — covers all routes) ────────
+    import time as _time
+
+    @app.before_request
+    def _before():
+        request._start_time = _time.perf_counter()
+
+    @app.after_request
+    def _after(response):
+        try:
+            elapsed_ms = (_time.perf_counter() - getattr(request, "_start_time", 0)) * 1000
+            # Skip static assets to keep logs clean
+            if not request.path.startswith("/static"):
+                log_performance(
+                    endpoint=request.path,
+                    method=request.method,
+                    http_status=response.status_code,
+                    response_ms=elapsed_ms,
+                    session_id=str(session.get("session_id", "")),
+                )
+        except Exception:
+            pass
+        return response
+
     return app
 
 
@@ -163,7 +192,32 @@ def register_routes(app):
     def settings_page():
         return render_template("settings.html", user=request.current_user, active_page="settings")
 
+    # ── Frontend Logging API ──────────────────────────────────────────
+    # Accepts log events from the browser JS logger (logger.js).
+    # No auth required — errors may happen before login completes.
+
+    @app.route("/api/log/frontend", methods=["POST"])
+    def api_log_frontend():
+        try:
+            d = request.get_json(force=True, silent=True) or {}
+            log_frontend_event(
+                event_type  = str(d.get("event_type", "unknown"))[:50],
+                page        = str(d.get("page", "unknown"))[:100],
+                component   = str(d.get("component", ""))[:80] or None,
+                message     = str(d.get("message", ""))[:500] or None,
+                level       = str(d.get("level", "info"))[:10],
+                browser     = str(d.get("browser", ""))[:120] or None,
+                viewport    = str(d.get("viewport", ""))[:30]  or None,
+                user_id     = str(d.get("user_id", ""))[:20]   or None,
+                session_id  = str(d.get("session_id", ""))[:40] or None,
+                stack_trace = str(d.get("stack_trace", ""))[:1000] or None,
+            )
+        except Exception as e:
+            app_logger.warning(f"[frontend-log] failed to parse: {e}")
+        return jsonify({"ok": True}), 200
+
     # ── Auth API ──────────────────────────────────────────────────────
+
 
     @app.route("/api/register", methods=["POST"])
     def api_register():

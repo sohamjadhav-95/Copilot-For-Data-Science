@@ -1,0 +1,13 @@
+timestamp,level,logger,session_id,user_id,plan_id,provider,model,latency_ms,tokens,status,intent,query,result_type,node_id,node_type,operation,execution_time_ms,completed_nodes,failed_nodes,replan_count,endpoint,method,http_status,response_ms,memory_mb,error_type,error_detail,context,stack_trace,action,ip_address,user_agent,page,component,event_type,browser,viewport,message,extra_json
+2026-03-02T19:01:29.478111+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
+2026-03-02T19:01:36.018857+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
+2026-03-02T19:01:56.810346+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
+2026-03-02T19:04:17.005394+00:00,ERROR,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,,console_error,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,{},
+2026-03-02T19:04:31.456563+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
+2026-03-02T19:04:35.767484+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
+2026-03-02T19:10:24.904278+00:00,INFO,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,,page_view,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,Viewed /workflow,
+2026-03-02T19:10:52.735811+00:00,INFO,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,,page_view,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,Viewed /workflow,
+2026-03-02T19:10:58.495245+00:00,INFO,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,performance-observer,page_load_perf,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,load=0ms dom=722ms,
+2026-03-02T19:11:01.422682+00:00,INFO,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,,page_view,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,Viewed /workflow,
+2026-03-02T19:11:23.865441+00:00,INFO,copilot.frontend,None,2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,/workflow,performance-observer,page_load_perf,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Sa",1392x768,load=0ms dom=480ms,
+2026-03-02T19:13:30.814307+00:00,INFO,copilot.frontend,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,unknown,,unknown,,,[FE] unknown | page=unknown component=None,
