@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Settings — DataCopilot{% endblock %}
+{% block page_icon %}settings{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Settings</h1>
+    <p>Manage your account, preferences, and integrations</p>
+</div>
+
+<div class="settings-sections">
+    <!-- Account -->
+    <div class="settings-section">
+        <div class="settings-section-header">
+            <div class="settings-section-title">Account</div>
+            <div class="settings-section-desc">Manage your user profile and security</div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Username</div>
+                <div class="settings-row-desc" id="settings-username">—</div>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Change Password</div>
+                <div class="settings-row-desc">Update your account password</div>
+            </div>
+            <div class="settings-row-control">
+                <button class="btn btn-secondary btn-sm md-ripple"
+                    onclick="document.getElementById('pwd-modal').classList.add('open')">Change</button>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Sign Out</div>
+                <div class="settings-row-desc">Sign out from this device</div>
+            </div>
+            <div class="settings-row-control">
+                <button class="btn btn-danger btn-sm md-ripple" onclick="handleLogout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appearance -->
+    <div class="settings-section">
+        <div class="settings-section-header">
+            <div class="settings-section-title">Appearance</div>
+            <div class="settings-section-desc">Customize the look and feel</div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Dark Mode</div>
+                <div class="settings-row-desc">Switch between light and dark themes</div>
+            </div>
+            <div class="settings-row-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle" onchange="setTheme(this.checked)">
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Provider -->
+    <div class="settings-section">
+        <div class="settings-section-header">
+            <div class="settings-section-title">AI Provider</div>
+            <div class="settings-section-desc">Configure AI model routing</div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Active Provider</div>
+                <div class="settings-row-desc">Select which AI provider to use</div>
+            </div>
+            <div class="settings-row-control">
+                <select class="select" id="provider-select" onchange="switchProvider(this.value)" style="width:160px;">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="settings-section">
+        <div class="settings-section-header"
+            style="background:var(--error-bg);border-bottom-color:var(--error-border);">
+            <div class="settings-section-title" style="color:var(--error);">Danger Zone</div>
+            <div class="settings-section-desc">Irreversible actions — handle with care</div>
+        </div>
+        <div class="settings-row">
+            <div>
+                <div class="settings-row-label">Delete All Sessions</div>
+                <div class="settings-row-desc">Permanently delete all session history</div>
+            </div>
+            <div class="settings-row-control">
+                <button class="btn btn-danger btn-sm md-ripple" onclick="confirmDeleteSessions()">Delete All</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Modal -->
+<div class="modal-overlay" id="pwd-modal" onclick="if(event.target===this)closePwdModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title">Change Password</div>
+            </div>
+            <button class="btn btn-ghost btn-icon btn-sm" onclick="closePwdModal()"><span
+                    class="material-symbols-rounded">close</span></button>
+        </div>
+        <div class="modal-body">
+            <div class="auth-error" id="pwd-error"></div>
+            <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="input" id="old-pwd" placeholder="Enter current password">
+            </div>
+            <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" class="input" id="new-pwd" placeholder="Min 8 characters">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary md-ripple" onclick="closePwdModal()">Cancel</button>
+            <button class="btn btn-primary md-ripple" onclick="changePassword()">Update Password</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    // Init theme toggle
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.getElementById('dark-mode-toggle').checked = currentTheme === 'dark';
+
+    function setTheme(isDark) {
+        const theme = isDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateThemeIcon(theme);
+    }
+
+    async function loadSettings() {
+        try {
+            const res = await fetch('/api/provider');
+            const data = await res.json();
+            const sel = document.getElementById('provider-select');
+            sel.innerHTML = (data.available_providers || []).map(p =>
+                `<option value="${p}" ${p === data.active_provider ? 'selected' : ''}>${p.charAt(0).toUpperCase() + p.slice(1)}</option>`
+            ).join('');
+        } catch (e) { }
+        // Load username
+        try {
+            const r = await fetch('/api/sessions');
+            const d = await r.json();
+            if (d.username) document.getElementById('settings-username').textContent = d.username;
+        } catch (e) { }
+    }
+
+    async function switchProvider(p) {
+        if (!p) return;
+        await fetch('/api/provider', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider: p }) });
+    }
+
+    function closePwdModal() { document.getElementById('pwd-modal').classList.remove('open'); }
+    async function changePassword() {
+        const old = document.getElementById('old-pwd').value, nw = document.getElementById('new-pwd').value;
+        const errEl = document.getElementById('pwd-error');
+        errEl.className = 'auth-error'; errEl.textContent = '';
+        if (!old || !nw) { errEl.className = 'auth-error show'; errEl.textContent = 'Please fill in both fields.'; return; }
+        if (nw.length < 8) { errEl.className = 'auth-error show'; errEl.textContent = 'New password must be at least 8 characters.'; return; }
+        const res = await fetch('/api/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ old_password: old, new_password: nw }) });
+        const data = await res.json();
+        if (res.ok) { closePwdModal(); } else { errEl.className = 'auth-error show'; errEl.textContent = data.error || 'Failed to change password'; }
+    }
+
+    function confirmDeleteSessions() {
+        if (confirm('Are you sure you want to delete ALL session history? This cannot be undone.')) {
+            fetch('/api/sessions/clear', { method: 'DELETE' }).then(() => location.reload());
+        }
+    }
+
+    loadSettings();
+</script>
+{% endblock %}

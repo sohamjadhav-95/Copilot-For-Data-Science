@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Workflow Studio — DataCopilot{% endblock %}
+{% block page_icon %}account_tree{% endblock %}
+{% block page_title %}Workflow Studio{% endblock %}
+
+{% block head %}
+<style>
+    body.workflow-page .page-content {
+        padding: 0 !important;
+    }
+</style>
+{% endblock %}
+
+{% block topbar_actions %}
+<span id="wf-dataset-badge" style="display:none;" class="badge green">
+    <span class="dot"></span><span id="wf-dataset-name">—</span>
+</span>
+<button class="topbar-action-btn secondary md-ripple" onclick="document.getElementById('wf-upload').click()">
+    <span class="material-symbols-rounded">upload_file</span> Dataset
+</button>
+<input type="file" id="wf-upload" accept=".csv" style="display:none" onchange="wfHandleUpload(this)">
+{% endblock %}
+
+{% block page_content %}
+<div class="workflow-studio" id="workflow-studio">
+
+    <!-- Left: Plan + Steps -->
+    <div class="studio-panel">
+        <div class="studio-panel-header">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent-400);">edit_square</span>
+            <span class="studio-panel-title">Plan</span>
+            <div style="margin-left:auto;">
+                <span class="badge purple" id="wf-mode-badge">Pro</span>
+            </div>
+        </div>
+
+        <!-- Prompt input -->
+        <div class="plan-input-area">
+            <textarea class="plan-textarea" id="plan-input"
+                placeholder="Describe your analysis goal... e.g. 'Analyze sales trends, find top products, and visualize monthly revenue'"
+                rows="4"></textarea>
+            <div class="plan-actions">
+                <button class="plan-btn generate md-ripple" id="plan-generate-btn" onclick="generatePlan()">
+                    <span class="material-symbols-rounded" style="font-size:14px;">auto_awesome</span>
+                    Generate Plan
+                </button>
+                <button class="plan-btn ghost md-ripple" onclick="clearWorkflow()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Steps list -->
+        <div class="studio-panel-scroll" id="steps-list">
+            <div class="output-empty" style="height:160px;">
+                <span class="material-symbols-rounded">account_tree</span>
+                <span>Plan will appear here</span>
+            </div>
+        </div>
+
+        <!-- Approve / Reject -->
+        <div class="plan-approve-bar" id="approve-bar" style="display:none;">
+            <div class="plan-actions">
+                <button class="plan-btn approve-btn md-ripple" id="approve-btn" onclick="approvePlan()">
+                    <span class="material-symbols-rounded" style="font-size:14px;">check_circle</span>
+                    Approve & Execute
+                </button>
+                <button class="plan-btn reject-btn md-ripple" onclick="rejectPlan()">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center: DAG / Progress -->
+    <div class="studio-center">
+        <div class="studio-panel-header" style="border-bottom:1px solid rgba(255,255,255,0.07);">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent-400);">timeline</span>
+            <span class="studio-panel-title">Execution Graph</span>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+                <span id="wf-progress-label" style="font-size:0.7rem;color:rgba(255,255,255,0.35);"></span>
+            </div>
+        </div>
+        <div class="exec-progress" id="wf-progress-wrap" style="display:none;">
+            <div class="exec-progress-bar-wrap">
+                <div class="exec-progress-bar" id="exec-progress-bar"></div>
+            </div>
+            <div class="exec-progress-label">
+                <span id="exec-step-label">Executing...</span>
+                <span id="exec-pct-label">0%</span>
+            </div>
+        </div>
+        <div class="dag-canvas" id="dag-canvas">
+            <span class="material-symbols-rounded">account_tree</span>
+            <span>Enter a goal and generate a plan to begin</span>
+        </div>
+        <div class="dag-steps-linear" id="dag-linear" style="display:none;"></div>
+    </div>
+
+    <!-- Right: Output -->
+    <div class="studio-panel studio-output">
+        <div class="studio-panel-header">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--violet-400);">output</span>
+            <span class="studio-panel-title">Output</span>
+            <div style="margin-left:auto;">
+                <button class="plan-btn ghost" style="height:24px;font-size:0.7rem;"
+                    onclick="clearOutput()">Clear</button>
+            </div>
+        </div>
+        <div class="output-scroll" id="output-scroll">
+            <div class="output-empty" id="output-empty">
+                <span class="material-symbols-rounded">assessment</span>
+                <span>Step results will appear here</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', filename='js/workflow.js') }}"></script>
+{% endblock %}

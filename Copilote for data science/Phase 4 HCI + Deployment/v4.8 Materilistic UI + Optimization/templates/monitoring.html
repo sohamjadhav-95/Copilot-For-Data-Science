@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Monitoring — DataCopilot{% endblock %}
+{% block page_icon %}monitoring{% endblock %}
+{% block page_title %}Monitoring{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>System Monitoring</h1>
+    <p>Real-time platform health and usage metrics</p>
+</div>
+
+<!-- Metric Stats -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat-card">
+        <div class="card-icon green"><span class="material-symbols-rounded">check_circle</span></div>
+        <div class="stat-body">
+            <div class="stat-label">API Status</div>
+            <div class="stat-value" style="font-size:1.125rem;" id="api-status">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon purple"><span class="material-symbols-rounded">history</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Total Sessions</div>
+            <div class="stat-value" id="mon-sessions">—</div>
+            <div class="stat-delta neutral">All users</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon violet"><span class="material-symbols-rounded">account_tree</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Pro Executions</div>
+            <div class="stat-value" id="mon-pro">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon amber"><span class="material-symbols-rounded">cloud</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Provider</div>
+            <div class="stat-value" style="font-size:1rem;" id="mon-provider">—</div>
+        </div>
+    </div>
+</div>
+
+<!-- Usage Meters -->
+<div class="content-grid three" style="margin-bottom:24px;">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">API Success Rate</div>
+            <div class="card-icon green"><span class="material-symbols-rounded">analytics</span></div>
+        </div>
+        <div class="metric-gauge">
+            <div class="gauge-value" style="color:var(--success);" id="success-rate">98%</div>
+            <div class="gauge-label">Avg last 30 days</div>
+        </div>
+        <div class="mini-bar-wrap">
+            <div class="mini-bar green" id="success-bar" style="width:98%;"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Sessions Today</div>
+            <div class="card-icon purple"><span class="material-symbols-rounded">today</span></div>
+        </div>
+        <div class="metric-gauge">
+            <div class="gauge-value" id="today-sessions">—</div>
+            <div class="gauge-label">Active sessions</div>
+        </div>
+        <div class="mini-bar-wrap">
+            <div class="mini-bar purple" id="today-bar" style="width:40%;"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Model Tier Usage</div>
+            <div class="card-icon violet"><span class="material-symbols-rounded">model_training</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding-top:8px;">
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">
+                    <span>Heavy</span><span>15%</span></div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar purple" style="width:15%;"></div>
+                </div>
+            </div>
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">
+                    <span>Mid</span><span>70%</span></div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar purple" style="width:70%;"></div>
+                </div>
+            </div>
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">
+                    <span>Light</span><span>15%</span></div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar green" style="width:15%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Health checks -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Health Checks</div>
+        <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="loadMonitoring()" title="Refresh">
+            <span class="material-symbols-rounded">refresh</span>
+        </button>
+    </div>
+    <div class="activity-list" id="health-list">
+        <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-body">
+                <div class="activity-title">Flask Application</div>
+                <div class="activity-meta">Running normally</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-dot" id="db-dot" style="background:var(--text-tertiary);"></div>
+            <div class="activity-body">
+                <div class="activity-title">Database</div>
+                <div class="activity-meta" id="db-status">Checking...</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-dot" id="ai-dot" style="background:var(--text-tertiary);"></div>
+            <div class="activity-body">
+                <div class="activity-title">AI Provider</div>
+                <div class="activity-meta" id="ai-status">Checking...</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    async function loadMonitoring() {
+        try {
+            const [sessRes, provRes] = await Promise.all([
+                fetch('/api/sessions'),
+                fetch('/api/provider')
+            ]);
+            const sessData = await sessRes.json();
+            const provData = await provRes.json();
+
+            const sessions = sessData.sessions || [];
+            document.getElementById('mon-sessions').textContent = sessions.length;
+            document.getElementById('today-sessions').textContent = sessions.length;
+            document.getElementById('mon-provider').textContent = provData.active_provider || '—';
+            document.getElementById('api-status').textContent = 'Online';
+            document.getElementById('api-status').style.color = 'var(--success)';
+
+            document.getElementById('db-dot').style.background = 'var(--success)';
+            document.getElementById('db-status').textContent = 'SQLite database — operational';
+            document.getElementById('ai-dot').style.background = 'var(--success)';
+            document.getElementById('ai-status').textContent = (provData.active_provider || 'Unknown') + ' — connected';
+
+            // today estimate
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const todayCount = sessions.filter(s => new Date(s.created_at) >= today).length;
+            document.getElementById('today-sessions').textContent = todayCount;
+            document.getElementById('today-bar').style.width = Math.min(todayCount * 10, 100) + '%';
+        } catch (e) {
+            document.getElementById('api-status').textContent = 'Error';
+            document.getElementById('api-status').style.color = 'var(--error)';
+        }
+    }
+    loadMonitoring();
+    setInterval(loadMonitoring, 30000);
+</script>
+{% endblock %}

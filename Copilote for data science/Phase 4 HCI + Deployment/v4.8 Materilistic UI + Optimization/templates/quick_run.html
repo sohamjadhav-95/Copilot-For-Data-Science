@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title %}Quick Run — DataCopilot{% endblock %}
+{% block page_icon %}bolt{% endblock %}
+{% block page_title %}Quick Run{% endblock %}
+
+{% block head %}
+<script>document.addEventListener('DOMContentLoaded', () => document.body.classList.add('quick-run-page'));</script>
+{% endblock %}
+
+{% block topbar_actions %}
+<div id="dataset-chip" style="display:none;">
+    <span class="badge green" id="dataset-badge">
+        <span class="material-symbols-rounded" style="font-size:11px;">check_circle</span>
+        <span id="dataset-badge-name">—</span>
+    </span>
+</div>
+<button class="topbar-action-btn secondary md-ripple" onclick="document.getElementById('upload-file').click()">
+    <span class="material-symbols-rounded">upload_file</span> Upload CSV
+</button>
+<input type="file" id="upload-file" accept=".csv" style="display:none" onchange="handleUpload(this)">
+{% endblock %}
+
+{% block page_content %}
+<div class="quick-run-layout" id="quick-run-layout">
+    <!-- Left: Chat -->
+    <div class="chat-pane" id="chat-pane">
+        <div class="pane-header">
+            <div class="pane-header-icon"><span class="material-symbols-rounded">chat</span></div>
+            <div>
+                <div class="pane-title">Chat</div>
+                <div class="pane-subtitle" id="chat-subtitle">Upload a dataset to start</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:4px;" id="session-actions">
+                <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="clearChat()" title="Clear chat">
+                    <span class="material-symbols-rounded">delete_sweep</span>
+                </button>
+                <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="expandPane('chat-pane')"
+                    title="Expand panel">
+                    <span class="material-symbols-rounded">open_in_full</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggestions bar -->
+        <div style="padding:8px 16px;border-bottom:1px solid var(--border);background:var(--bg-subtle);display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;"
+            id="suggestion-bar">
+            <button class="chip active" onclick="useSuggestion('Show first 10 rows')">First 10 rows</button>
+            <button class="chip" onclick="useSuggestion('Display summary statistics')">Summary stats</button>
+            <button class="chip"
+                onclick="useSuggestion('Plot a histogram of the first numeric column')">Histogram</button>
+            <button class="chip" onclick="useSuggestion('Find missing values')">Missing values</button>
+            <button class="chip" onclick="useSuggestion('Show correlation heatmap')">Correlation</button>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-welcome" id="chat-welcome">
+                <div class="chat-welcome-icon"><span class="material-symbols-rounded">smart_toy</span></div>
+                <h3>DataCopilot</h3>
+                <p>Upload a CSV to start chatting with your data using natural language</p>
+            </div>
+        </div>
+
+        <div class="chat-input-bar">
+            <form class="chat-input-form" onsubmit="return sendChat(event)">
+                <div class="chat-input-wrap">
+                    <textarea class="chat-input" id="chat-input" rows="1" placeholder="Ask about your data..."
+                        maxlength="2000" onkeydown="handleChatKey(event)" oninput="autoResize(this)"
+                        disabled></textarea>
+                </div>
+                <button type="submit" class="send-btn md-ripple" id="send-btn" disabled>
+                    <span class="material-symbols-rounded">send</span>
+                </button>
+            </form>
+            <div class="chat-status-bar">
+                <span id="chat-status">No dataset loaded</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resize Handle -->
+    <div class="pane-resize-handle" id="pane-resize-handle" title="Drag to resize"></div>
+
+    <!-- Right: Results -->
+    <div class="results-pane" id="results-pane">
+        <div class="pane-header">
+            <div class="pane-header-icon" style="background:rgba(139,92,246,0.1);">
+                <span class="material-symbols-rounded" style="color:var(--violet-600);">assessment</span>
+            </div>
+            <div>
+                <div class="pane-title">Results</div>
+                <div class="pane-subtitle">Charts, tables, and analysis</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:4px;">
+                <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="clearResults()" title="Clear results">
+                    <span class="material-symbols-rounded">clear_all</span>
+                </button>
+                <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="expandPane('results-pane')"
+                    title="Expand panel">
+                    <span class="material-symbols-rounded">open_in_full</span>
+                </button>
+            </div>
+        </div>
+        <div class="results-scroll" id="results-content">
+            <div class="empty-state" id="results-empty">
+                <div class="empty-icon"><span class="material-symbols-rounded">assessment</span></div>
+                <h3>No results yet</h3>
+                <p>Ask a question in the chat panel to see analysis results here</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Panel Expand Overlay -->
+<div id="pane-overlay"
+    style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);"
+    onclick="collapsePane()">
+    <div id="pane-overlay-inner"
+        style="position:absolute;top:5vh;left:5vw;right:5vw;bottom:5vh;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,0.5);"
+        onclick="event.stopPropagation()">
+        <div
+            style="display:flex;align-items:center;padding:8px 14px;background:var(--bg-elevated);border-bottom:1px solid var(--border);flex-shrink:0;">
+            <span id="overlay-title" style="font-size:0.875rem;font-weight:600;color:var(--text-primary);">Panel</span>
+            <button class="btn btn-ghost btn-sm btn-icon md-ripple" onclick="collapsePane()" style="margin-left:auto;"
+                title="Close (Esc)">
+                <span class="material-symbols-rounded">close_fullscreen</span>
+            </button>
+        </div>
+        <div id="overlay-content" style="flex:1;overflow-y:auto;overflow-x:hidden;"></div>
+    </div>
+</div>
+
+<!-- Code modal -->
+<div class="modal-overlay" id="code-modal" onclick="if(event.target===this)closeCodeModal()">
+    <div class="modal" style="max-width:680px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" id="code-modal-title">Generated Code</div>
+                <div class="modal-subtitle" id="code-modal-meta"></div>
+            </div>
+            <button class="btn btn-ghost btn-icon btn-sm md-ripple" onclick="closeCodeModal()">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+        <div class="modal-body" style="padding:0;">
+            <div class="code-block" style="border:none;border-radius:0;">
+                <div class="code-block-header">
+                    <span class="code-lang">Python</span>
+                    <button class="btn btn-ghost btn-sm md-ripple" onclick="copyCode()">
+                        <span class="material-symbols-rounded">content_copy</span> Copy
+                    </button>
+                </div>
+                <pre><code id="code-modal-code"></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+    // ── Panel Resize ───────────────────────────────────────────────────
+    (function () {
+        const layout = document.getElementById('quick-run-layout');
+        const handle = document.getElementById('pane-resize-handle');
+        const chatPane = document.getElementById('chat-pane');
+        const resultsPane = document.getElementById('results-pane');
+        if (!handle || !layout) return;
+
+        let isDragging = false, startX = 0, startLeft = 0;
+
+        handle.addEventListener('mousedown', e => {
+            isDragging = true;
+            startX = e.clientX;
+            const rect = layout.getBoundingClientRect();
+            const chatRect = chatPane.getBoundingClientRect();
+            startLeft = chatRect.width;
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            const layoutWidth = layout.getBoundingClientRect().width - 6; // subtract handle width
+            const delta = e.clientX - startX;
+            const newLeft = Math.max(240, Math.min(startLeft + delta, layoutWidth - 240));
+            const rightWidth = layoutWidth - newLeft;
+            chatPane.style.flex = 'none';
+            chatPane.style.width = newLeft + 'px';
+            resultsPane.style.flex = 'none';
+            resultsPane.style.width = rightWidth + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+    })();
+
+    // ── Panel Expand Overlay ───────────────────────────────────────────
+    function expandPane(paneId) {
+        const pane = document.getElementById(paneId);
+        if (!pane) return;
+        const overlay = document.getElementById('pane-overlay');
+        const inner = document.getElementById('overlay-content');
+        const titleEl = document.getElementById('overlay-title');
+        if (!overlay || !inner) return;
+
+        // Clone the scrollable content area
+        let scrollEl;
+        if (paneId === 'results-pane') {
+            scrollEl = document.getElementById('results-content');
+            titleEl.textContent = 'Results';
+        } else {
+            scrollEl = document.getElementById('chat-messages');
+            titleEl.textContent = 'Chat';
+        }
+        if (!scrollEl) return;
+
+        // Deep clone so original stays intact
+        inner.innerHTML = '';
+        const clone = scrollEl.cloneNode(true);
+        clone.style.cssText = 'flex:1;width:100%;height:100%;padding:16px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:14px;';
+        inner.appendChild(clone);
+
+        overlay.style.display = 'block';
+        overlay.dataset.source = paneId;
+
+        // Apply theme
+        const overlayInner = document.getElementById('pane-overlay-inner');
+        overlayInner.style.background = 'var(--bg-elevated)';
+        overlayInner.style.border = '1px solid var(--border)';
+    }
+
+    function collapsePane() {
+        const overlay = document.getElementById('pane-overlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    // Dismiss overlay on Escape
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') collapsePane();
+    });
+</script>
+{% endblock %}

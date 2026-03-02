@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Models — DataCopilot{% endblock %}
+{% block page_icon %}model_training{% endblock %}
+{% block page_title %}AI Models{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>AI Models</h1>
+    <p>Model routing configuration and provider status</p>
+</div>
+
+<div class="model-tier-grid">
+    <!-- Heavy Tier -->
+    <div class="model-tier-card">
+        <div class="model-tier-header">
+            <div class="model-tier-icon card-icon purple">
+                <span class="material-symbols-rounded">psychology</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <div class="status-dot online"></div>
+                <span style="font-size:0.75rem;color:var(--text-tertiary);">Online</span>
+            </div>
+        </div>
+        <div class="model-tier-name">Heavy Tier</div>
+        <div class="model-tier-provider" id="heavy-provider">GPT-4o / Gemini 1.5 Pro</div>
+        <div class="model-tier-desc">Used for complex reasoning tasks — DAG planning, code generation for difficult
+            queries, intent classification edge cases.</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> DAG Plan Generation</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Complex Code Generation
+        </div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Intent Classification
+        </div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Replanning Engine</div>
+    </div>
+
+    <!-- Mid Tier -->
+    <div class="model-tier-card active">
+        <div class="model-tier-header">
+            <div class="model-tier-icon card-icon violet">
+                <span class="material-symbols-rounded">smart_toy</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <div class="status-dot online"></div>
+                <span style="font-size:0.75rem;color:var(--text-tertiary);">Active</span>
+                <span class="badge purple">Default</span>
+            </div>
+        </div>
+        <div class="model-tier-name">Mid Tier</div>
+        <div class="model-tier-provider" id="mid-provider">GPT-4o-mini / Gemini Flash</div>
+        <div class="model-tier-desc">Balanced speed and capability — handles standard data analysis, visualization code
+            generation, and chat responses.</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Data Analysis</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Visualization Code</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Chat Responses</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Code Fixing</div>
+    </div>
+
+    <!-- Light Tier -->
+    <div class="model-tier-card">
+        <div class="model-tier-header">
+            <div class="model-tier-icon card-icon blue">
+                <span class="material-symbols-rounded">bolt</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <div class="status-dot online"></div>
+                <span style="font-size:0.75rem;color:var(--text-tertiary);">Online</span>
+            </div>
+        </div>
+        <div class="model-tier-name">Light Tier</div>
+        <div class="model-tier-provider">GPT-3.5 / Gemini Ultra Light</div>
+        <div class="model-tier-desc">Fast and efficient for simple tasks — result summarization, basic intent detection,
+            and lightweight operations.</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Result Summary</div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Simple Intent Detection
+        </div>
+        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Lightweight Operations
+        </div>
+    </div>
+</div>
+
+<!-- Provider Switch -->
+<div style="margin-top:24px;">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Active Provider</div>
+            <div class="card-icon blue"><span class="material-symbols-rounded">cloud</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-size:0.875rem;color:var(--text-secondary);">Current:</span>
+            <span class="badge purple" id="current-provider">Loading...</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="provider-buttons"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    async function loadModels() {
+        try {
+            const res = await fetch('/api/provider');
+            const data = await res.json();
+            document.getElementById('current-provider').textContent = data.active_provider || '—';
+            const btns = document.getElementById('provider-buttons');
+            (data.available_providers || []).forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'btn md-ripple ' + (p === data.active_provider ? 'btn-primary' : 'btn-secondary');
+                btn.textContent = p.charAt(0).toUpperCase() + p.slice(1);
+                btn.onclick = () => switchProvider(p);
+                btns.appendChild(btn);
+            });
+        } catch (e) { console.warn('Models load error', e); }
+    }
+
+    async function switchProvider(p) {
+        try {
+            const res = await fetch('/api/provider', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider: p }) });
+            const data = await res.json();
+            document.getElementById('current-provider').textContent = data.active_provider || p;
+            document.querySelectorAll('#provider-buttons .btn').forEach(btn => {
+                btn.className = 'btn md-ripple ' + (btn.textContent.toLowerCase() === data.active_provider ? 'btn-primary' : 'btn-secondary');
+            });
+        } catch (e) { alert('Failed to switch provider'); }
+    }
+    loadModels();
+</script>
+{% endblock %}

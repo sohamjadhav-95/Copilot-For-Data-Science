@@ -1,0 +1,2 @@
+{"timestamp": "2026-03-01T14:49:53.000938+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-01T14:49:55.539159+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
