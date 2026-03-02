@@ -287,17 +287,59 @@ Reply with ONLY valid JSON:
         """Get current execution state for a plan.
 
         Returns status dict or None if plan not found.
+        Includes per-node serialized outputs so frontend can render results.
         """
         entry = _get_execution(plan_id)
         if not entry:
             return None
 
         plan = entry["plan"]
-        result = entry["result"]
+        result = entry.get("result")
+        is_running = entry.get("running", False)
+        exec_error = entry.get("exec_error")
+        context = entry.get("context")
+
+        # Serialize per-node outputs from ExecutionContext so frontend can render them
+        node_outputs = {}
+        if context and hasattr(context, "step_outputs"):
+            for node_id, output_val in context.step_outputs.items():
+                try:
+                    if output_val is None:
+                        node_outputs[node_id] = {"type": "none", "data": None}
+                    elif isinstance(output_val, pd.DataFrame):
+                        node_outputs[node_id] = {
+                            "type": "dataframe",
+                            "data": output_val.to_json(orient="split"),
+                        }
+                    elif isinstance(output_val, pd.Series):
+                        node_outputs[node_id] = {
+                            "type": "dataframe",
+                            "data": output_val.to_frame().to_json(orient="split"),
+                        }
+                    elif isinstance(output_val, str) and len(output_val) > 100 and all(
+                        c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" for c in output_val[:50]
+                    ):
+                        # Likely a base64 image artifact
+                        node_outputs[node_id] = {"type": "chart", "data": output_val}
+                    elif isinstance(output_val, dict):
+                        node_outputs[node_id] = {"type": "dict", "data": str(output_val)[:2000]}
+                    else:
+                        node_outputs[node_id] = {"type": "scalar", "data": str(output_val)[:500]}
+                except Exception:
+                    node_outputs[node_id] = {"type": "scalar", "data": str(output_val)[:200]}
+
+        # Also expose artifacts (charts) from context
+        if context and hasattr(context, "artifacts"):
+            for artifact_key, artifact_val in context.artifacts.items():
+                node_id = artifact_key.replace("_artifact", "")
+                if artifact_val and isinstance(artifact_val, str):
+                    node_outputs[node_id] = {"type": "chart", "data": artifact_val}
 
         return {
             "plan_id": plan.plan_id,
             "plan_status": plan.status,
+            "running": is_running,
+            "exec_error": exec_error,
             "version": plan.version,
             "replan_count": plan.replan_count,
             "nodes": [
@@ -305,6 +347,7 @@ Reply with ONLY valid JSON:
                     "id": n.id,
                     "type": n.type.value,
                     "description": n.description,
+                    "operation": n.operation,
                     "status": (
                         plan.metadata[n.id].status.value
                         if n.id in plan.metadata
@@ -315,10 +358,18 @@ Reply with ONLY valid JSON:
                         if n.id in plan.metadata
                         else None
                     ),
+                    "output": node_outputs.get(n.id),
                 }
                 for n in plan.nodes
             ],
-            "result": result,
+            "result": {
+                "status": result.get("status") if result else None,
+                "completed_nodes": result.get("completed_nodes", []) if result else [],
+                "failed_nodes": result.get("failed_nodes", []) if result else [],
+                "skipped_nodes": result.get("skipped_nodes", []) if result else [],
+                "summary": result.get("summary", "") if result else "",
+                "replan_reason": result.get("replan_reason") if result else None,
+            } if result else None,
         }
 
     # ───────────────────────────────────────────────────────────────────

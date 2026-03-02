@@ -233,3 +233,46 @@
 {"timestamp": "2026-03-02T17:27:09.436205+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Display summary statistics of the dataset."}
 {"timestamp": "2026-03-02T17:27:10.283489+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (646 chars)"}
 {"timestamp": "2026-03-02T17:27:10.464595+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #75: display — Display summary statistics of the dataset."}
+{"timestamp": "2026-03-02T17:34:14.111074+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:34:18.319923+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:34:45.082910+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T17:35:08.064221+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:35:08.107271+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:35:08.108280+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T17:37:39.329301+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Skipping malformed node: 'list' is not a valid OutputType"}
+{"timestamp": "2026-03-02T17:37:39.330802+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: Node 'replace_zeros' depends on non-existent node 'identify_columns_to_fix'"}
+{"timestamp": "2026-03-02T17:37:39.331812+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_5845f54f9a64"}
+{"timestamp": "2026-03-02T17:37:51.065504+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_5845f54f9a64' (4 nodes)"}
+{"timestamp": "2026-03-02T17:37:51.067012+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-02T17:37:51.068021+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:37:52.231160+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'input_data' completed: dataframe"}
+{"timestamp": "2026-03-02T17:37:52.263491+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:37:52.949329+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_zero_percentages' completed: dict"}
+{"timestamp": "2026-03-02T17:37:52.965126+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:37:54.311430+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_zeros' failed: name 'columns_to_fix' is not defined, retrying..."}
+{"timestamp": "2026-03-02T17:37:54.334494+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:37:55.957109+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'replace_zeros' failed after retry"}
+{"timestamp": "2026-03-02T17:43:51.902996+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T17:43:58.592151+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:43:58.608528+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:43:58.609531+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T17:44:43.969200+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:44:44.102557+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:44:44.114923+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:44:44.116438+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T17:44:50.475083+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:47:50.486205+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:47:54.113410+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T17:48:28.920647+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T17:48:29.156261+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:48:29.173623+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T17:48:29.174622+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/qwen/qwen3-235b-a22b-thinking-2507"}
+{"timestamp": "2026-03-02T17:51:21.549988+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 3 nodes, plan_id=plan_b7aff0b818f7"}
+{"timestamp": "2026-03-02T17:51:26.036153+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_b7aff0b818f7' (3 nodes)"}
+{"timestamp": "2026-03-02T17:51:26.039364+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 3 nodes"}
+{"timestamp": "2026-03-02T17:51:26.040873+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:51:28.261444+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_zero_percentages' completed: dict"}
+{"timestamp": "2026-03-02T17:51:28.262415+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:51:29.397558+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'replace_invalid_zeros' completed: dataframe"}
+{"timestamp": "2026-03-02T17:51:29.423255+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T17:51:30.299276+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'compute_updated_summary' completed: dataframe"}

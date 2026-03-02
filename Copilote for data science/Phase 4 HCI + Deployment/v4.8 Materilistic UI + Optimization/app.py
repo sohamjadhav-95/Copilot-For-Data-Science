@@ -535,22 +535,52 @@ def register_routes(app):
     @app.route("/api/pro/approve", methods=["POST"])
     @login_required
     def api_pro_approve():
-        """Approve and execute a DAG plan."""
+        """Approve and start executing a DAG plan in a background thread.
+        Returns 202 immediately — client should poll /api/pro/status/<plan_id>.
+        """
+        import threading as _threading
         data = request.get_json()
         plan_id = data.get("plan_id")
 
         if not plan_id:
             return jsonify({"error": "plan_id required"}), 400
 
-        result = pro_engine.execute(plan_id)
-        if result is None:
-            return jsonify({"error": "Plan not found or expired"}), 404
+        # Mark as queued so get_status returns "running" immediately
+        from engines_pro.pro_engine import _execution_store
+        entry = _execution_store.get(plan_id)
+        if entry is None:
+            return jsonify({"error": "Plan not found or expired. Please regenerate the plan."}), 404
 
-        if "error" in result:
-            return jsonify(result), 400
+        plan = entry.get("plan")
+        if plan and plan.status not in ("planned", "replanned"):
+            return jsonify({"error": f"Plan already executed (status: {plan.status})"}), 400
 
-        _log_activity(request.current_user.id, "pro_execute", f"Plan {plan_id}")
-        return jsonify(result)
+        # Mark as running before background thread starts
+        entry["running"] = True
+        entry["result"] = None
+
+        def _run_in_background():
+            try:
+                result = pro_engine.execute(plan_id)
+                entry["running"] = False
+                if result is None:
+                    entry["exec_error"] = "Execution returned no result"
+                elif "error" in result:
+                    entry["exec_error"] = result["error"]
+                else:
+                    entry["exec_error"] = None
+                    entry["result"] = result
+            except Exception as exc:
+                entry["running"] = False
+                entry["exec_error"] = str(exc)
+                log_error(exc, context=f"Background execution of plan {plan_id}")
+
+        t = _threading.Thread(target=_run_in_background, daemon=True, name=f"pro-exec-{plan_id}")
+        t.start()
+
+        _log_activity(request.current_user.id, "pro_execute_start", f"Plan {plan_id}")
+        # Return 202 Accepted — client must poll /api/pro/status/<plan_id>
+        return jsonify({"status": "running", "plan_id": plan_id, "message": "Execution started. Poll /api/pro/status/<plan_id>"}), 202
 
     @app.route("/api/pro/status/<plan_id>")
     @login_required

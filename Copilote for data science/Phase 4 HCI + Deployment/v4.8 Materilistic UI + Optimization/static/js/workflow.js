@@ -195,10 +195,9 @@ async function approvePlan() {
     approveBtn.disabled = true;
     approveBtn.innerHTML = '<span class="spinner sm" style="border-color:rgba(5,150,105,0.3);border-top-color:var(--success);"></span> Executing...';
 
-    // Show progress bar
     const progressWrap = document.getElementById('wf-progress-wrap');
     progressWrap.style.display = 'block';
-    setProgress(0, 'Initializing...');
+    setProgress(0, 'Starting execution...');
 
     try {
         const plan_id = wfState.planData?.plan_id;
@@ -208,86 +207,205 @@ async function approvePlan() {
             wfState.isExecuting = false;
             return;
         }
+
+        // Step 1: Kick off async execution (returns 202 immediately)
         const res = await fetch('/api/pro/approve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            // API expects `plan_id`, not the full plan object
             body: JSON.stringify({ plan_id })
         });
-        const data = await res.json();
+        const kickoff = await res.json();
 
         if (!res.ok) {
-            showToast(data.error || 'Execution failed', 'error');
+            showToast(kickoff.error || 'Could not start execution', 'error');
             resetApproveBtn();
+            wfState.isExecuting = false;
             return;
         }
 
-        // ── PRO RESULTS FIX ──────────────────────────────────────────────
-        // After approval, iterate all step results and render each one
-        const resultSteps = data.steps || data.results || [];
-        const total = resultSteps.length || wfState.steps.length;
+        // res.status === 202 → execution started, begin polling
+        setProgress(5, 'Execution in progress...');
+        showToast('Execution started — running steps...', 'info');
 
-        resultSteps.forEach((stepResult, i) => {
-            // Mark step done in UI
-            markStepStatus(i, 'done');
-            setProgress(Math.round(((i + 1) / total) * 100), `Step ${i + 1}/${total} complete`);
+        // Step 2: Poll status until done or timeout (10 min max)
+        const MAX_POLLS = 200;   // 200 × 3s = 10 minutes
+        const POLL_INTERVAL_MS = 3000;
+        let polls = 0;
+        let renderedNodes = new Set();
 
-            // Render result into output panel
-            appendStepResult(i, stepResult);
-        });
+        const poll = async () => {
+            if (polls >= MAX_POLLS) {
+                showToast('Execution timed out after 10 minutes', 'error');
+                resetApproveBtn();
+                wfState.isExecuting = false;
+                return;
+            }
+            polls++;
 
-        // If there are steps but no per-step results (flat response)
-        if (resultSteps.length === 0 && data.result_type) {
-            appendStepResult(0, data);
-        }
+            let statusData;
+            try {
+                const statusRes = await fetch(`/api/pro/status/${plan_id}`);
+                statusData = await statusRes.json();
+                if (!statusRes.ok) {
+                    showToast(statusData.error || 'Status check failed', 'error');
+                    resetApproveBtn();
+                    wfState.isExecuting = false;
+                    return;
+                }
+            } catch (e) {
+                // Network hiccup — retry
+                setTimeout(poll, POLL_INTERVAL_MS);
+                return;
+            }
 
-        setProgress(100, 'Execution complete');
-        showToast('Workflow completed successfully', 'success');
+            const nodes = statusData.nodes || [];
+            const totalNodes = nodes.length || wfState.steps.length || 1;
+            const completedCount = nodes.filter(n => n.status === 'success').length;
+            const failedCount = nodes.filter(n => n.status === 'failed').length;
+
+            // Update step icons and progress bar for each node
+            nodes.forEach((node, i) => {
+                const icon = document.getElementById(`step-icon-${i}`);
+                const dagRow = document.getElementById(`dag-step-${i}`);
+                if (node.status === 'success') {
+                    if (icon) icon.textContent = '✓';
+                    if (dagRow) dagRow.classList.add('done');
+                } else if (node.status === 'failed') {
+                    if (icon) icon.textContent = '✗';
+                    if (dagRow) dagRow.classList.add('failed');
+                } else if (node.status === 'running' || node.status === 'retrying') {
+                    if (icon) icon.innerHTML = '<span class="spinner sm"></span>';
+                }
+
+                // Render output for newly completed nodes
+                if ((node.status === 'success' || node.status === 'failed') && !renderedNodes.has(node.id)) {
+                    renderedNodes.add(node.id);
+                    appendStepResult(i, node);
+                }
+            });
+
+            const pct = Math.max(10, Math.round((completedCount / totalNodes) * 90));
+            setProgress(pct, `${completedCount}/${totalNodes} steps complete`);
+
+            // Check if execution is done
+            const isRunning = statusData.running;
+            const execError = statusData.exec_error;
+            const planStatus = statusData.plan_status;
+            const isDone = !isRunning && (planStatus === 'completed' || planStatus === 'failed' || planStatus === 'executing' && completedCount + failedCount >= totalNodes);
+
+            if (isDone || (!isRunning && planStatus !== 'planned' && planStatus !== 'approved' && planStatus !== 'executing')) {
+                setProgress(100, 'Execution complete');
+
+                if (execError) {
+                    showToast('Execution error: ' + execError, 'error');
+                } else {
+                    const result = statusData.result;
+                    const summary = result?.summary || '';
+                    if (summary) {
+                        appendSummaryBlock(summary, result);
+                    }
+                    const failedNodes = result?.failed_nodes || [];
+                    if (failedNodes.length) {
+                        showToast(`⚠ ${failedNodes.length} step(s) failed — see output for details`, 'warn');
+                    } else {
+                        showToast('Workflow completed successfully ✓', 'success');
+                    }
+                }
+
+                wfState.isExecuting = false;
+                resetApproveBtn();
+                return;
+            }
+
+            // Still running — poll again
+            setTimeout(poll, POLL_INTERVAL_MS);
+        };
+
+        setTimeout(poll, 1500); // First poll after 1.5s
 
     } catch (e) {
         showToast('Execution error: ' + e.message, 'error');
         console.error(e);
-    } finally {
         wfState.isExecuting = false;
         resetApproveBtn();
     }
 }
 
+function appendSummaryBlock(summary, result) {
+    const outputScroll = document.getElementById('output-scroll');
+    if (!outputScroll) return;
+    const block = document.createElement('div');
+    block.className = 'output-block';
+    const status = result?.status || 'completed';
+    const icon = status === 'completed' ? '✅' : '⚠';
+    block.innerHTML = `
+    <div class="output-block-header">
+      <span class="output-block-label">${icon} Execution Summary</span>
+      <span style="margin-left:auto;font-size:0.65rem;color:rgba(255,255,255,0.3);">${status}</span>
+    </div>
+    <div class="output-block-body" style="white-space:pre-wrap;font-size:0.8125rem;color:rgba(255,255,255,0.75);line-height:1.7;">${esc(summary)}</div>`;
+    outputScroll.appendChild(block);
+    block.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+
+
 // ── Append Step Result to Output Panel ───────────────────────────
 function appendStepResult(stepIndex, stepData) {
     const outputScroll = document.getElementById('output-scroll');
     const outputEmpty = document.getElementById('output-empty');
+    if (!outputScroll) return;
     if (outputEmpty) outputEmpty.style.display = 'none';
 
-    const stepName = (wfState.steps[stepIndex] || {}).action || (wfState.steps[stepIndex] || {}).name || `Step ${stepIndex + 1}`;
-    const rtype = stepData.result_type || stepData.type || 'text';
-    const rdata = stepData.result_data || stepData.data || stepData.result || '';
+    // Support new polling node format: { id, description, operation, status, output: {type, data} }
+    // as well as legacy format: { result_type, result_data, type, data }
+    const nodeOutput = stepData.output || {};
+    const stepName = stepData.description || stepData.operation
+        || (wfState.steps[stepIndex] || {}).description
+        || (wfState.steps[stepIndex] || {}).operation
+        || `Step ${stepIndex + 1}`;
+
+    // Determine type and data from whichever format is present
+    const rtype = nodeOutput.type || stepData.result_type || stepData.type || 'text';
+    const rdata = nodeOutput.data || stepData.result_data || stepData.data || stepData.result || '';
+    const failed = stepData.status === 'failed';
 
     let bodyHtml = '';
-
-    if (rtype === 'dataframe' || rtype === 'table') {
+    if (failed && !rdata) {
+        const err = stepData.metadata?.error || 'Step failed';
+        bodyHtml = `<div style="color:var(--error);font-size:0.8rem;font-family:var(--font-mono);white-space:pre-wrap;">${esc(err)}</div>`;
+    } else if (rtype === 'dataframe' || rtype === 'table') {
         bodyHtml = buildTableHtml(rdata);
-    } else if (rtype === 'image' || rtype === 'chart' || rtype === 'figure') {
-        // base64 image
-        const src = rdata.startsWith('data:') ? rdata : `data:image/png;base64,${rdata}`;
+    } else if (rtype === 'chart' || rtype === 'image' || rtype === 'figure') {
+        const src = typeof rdata === 'string' && rdata.startsWith('data:') ? rdata : `data:image/png;base64,${rdata}`;
         bodyHtml = `<img src="${src}" alt="Chart" style="width:100%;border-radius:4px;">`;
     } else if (rtype === 'error') {
         bodyHtml = `<div style="color:var(--error);font-size:0.8rem;font-family:var(--font-mono);white-space:pre-wrap;">${esc(String(rdata))}</div>`;
+    } else if (rtype === 'none' || !rdata) {
+        bodyHtml = `<div style="color:rgba(255,255,255,0.35);font-size:0.8rem;font-style:italic;">No displayable output for this step.</div>`;
     } else {
-        // text / summary
         bodyHtml = `<div style="white-space:pre-wrap;font-size:0.8125rem;color:rgba(255,255,255,0.7);line-height:1.6;">${esc(String(rdata))}</div>`;
     }
 
+    // Don't duplicate an existing block for this step
+    const existingId = `output-step-${stepData.id || stepIndex}`;
+    if (document.getElementById(existingId)) return;
+
     const block = document.createElement('div');
     block.className = 'output-block';
-    block.id = `output-step-${stepIndex}`;
+    block.id = existingId;
+    const statusBadge = failed
+        ? `<span style="background:rgba(225,29,72,0.15);color:#f87171;font-size:0.6rem;padding:1px 6px;border-radius:4px;font-weight:600;">FAILED</span>`
+        : `<span style="background:rgba(5,150,105,0.15);color:#34d399;font-size:0.6rem;padding:1px 6px;border-radius:4px;font-weight:600;">DONE</span>`;
     block.innerHTML = `
     <div class="output-block-header">
       <span class="output-block-label">Step ${stepIndex + 1} · ${esc(stepName)}</span>
-      <span style="margin-left:auto;font-size:0.65rem;color:rgba(255,255,255,0.3);">${rtype}</span>
+      <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+        <span style="font-size:0.65rem;color:rgba(255,255,255,0.3);">${rtype}</span>
+        ${statusBadge}
+      </span>
     </div>
-    <div class="output-block-body">${bodyHtml}</div>
-  `;
+    <div class="output-block-body">${bodyHtml}</div>`;
     outputScroll.appendChild(block);
     block.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
