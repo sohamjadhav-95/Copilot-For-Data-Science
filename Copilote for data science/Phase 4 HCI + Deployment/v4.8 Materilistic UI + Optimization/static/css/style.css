@@ -2409,30 +2409,28 @@ body.workflow-page .page-content {
   font-size: 13px;
 }
 
-/* ── Workflow Studio (Pro Mode) ─────────────────────────────────── */
-.workflow-page {
-  background: #0A0A12 !important;
-}
-
+/* ── Workflow Studio (Pro Mode) — theme-aware, no forced dark ───── */
+/* Body bg/topbar now use global CSS variables, so light mode stays light. */
+/* Pro Mode identity comes from gradient accents, NOT dark backgrounds.   */
 .workflow-page .page-topbar {
-  background: #10101C;
-  border-bottom-color: rgba(255, 255, 255, 0.07);
+  background: var(--bg-elevated);
+  border-bottom-color: var(--border);
 }
 
 .workflow-page .breadcrumb-title,
 .workflow-page .topbar-username {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: var(--text-primary) !important;
 }
 
 .workflow-page .nav-toggle,
 .workflow-page .topbar-btn {
-  color: rgba(255, 255, 255, 0.5) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border) !important;
 }
 
 .workflow-page .nav-toggle:hover,
 .workflow-page .topbar-btn:hover {
-  background: rgba(255, 255, 255, 0.07) !important;
+  background: var(--bg-muted) !important;
 }
 
 .workflow-page .page-content {
@@ -2440,6 +2438,15 @@ body.workflow-page .page-content {
   padding: 0 !important;
   overflow: hidden !important;
   /* trap scroll in panels, not page */
+}
+
+/* workflow-studio must be a proper flex child of page-content (which becomes
+   display:flex flex-direction:column via body.workflow-page rule). flex:1 + min-height:0
+   fills exactly the available space without the fragile calc() override. */
+.workflow-page .workflow-studio {
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }
 
 .workflow-studio {
@@ -2452,13 +2459,14 @@ body.workflow-page .page-content {
 .studio-panel {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  border-right: 1px solid var(--border);
   overflow: hidden;
+  background: var(--bg-elevated);
 }
 
 .studio-panel:last-child {
   border-right: none;
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 1px solid var(--border);
 }
 
 .studio-panel-header {
@@ -2466,15 +2474,16 @@ body.workflow-page .page-content {
   align-items: center;
   gap: 8px;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+  /* Pro-mode identity: gradient accent stripe instead of dark bg */
+  background: linear-gradient(135deg, var(--bg-subtle) 0%, color-mix(in srgb, var(--accent-500) 6%, var(--bg-subtle)) 100%);
   flex-shrink: 0;
 }
 
 .studio-panel-title {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary);
 }
 
 .studio-panel-scroll,
@@ -2490,17 +2499,17 @@ body.workflow-page .page-content {
 /* Left panel — Plan / Steps */
 .plan-input-area {
   padding: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .plan-textarea {
   width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 10px 12px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-primary);
   font-size: 0.8125rem;
   resize: none;
   height: 80px;
@@ -2512,10 +2521,11 @@ body.workflow-page .page-content {
 
 .plan-textarea:focus {
   border-color: var(--accent-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-500) 15%, transparent);
 }
 
 .plan-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--text-muted);
 }
 
 .plan-actions {
@@ -2555,29 +2565,29 @@ body.workflow-page .page-content {
 }
 
 .plan-btn.ghost {
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
 }
 
 .plan-btn.ghost:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: var(--bg-muted);
+  color: var(--text-primary);
 }
 
 .step-item {
   padding: 10px 12px;
   border-radius: var(--radius-md);
   margin-bottom: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   cursor: pointer;
   transition: all var(--duration-fast);
 }
 
 .step-item:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: var(--bg-muted);
+  border-color: var(--border-strong, var(--border));
 }
 
 .step-item.active {
@@ -2623,7 +2633,7 @@ body.workflow-page .page-content {
 .step-name {
   font-size: 0.8rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-primary);
   flex: 1;
 }
 
@@ -2647,7 +2657,7 @@ body.workflow-page .page-content {
 
 .step-desc {
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-muted);
   margin-top: 4px;
   line-height: 1.4;
 }
@@ -2655,7 +2665,7 @@ body.workflow-page .page-content {
 .step-result-mini {
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid var(--border);
 }
 
 .step-result-mini .badge {
@@ -2665,8 +2675,8 @@ body.workflow-page .page-content {
 /* Approve/Reject bar */
 .plan-approve-bar {
   padding: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--border);
+  background: var(--bg-subtle);
   flex-shrink: 0;
 }
 
@@ -2698,7 +2708,8 @@ body.workflow-page .page-content {
 
 /* Center — DAG / summary */
 .studio-center {
-  background: #0A0A12;
+  background: var(--bg);
+  /* theme-aware, not forced dark */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2709,7 +2720,7 @@ body.workflow-page .page-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.2);
+  color: var(--text-muted);
   font-size: 0.875rem;
   flex-direction: column;
   gap: 12px;
@@ -2725,6 +2736,10 @@ body.workflow-page .page-content {
   display: flex;
   flex-direction: column;
   gap: 0;
+  flex: 1;
+  /* fill remaining space in .studio-center flex column */
+  min-height: 0;
+  /* allow shrink so overflow-y actually scrolls */
   overflow-y: auto;
 }
 
@@ -2742,7 +2757,7 @@ body.workflow-page .page-content {
   top: 32px;
   bottom: -4px;
   width: 2px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
 }
 
 .dag-step-icon {
@@ -2793,13 +2808,13 @@ body.workflow-page .page-content {
 .dag-step-name {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .dag-step-desc {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-muted);
   line-height: 1.5;
 }
 
@@ -2807,23 +2822,33 @@ body.workflow-page .page-content {
 .studio-output {
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  /* critical: let flex parent cap height so overflow-y works on child */
+  min-width: 0;
+  overflow: hidden;
+  /* same pattern as .chat-pane / .results-pane in normal mode */
 }
 
 .output-scroll {
   flex: 1;
   min-height: 0;
-  /* allow flex shrink so content scrolls within panel */
+  /* NOTE: block layout (not flex) — same fix as .results-scroll in normal mode.
+     Using display:flex here causes flex children's min-height:auto to fight the
+     container height cap, making overflow escape to the parent panel instead of
+     scrolling inside output-scroll. Block layout avoids this entirely. */
   padding: 12px;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+}
+
+.output-block+.output-block {
+  margin-top: 10px;
+  /* replaces gap:10px from the removed flex layout */
 }
 
 .output-block {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -2833,14 +2858,15 @@ body.workflow-page .page-content {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+  /* Gradient accent stripe — pro mode identity in both light & dark */
+  background: linear-gradient(135deg, var(--bg-muted) 0%, color-mix(in srgb, var(--accent-500) 8%, var(--bg-muted)) 100%);
 }
 
 .output-block-label {
   font-size: 0.7rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--accent-600, var(--accent-500));
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -2848,7 +2874,7 @@ body.workflow-page .page-content {
 .output-block-body {
   padding: 10px 12px;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-primary);
   line-height: 1.6;
 }
 

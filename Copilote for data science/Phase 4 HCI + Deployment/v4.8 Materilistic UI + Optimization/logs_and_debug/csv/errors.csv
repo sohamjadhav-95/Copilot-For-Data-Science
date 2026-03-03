@@ -1,1 +1,37 @@
 timestamp,level,logger,session_id,user_id,plan_id,provider,model,latency_ms,tokens,status,intent,query,result_type,node_id,node_type,operation,execution_time_ms,completed_nodes,failed_nodes,replan_count,endpoint,method,http_status,response_ms,memory_mb,error_type,error_detail,context,stack_trace,action,ip_address,user_agent,page,component,event_type,browser,viewport,message,extra_json
+2026-03-02T19:38:20.016405+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_55399c1d9bcb,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_55399c1d9bcb,
+2026-03-02T19:38:49.790628+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_d0722e3e3a5e,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_d0722e3e3a5e,
+2026-03-02T19:48:03.207244+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,All AI call attempts exhausted,"prompt=Conversation:
+USER: Show first 10 rows
+ASSISTANT: All set! I ran that query for you — take a look at","NoneType: None
+",,,,,,,,,"[RuntimeError] All AI call attempts exhausted | context=prompt=Conversation:
+USER: Show first 10 rows
+ASSISTANT: All set! I ran that query for you — take a look at",

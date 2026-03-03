@@ -391,3 +391,127 @@
 {"timestamp": "2026-03-02T19:14:34.233166+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
 {"timestamp": "2026-03-02T19:14:37.011572+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[VALIDATOR] CRITICAL: Node 'node_6' declared output_var='summary_report' but produced no output (output_type=NONE). Downstream variable reads will fail — aborting."}
 {"timestamp": "2026-03-02T19:14:37.545933+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:36:47.699506+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:36:50.461453+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:37:16.254243+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:37:49.613278+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:37:59.214594+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-02T19:38:03.595733+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-02T19:38:04.308521+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:04.341047+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:04.342048+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:09.676071+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_3 → node_4 → node_3"}
+{"timestamp": "2026-03-02T19:38:09.677594+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-02T19:38:12.149512+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:12.169785+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:12.172564+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:17.006249+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_55399c1d9bcb"}
+{"timestamp": "2026-03-02T19:38:19.996176+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_55399c1d9bcb' (6 nodes)"}
+{"timestamp": "2026-03-02T19:38:19.998175+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-02T19:38:20.001713+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_1': missing_variable: node 'node_1' needs variable 'df' which doesn't exist"}
+{"timestamp": "2026-03-02T19:38:20.004238+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_1' needs variable 'df' which doesn't exist"}
+{"timestamp": "2026-03-02T19:38:29.194101+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:29.212566+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Profile the dataset and identify columns with more than 5% zero values where zero is not medically v"}
+{"timestamp": "2026-03-02T19:38:29.214566+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:32.743170+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_d0722e3e3a5e"}
+{"timestamp": "2026-03-02T19:38:34.939198+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_d0722e3e3a5e' (5 nodes)"}
+{"timestamp": "2026-03-02T19:38:34.944795+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 5 nodes"}
+{"timestamp": "2026-03-02T19:38:34.948737+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:36.483368+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dict"}
+{"timestamp": "2026-03-02T19:38:36.491495+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:38.176348+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dict"}
+{"timestamp": "2026-03-02T19:38:38.182238+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:39.421078+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'cols_to_impute' is not defined, retrying..."}
+{"timestamp": "2026-03-02T19:38:39.423478+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:40.447480+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-02T19:38:40.481900+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:41.157966+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: name 'df_imputed' is not defined, retrying..."}
+{"timestamp": "2026-03-02T19:38:41.177956+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:42.409560+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-02T19:38:42.457111+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:43.954451+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed: name 'cols_to_impute' is not defined, retrying..."}
+{"timestamp": "2026-03-02T19:38:43.990918+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-02T19:38:49.750257+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_5' failed after retry"}
+{"timestamp": "2026-03-02T19:47:24.711994+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded USDJPYm_M1_output_1_4.csv (99845x28)"}
+{"timestamp": "2026-03-02T19:47:27.749272+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:47:27.755100+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-02T19:47:27.772077+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show first 10 rows"}
+{"timestamp": "2026-03-02T19:47:29.046637+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (304 chars)"}
+{"timestamp": "2026-03-02T19:47:29.684853+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #78: display — Show first 10 rows"}
+{"timestamp": "2026-03-02T19:47:52.559855+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'plot close over time' -> visualize (keyword)"}
+{"timestamp": "2026-03-02T19:47:52.574314+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'plot close over time' -> Intent: visualize"}
+{"timestamp": "2026-03-02T19:47:53.161555+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b: empty response (attempt 1)"}
+{"timestamp": "2026-03-02T19:47:54.442002+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-03-02T19:47:59.084410+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openrouter/openai/gpt-oss-120b:free attempt 1 failed: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'openai/gpt-oss-120b:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'OpenInference', 'is_byok': False}}, 'user_id': 'user_39pXoHe4Yocx6gUAkJdroR6Rvom'}"}
+{"timestamp": "2026-03-02T19:47:59.086947+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Rate limited, waiting 3s..."}
+{"timestamp": "2026-03-02T19:48:03.225280+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: plot close over time"}
+{"timestamp": "2026-03-02T19:48:04.838428+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1899 chars)"}
+{"timestamp": "2026-03-02T19:48:07.114648+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-02T19:48:07.139642+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #79: visualize — plot close over time"}
+{"timestamp": "2026-03-02T19:49:20.481441+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'how many null values are there tell me column wise' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:49:20.486976+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'how many null values are there tell me column wise' -> Intent: display"}
+{"timestamp": "2026-03-02T19:49:20.507463+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: how many null values are there tell me column wise"}
+{"timestamp": "2026-03-02T19:49:21.370825+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (433 chars)"}
+{"timestamp": "2026-03-02T19:49:22.046325+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #80: display — how many null values are there tell me column wise"}
+{"timestamp": "2026-03-02T19:49:44.626498+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'in total' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:49:44.631693+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'in total' -> Intent: display"}
+{"timestamp": "2026-03-02T19:49:45.105284+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'in total' -> 'Provide the total number of null values in the dataset (the sum across all columns).'"}
+{"timestamp": "2026-03-02T19:49:45.108317+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'in total' -> 'Provide the total number of null values in the dataset (the sum across all columns).'"}
+{"timestamp": "2026-03-02T19:49:45.125367+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Provide the total number of null values in the dataset (the sum across all columns)."}
+{"timestamp": "2026-03-02T19:49:45.853941+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (432 chars)"}
+{"timestamp": "2026-03-02T19:49:46.884727+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #81: display — Provide the total number of null values in the dataset (the sum across all colum..."}
+{"timestamp": "2026-03-02T19:50:25.126993+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'last 10 rows show me' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:50:25.140365+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'last 10 rows show me' -> Intent: display"}
+{"timestamp": "2026-03-02T19:50:25.625956+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'last 10 rows show me' -> 'Show the last 10 rows of the dataset.'"}
+{"timestamp": "2026-03-02T19:50:25.628589+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'last 10 rows show me' -> 'Show the last 10 rows of the dataset.'"}
+{"timestamp": "2026-03-02T19:50:25.649917+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show the last 10 rows of the dataset."}
+{"timestamp": "2026-03-02T19:50:26.265753+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (298 chars)"}
+{"timestamp": "2026-03-02T19:50:27.423364+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #82: display — Show the last 10 rows of the dataset."}
+{"timestamp": "2026-03-02T19:50:59.696822+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'delete row where date time is 2025-08-25 07:45:00' -> modify (keyword)"}
+{"timestamp": "2026-03-02T19:50:59.701287+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'delete row where date time is 2025-08-25 07:45:00' -> Intent: modify"}
+{"timestamp": "2026-03-02T19:50:59.742942+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Backup created: backup_20260303_012059.csv"}
+{"timestamp": "2026-03-02T19:51:00.746489+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (633 chars)"}
+{"timestamp": "2026-03-02T19:51:00.749468+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MODIFY] Executing AI-generated code..."}
+{"timestamp": "2026-03-02T19:51:04.838317+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #83: modify — delete row where date time is 2025-08-25 07:45:00"}
+{"timestamp": "2026-03-02T19:51:12.150480+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-02T19:51:12.154043+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-02T19:51:12.536576+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'Show first 10 rows' -> 'Show the first 10 rows of the dataset.'"}
+{"timestamp": "2026-03-02T19:51:12.539201+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'Show first 10 rows' -> 'Show the first 10 rows of the dataset.'"}
+{"timestamp": "2026-03-02T19:51:12.551510+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show the first 10 rows of the dataset."}
+{"timestamp": "2026-03-02T19:51:13.109627+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (281 chars)"}
+{"timestamp": "2026-03-02T19:51:13.737265+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #84: display — Show the first 10 rows of the dataset."}
+{"timestamp": "2026-03-03T18:06:36.958691+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-03T18:06:40.924323+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-03T18:07:03.685993+00:00", "level": "INFO", "logger": "copilot.app", "message": "[login] User: soham.ai.engineer@gmail.com"}
+{"timestamp": "2026-03-03T18:07:23.233907+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded USDJPYm_M1_Cleaned.csv (99845x10)"}
+{"timestamp": "2026-03-03T18:07:31.853650+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded USDJPYm_M1_Cleaned.csv (99845x10)"}
+{"timestamp": "2026-03-03T18:07:35.511754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-03T18:07:35.517812+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-03T18:07:35.535016+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show first 10 rows"}
+{"timestamp": "2026-03-03T18:07:39.194217+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (629 chars)"}
+{"timestamp": "2026-03-03T18:07:39.453311+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #85: display — Show first 10 rows"}
+{"timestamp": "2026-03-03T18:08:22.604693+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded USDJPYm_M1_Cleaned.csv (99845x10)"}
+{"timestamp": "2026-03-03T18:08:22.910255+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Annlyse correation in trend from start to end and plot it"}
+{"timestamp": "2026-03-03T18:08:23.451731+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Annlyse correation in trend from start to end and plot it"}
+{"timestamp": "2026-03-03T18:08:23.454292+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:08:38.728031+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_2c56ae7c63be"}
+{"timestamp": "2026-03-03T18:08:46.556039+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_2c56ae7c63be' (6 nodes)"}
+{"timestamp": "2026-03-03T18:08:46.557538+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-03T18:08:46.560612+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:08:49.431820+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-03T18:08:49.467856+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:08:50.587673+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-03T18:08:50.893815+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_2', profile updated"}
+{"timestamp": "2026-03-03T18:08:50.928043+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:08:53.352325+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-03T18:08:53.425375+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:08:59.513307+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-03T18:08:59.582645+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:09:03.435503+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: artifact"}
+{"timestamp": "2026-03-03T18:09:03.859772+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:09:07.995274+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[VALIDATOR] CRITICAL: Node 'node_6' declared output_var='corr_summary' but produced no output (output_type=NONE). Downstream variable reads will fail — aborting."}
+{"timestamp": "2026-03-03T18:09:08.064416+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-03T18:11:10.736443+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-03T18:11:13.373560+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-03T18:16:41.935599+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-03T18:16:45.462451+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}

@@ -45,7 +45,7 @@ MODEL_TIERS = {
     "heavy": {
         "description": "Heavy reasoning model — DAG planning, final reports, re-planning",
         "groq": None,  # Groq does not host this model
-        "openrouter": "qwen/qwen3-235b-a22b-thinking-2507",
+        "openrouter": "openai/gpt-oss-120b",
     },
     "mid": {
         "description": "Mid-tier model — code generation, step execution",
