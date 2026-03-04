@@ -1,0 +1,832 @@
+/* ═══════════════════════════════════════════════════════════════════
+   WORKFLOW STUDIO (Pro Mode) — Theme-aware styles
+   Uses CSS variables throughout so light/dark mode is respected.
+   Pro identity comes from gradient accents, not forced dark bg.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Pro accent token (gradient personality) ──────────────────────── */
+:root {
+  --pro-gradient: linear-gradient(135deg, var(--accent-500) 0%, var(--violet-500) 100%);
+  --pro-gradient-soft: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.12) 0%,
+      rgba(139, 92, 246, 0.10) 100%);
+  --pro-gradient-border: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.4));
+  --pro-glow: 0 0 20px rgba(99, 102, 241, 0.18);
+}
+
+/* ── Workflow Page Shell ────────────────────────────────────────────
+   NO background override — inherits var(--bg) from the theme.
+   Only the topbar gets the subtle Pro gradient stripe. */
+.workflow-page .page-topbar {
+  background: var(--bg-elevated);
+  border-bottom: 2px solid transparent;
+  border-image: var(--pro-gradient) 1;
+  box-shadow: var(--shadow-sm), var(--pro-glow);
+}
+
+.workflow-page .page-content {
+  background: transparent;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* workflow-studio must fill page-content */
+.workflow-page .workflow-studio {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+
+/* ── Workflow Studio Shell ──────────────────────────────────────────── */
+.workflow-studio {
+  height: calc(100vh - var(--topbar-h));
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-subtle);
+  min-height: 500px;
+}
+
+/* ── Shared Panel Base ─────────────────────────────────────────────── */
+.studio-panel,
+.studio-center {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.studio-panel {
+  border-right: 1px solid var(--border);
+}
+
+.studio-panel:last-child {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+.studio-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+/* Gradient left-border accent on panel headers — the Pro touch */
+.studio-panel-header::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--pro-gradient);
+  flex-shrink: 0;
+}
+
+.studio-panel-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Scroll containers inside panels */
+.studio-panel-scroll,
+.output-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+}
+
+/* ── Left Panel — Plan / Steps ────────────────────────────────────── */
+.plan-input-area {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.plan-textarea {
+  width: 100%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  resize: none;
+  height: 80px;
+  outline: none;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.plan-textarea:focus {
+  border-color: var(--accent-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
+}
+
+.plan-textarea::placeholder {
+  color: var(--text-placeholder);
+}
+
+.plan-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.plan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.plan-btn.generate {
+  background: var(--pro-gradient);
+  color: #fff;
+  flex: 1;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.plan-btn.generate:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+
+.plan-btn.generate:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.plan-btn.ghost {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.plan-btn.ghost:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+/* ── Step Items ────────────────────────────────────────────────────── */
+.step-item {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.step-item:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-xs);
+}
+
+.step-item.active {
+  background: var(--pro-gradient-soft);
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+.step-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-number {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent-500);
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-item.running .step-number {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.step-item.done .step-number {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.step-item.error .step-number {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.step-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.step-status-icon {
+  font-size: 14px;
+  font-family: 'Material Symbols Rounded';
+}
+
+.step-status-icon.running {
+  color: var(--warning);
+  animation: spin 1s linear infinite;
+}
+
+.step-status-icon.done {
+  color: var(--success);
+}
+
+.step-status-icon.error {
+  color: var(--error);
+}
+
+.step-desc {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.step-result-mini {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.step-result-mini .badge {
+  font-size: 0.65rem;
+}
+
+/* ── Approve / Reject bar ──────────────────────────────────────────── */
+.plan-approve-bar {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.plan-approve-bar .plan-actions {
+  margin-top: 0;
+}
+
+.approve-btn {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+  flex: 1;
+  justify-content: center;
+}
+
+.approve-btn:hover {
+  background: rgba(5, 150, 105, 0.2);
+}
+
+.reject-btn {
+  background: var(--error-bg);
+  color: var(--error);
+  border: 1px solid var(--error-border);
+}
+
+.reject-btn:hover {
+  background: rgba(225, 29, 72, 0.18);
+}
+
+/* ── Center — DAG / Summary ────────────────────────────────────────── */
+.studio-center {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dag-canvas {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dag-canvas .material-symbols-rounded {
+  font-size: 48px;
+  opacity: 0.25;
+}
+
+.dag-steps-linear {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.dag-step-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.dag-step-row:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--border);
+}
+
+.dag-step-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.1);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dag-step-icon .material-symbols-rounded {
+  font-size: 14px;
+  color: var(--accent-500);
+}
+
+.dag-step-icon.done {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+.dag-step-icon.done .material-symbols-rounded {
+  color: var(--success);
+}
+
+.dag-step-icon.running {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+}
+
+.dag-step-icon.running .material-symbols-rounded {
+  color: var(--warning);
+}
+
+.dag-step-icon.error {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+}
+
+.dag-step-body {
+  padding-bottom: 20px;
+}
+
+.dag-step-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.dag-step-desc {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ── Right — Output Panel ──────────────────────────────────────────── */
+.studio-output {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.output-scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.output-block+.output-block {
+  margin-top: 10px;
+}
+
+.output-block {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.output-block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--pro-gradient-soft);
+}
+
+.output-block-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.output-block-body {
+  padding: 10px 12px;
+  font-size: 0.8125rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.output-block img {
+  width: 100%;
+  display: block;
+}
+
+.output-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+  gap: 10px;
+}
+
+.output-empty .material-symbols-rounded {
+  font-size: 36px;
+  opacity: 0.4;
+}
+
+/* ── Progress Bar ──────────────────────────────────────────────────── */
+.exec-progress {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+}
+
+.exec-progress-bar-wrap {
+  height: 4px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.exec-progress-bar {
+  height: 100%;
+  background: var(--pro-gradient);
+  border-radius: var(--radius-full);
+  width: 0%;
+  transition: width 0.5s var(--ease-standard);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+.exec-progress-label {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Workflow Layout Toggle Buttons ───────────────────────────────── */
+.wf-layout-toggles {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+
+.wf-layout-btn {
+  width: 30px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.wf-layout-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.wf-layout-btn.active {
+  background: var(--pro-gradient);
+  color: #fff;
+  box-shadow: 0 1px 6px rgba(99, 102, 241, 0.4);
+}
+
+/* ── Workflow Expand Button ───────────────────────────────────────── */
+.wf-expand-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  transition: all var(--duration-fast);
+  flex-shrink: 0;
+}
+
+.wf-expand-btn:hover {
+  background: var(--bg-muted);
+  color: var(--text-primary);
+}
+
+.wf-expand-btn .material-symbols-rounded {
+  font-size: 15px;
+}
+
+/* ── Workflow Panel Expand Overlay ────────────────────────────────── */
+.wf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  flex-direction: column;
+  overflow: hidden;
+  animation: wfOverlayIn 0.18s var(--ease-decel);
+}
+
+@keyframes wfOverlayIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wf-overlay-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 2px solid transparent;
+  border-image: var(--pro-gradient) 1;
+  flex-shrink: 0;
+  gap: 12px;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.wf-overlay-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.wf-overlay-close {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--duration-fast);
+}
+
+.wf-overlay-close:hover {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.wf-overlay-close .material-symbols-rounded {
+  font-size: 18px;
+}
+
+.wf-overlay-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Workflow Resize Handle ───────────────────────────────────────── */
+.wf-resize-handle {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background var(--duration-fast);
+}
+
+.wf-resize-handle.wf-resize-h {
+  width: 6px;
+  cursor: col-resize;
+  background: var(--border);
+}
+
+.wf-resize-handle.wf-resize-v {
+  height: 6px;
+  cursor: row-resize;
+  background: var(--border);
+}
+
+.wf-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: var(--border-strong);
+  transition: background var(--duration-fast);
+}
+
+.wf-resize-handle.wf-resize-h::after {
+  width: 2px;
+  height: 40px;
+}
+
+.wf-resize-handle.wf-resize-v::after {
+  width: 40px;
+  height: 2px;
+}
+
+.wf-resize-handle:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.wf-resize-handle:hover::after {
+  background: var(--accent-500);
+}
+
+/* ── Layout 1: Default 3-column ──────────────────────────────────── */
+.workflow-studio.wf-layout-1 {
+  display: flex;
+  flex-direction: row;
+}
+
+.wf-layout-1 .studio-panel {
+  flex: 0 0 280px;
+}
+
+.wf-layout-1 .studio-center {
+  flex: 1;
+}
+
+.wf-layout-1 .studio-output {
+  flex: 0 0 320px;
+}
+
+.wf-layout-1 #wf-resize-plan-graph {
+  display: flex;
+}
+
+.wf-layout-1 #wf-resize-graph-output {
+  display: flex;
+}
+
+/* ── Layout 2: Plan+Output top, Graph bottom ─────────────────────── */
+.workflow-studio.wf-layout-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 6px 240px;
+  grid-template-areas:
+    "plan  output"
+    "vres  vres"
+    "graph graph";
+}
+
+.wf-layout-2 #wf-panel-plan {
+  grid-area: plan;
+  border-right: 1px solid var(--border);
+}
+
+.wf-layout-2 #wf-panel-output {
+  grid-area: output;
+}
+
+.wf-layout-2 #wf-center {
+  grid-area: graph;
+  border-top: 1px solid var(--border);
+}
+
+.wf-layout-2 #wf-resize-plan-graph {
+  display: none;
+}
+
+.wf-layout-2 #wf-resize-graph-output {
+  display: none;
+}
+
+.wf-layout-2 #wf-resize-v-2 {
+  grid-area: vres;
+  cursor: row-resize;
+  display: flex;
+}
+
+/* ── Layout 3: Plan+Graph stacked left, Output full-height right ─── */
+.workflow-studio.wf-layout-3 {
+  display: grid;
+  grid-template-columns: 340px 6px 1fr;
+  grid-template-rows: 1fr 6px 1fr;
+  grid-template-areas:
+    "plan  hres  output"
+    "vres3 hres  output"
+    "graph hres  output";
+}
+
+.wf-layout-3 #wf-panel-plan {
+  grid-area: plan;
+  border-bottom: 1px solid var(--border);
+}
+
+.wf-layout-3 #wf-center {
+  grid-area: graph;
+}
+
+.wf-layout-3 #wf-panel-output {
+  grid-area: output;
+  border-left: 1px solid var(--border);
+}
+
+.wf-layout-3 #wf-resize-plan-graph {
+  grid-area: hres;
+  display: none;
+}
+
+.wf-layout-3 #wf-resize-graph-output {
+  grid-area: hres;
+  cursor: col-resize;
+  display: flex;
+}
+
+.wf-layout-3 #wf-resize-v-3 {
+  grid-area: vres3;
+  cursor: row-resize;
+  display: flex;
+}
+
+/* Hide layout-specific resize handles by default */
+#wf-resize-v-2,
+#wf-resize-v-3 {
+  display: none;
+}

@@ -1,0 +1,102 @@
+/* ── Responsive ─────────────────────────────────────────────────── */
+
+@media (max-width:1100px) {
+
+  /* workflow-studio is now flex — remove old grid override */
+  .wf-layout-1 .studio-panel:not(.studio-output) {
+    flex-basis: 220px;
+  }
+
+  .wf-layout-1 .studio-output {
+    flex-basis: 260px;
+  }
+
+  .content-grid.sidebar-right {
+    grid-template-columns: 1fr 280px;
+  }
+}
+
+@media (max-width:900px) {
+  .app-nav {
+    width: var(--nav-width-collapsed);
+    min-width: var(--nav-width-collapsed);
+  }
+
+  .app-nav .brand-text,
+  .app-nav .nav-label,
+  .app-nav .nav-badge,
+  .app-nav .user-info,
+  .app-nav .logout-btn {
+    display: none;
+  }
+
+  .app-nav .nav-item {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .app-nav .nav-item::before {
+    display: none;
+  }
+
+  .page-wrapper {
+    margin-left: var(--nav-width-collapsed);
+  }
+
+  /* Layout 1 collapses to single column on small screens */
+  .wf-layout-1.workflow-studio {
+    flex-direction: column;
+  }
+
+  .wf-layout-1 .studio-panel,
+  .wf-layout-1 .studio-output {
+    flex: 1;
+    min-height: 200px;
+  }
+
+  .wf-layout-1 .wf-resize-handle {
+    display: none !important;
+  }
+
+  .content-grid,
+  .content-grid.sidebar-right {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-run-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .chat-pane {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 400px;
+  }
+}
+
+@media (max-width:640px) {
+  .page-content {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .model-tier-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-topbar {
+    padding: 0 16px;
+  }
+
+  .topbar-username {
+    display: none;
+  }
+}

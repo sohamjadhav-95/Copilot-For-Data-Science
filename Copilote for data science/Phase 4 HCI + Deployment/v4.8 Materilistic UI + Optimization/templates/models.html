@@ -1,127 +1,281 @@
 {% extends "base.html" %}
-{% block title %}Models — DataCopilot{% endblock %}
-{% block page_icon %}model_training{% endblock %}
-{% block page_title %}AI Models{% endblock %}
+{% block title %}Plans — DataCopilot{% endblock %}
+{% block page_icon %}workspace_premium{% endblock %}
+{% block page_title %}Plans & Capabilities{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>AI Models</h1>
-    <p>Model routing configuration and provider status</p>
+    <h1>Plans &amp; Capabilities</h1>
+    <p>Scale your data reasoning workflows with different levels of AI power.</p>
 </div>
 
-<div class="model-tier-grid">
-    <!-- Heavy Tier -->
-    <div class="model-tier-card">
-        <div class="model-tier-header">
-            <div class="model-tier-icon card-icon purple">
-                <span class="material-symbols-rounded">psychology</span>
+<!-- ── Plan Cards ─────────────────────────────────────────────────── -->
+<div class="plans-grid">
+
+    <!-- ─── FREE ─── -->
+    <div class="plan-card">
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Free</span>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <div class="status-dot online"></div>
-                <span style="font-size:0.75rem;color:var(--text-tertiary);">Online</span>
+            <p class="plan-tagline">Essential tools for simple data exploration and quick analysis.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Individuals</span>
+                <span class="audience-chip">Students</span>
+                <span class="audience-chip">Learning</span>
+                <span class="audience-chip">Small datasets</span>
             </div>
         </div>
-        <div class="model-tier-name">Heavy Tier</div>
-        <div class="model-tier-provider" id="heavy-provider">GPT-4o / Gemini 1.5 Pro</div>
-        <div class="model-tier-desc">Used for complex reasoning tasks — DAG planning, code generation for difficult
-            queries, intent classification edge cases.</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> DAG Plan Generation</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Complex Code Generation
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Core Access</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Quick Run Mode
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Basic dataset profiling
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Simple dataframe operations
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Basic visualizations
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">AI Capabilities</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Light-tier model routing
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Intent detection
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Result summarization
+            </div>
         </div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Intent Classification
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max dataset: 25 MB
+            </div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max rows: 100k</div>
+            <div class="plan-limit plan-limit-no"><span class="material-symbols-rounded limit-no">block</span>No Pro
+                Workflow DAG</div>
+            <div class="plan-limit plan-limit-no"><span class="material-symbols-rounded limit-no">block</span>No
+                conditional execution</div>
         </div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Replanning Engine</div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-free btn md-ripple">Choose Free</button>
     </div>
 
-    <!-- Mid Tier -->
-    <div class="model-tier-card active">
-        <div class="model-tier-header">
-            <div class="model-tier-icon card-icon violet">
-                <span class="material-symbols-rounded">smart_toy</span>
+    <!-- ─── PRO (Recommended) ─── -->
+    <div class="plan-card plan-card-pro">
+        <div class="plan-recommended-badge">
+            <span class="material-symbols-rounded">star</span> Recommended
+        </div>
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Pro</span>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <div class="status-dot online"></div>
-                <span style="font-size:0.75rem;color:var(--text-tertiary);">Active</span>
-                <span class="badge purple">Default</span>
+            <p class="plan-tagline">Advanced workflow automation for structured data reasoning.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Data analysts</span>
+                <span class="audience-chip">AI builders</span>
+                <span class="audience-chip">Research workflows</span>
+                <span class="audience-chip">Professional use</span>
             </div>
         </div>
-        <div class="model-tier-name">Mid Tier</div>
-        <div class="model-tier-provider" id="mid-provider">GPT-4o-mini / Gemini Flash</div>
-        <div class="model-tier-desc">Balanced speed and capability — handles standard data analysis, visualization code
-            generation, and chat responses.</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Data Analysis</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Visualization Code</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Chat Responses</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Code Fixing</div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Workflow Engine</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Pro Mode Workflow Studio
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                DAG-based execution engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Plan generation and approval
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Conditional branching
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Step-by-step execution
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">AI Capabilities</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Heavy-tier reasoning models
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Code generation for complex analysis
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                ExecutionContext memory
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Replanning engine
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Data Operations</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Feature engineering
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Statistical analysis
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced visualization generation
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max dataset: 500 MB
+            </div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max rows: 5M</div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Parallel workflow
+                execution</div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-pro btn md-ripple">Choose Pro</button>
     </div>
 
-    <!-- Light Tier -->
-    <div class="model-tier-card">
-        <div class="model-tier-header">
-            <div class="model-tier-icon card-icon blue">
-                <span class="material-symbols-rounded">bolt</span>
+    <!-- ─── ULTRA ─── -->
+    <div class="plan-card plan-card-ultra">
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Ultra</span>
             </div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <div class="status-dot online"></div>
-                <span style="font-size:0.75rem;color:var(--text-tertiary);">Online</span>
+            <p class="plan-tagline">State-of-the-art agentic reasoning for large-scale data workflows.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Enterprises</span>
+                <span class="audience-chip">AI teams</span>
+                <span class="audience-chip">Large data</span>
+                <span class="audience-chip">Research labs</span>
             </div>
         </div>
-        <div class="model-tier-name">Light Tier</div>
-        <div class="model-tier-provider">GPT-3.5 / Gemini Ultra Light</div>
-        <div class="model-tier-desc">Fast and efficient for simple tasks — result summarization, basic intent detection,
-            and lightweight operations.</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Result Summary</div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Simple Intent Detection
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Agentic Intelligence</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Multi-stage planning engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Autonomous replanning
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced failure recovery
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Dynamic graph mutation
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Advanced Execution</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Multi-agent orchestration
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced optimization engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Execution monitoring dashboard
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Workflow templates
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Large Dataset Support</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Local execution agent
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Hybrid cloud execution
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Dataset connectors (DB, APIs)
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Priority AI Routing</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Premium reasoning models
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Faster execution queues
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                High token limits
+            </div>
         </div>
-        <div class="model-feature"><span class="material-symbols-rounded">check_circle</span> Lightweight Operations
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Dataset size:
+                Unlimited (local agent)</div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Custom compute support
+            </div>
         </div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-ultra btn md-ripple">Choose Ultra</button>
     </div>
 </div>
 
-<!-- Provider Switch -->
-<div style="margin-top:24px;">
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">Active Provider</div>
-            <div class="card-icon blue"><span class="material-symbols-rounded">cloud</span></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-            <span style="font-size:0.875rem;color:var(--text-secondary);">Current:</span>
-            <span class="badge purple" id="current-provider">Loading...</span>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="provider-buttons"></div>
+<!-- ── Enterprise Footer ─────────────────────────────────────────── -->
+<div class="plans-enterprise-bar">
+    <span class="material-symbols-rounded plans-enterprise-icon">corporate_fare</span>
+    <div class="plans-enterprise-text">
+        <strong>Need enterprise deployment?</strong>
+        Contact us for custom on-premise solutions, dedicated compute, and SLA support.
     </div>
+    <button class="btn btn-secondary md-ripple">Contact Us</button>
 </div>
-{% endblock %}
-
-{% block page_scripts %}
-<script>
-    async function loadModels() {
-        try {
-            const res = await fetch('/api/provider');
-            const data = await res.json();
-            document.getElementById('current-provider').textContent = data.active_provider || '—';
-            const btns = document.getElementById('provider-buttons');
-            (data.available_providers || []).forEach(p => {
-                const btn = document.createElement('button');
-                btn.className = 'btn md-ripple ' + (p === data.active_provider ? 'btn-primary' : 'btn-secondary');
-                btn.textContent = p.charAt(0).toUpperCase() + p.slice(1);
-                btn.onclick = () => switchProvider(p);
-                btns.appendChild(btn);
-            });
-        } catch (e) { console.warn('Models load error', e); }
-    }
-
-    async function switchProvider(p) {
-        try {
-            const res = await fetch('/api/provider', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider: p }) });
-            const data = await res.json();
-            document.getElementById('current-provider').textContent = data.active_provider || p;
-            document.querySelectorAll('#provider-buttons .btn').forEach(btn => {
-                btn.className = 'btn md-ripple ' + (btn.textContent.toLowerCase() === data.active_provider ? 'btn-primary' : 'btn-secondary');
-            });
-        } catch (e) { alert('Failed to switch provider'); }
-    }
-    loadModels();
-</script>
 {% endblock %}

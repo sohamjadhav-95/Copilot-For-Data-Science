@@ -20,7 +20,13 @@
     <!-- Material Symbols -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/quick-run.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/workflow.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
     <!-- Frontend logger — loaded first to capture all subsequent errors -->
     <script src="{{ url_for('static', filename='js/logger.js') }}"></script>
     {% block head %}{% endblock %}
@@ -75,9 +81,9 @@
                     <span class="material-symbols-rounded">history</span>
                     <span class="nav-label">Sessions</span>
                 </a>
-                <a href="/models" class="nav-item {% if active_page == 'models' %}active{% endif %}" title="Models">
-                    <span class="material-symbols-rounded">model_training</span>
-                    <span class="nav-label">Models</span>
+                <a href="/models" class="nav-item {% if active_page == 'models' %}active{% endif %}" title="Plans">
+                    <span class="material-symbols-rounded">workspace_premium</span>
+                    <span class="nav-label">Plans</span>
                 </a>
                 <a href="/monitoring" class="nav-item {% if active_page == 'monitoring' %}active{% endif %}"
                     title="Monitoring">

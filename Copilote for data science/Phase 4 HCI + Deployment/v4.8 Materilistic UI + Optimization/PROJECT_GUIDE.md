@@ -1,7 +1,7 @@
-# Data Science Copilot — Project Guide v4.5
+# DataCopilot — Project Guide v4.8
 
-> **Dual-mode AI data science assistant with Graph-Based DAG execution engine**
-> Normal Mode: single-step AI operations · Pro Mode: multi-step planned pipelines
+> **Enterprise SaaS AI data science platform — Material Design UI · Quick Run + Pro Workflow Studio DAG Engine**
+> Normal Mode (Quick Run): single-step AI operations · Pro Mode (Workflow Studio): multi-step planned DAG pipelines
 
 ---
 
@@ -10,78 +10,86 @@
 1. [Overview](#overview)
 2. [Architecture](#architecture)
 3. [Project Structure](#project-structure)
-4. [Installation & Setup](#installation--setup)
-5. [User Guide](#user-guide)
-6. [Developer Guide](#developer-guide)
-7. [API Reference](#api-reference)
-8. [Configuration Reference](#configuration-reference)
-9. [Troubleshooting](#troubleshooting)
+4. [Frontend Design System](#frontend-design-system)
+5. [Installation & Setup](#installation--setup)
+6. [User Guide](#user-guide)
+7. [Developer Guide](#developer-guide)
+8. [API Reference](#api-reference)
+9. [Configuration Reference](#configuration-reference)
+10. [Troubleshooting](#troubleshooting)
+11. [Deployment Checklist](#deployment-checklist)
 
 ---
 
 ## Overview
 
-Data Science Copilot is a full-stack Flask web application that lets users interact with CSV datasets using natural language. Version 4.5 introduces **Pro Mode** — a graph-based DAG execution engine layered cleanly on top of the existing Normal Mode. Both modes run in the same application; Normal Mode behavior is unchanged.
+DataCopilot is a full-stack Flask web application that lets users interact with CSV datasets using natural language. Version 4.8 brings a complete **enterprise SaaS UI overhaul** — a multi-page routed architecture with 8 distinct pages, a 7-file split CSS design system, light/dark theme support, and a redesigned Pro Workflow Studio with scroll-fixed resizable panels.
 
-| | Normal Mode | Pro Mode |
+| | Quick Run | Workflow Studio (Pro) |
 |---|---|---|
-| **Use case** | Single-step queries | Multi-step pipelines |
+| **Use case** | Single-step queries | Multi-step analysis pipelines |
 | **Planning** | None | DAG plan generated, user approves |
-| **Execution** | Immediate | Step-by-step with tracker |
+| **Execution** | Immediate | Step-by-step with live tracker |
 | **Model tier** | Mid/Light | Heavy→Mid→Light |
 | **Replan** | N/A | Auto-replan up to 2× on failure |
+| **Plan tier** | Free | Pro / Ultra |
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Browser  (dashboard.html + app.js + style.css)             │
-│  ┌──────────────────┐  ┌──────────────────────────────────┐ │
-│  │  Normal Chat UI  │  │  Pro Mode UI                     │ │
-│  │  (unchanged)     │  │  ┌─────────────┐ ┌───────────┐  │ │
-│  │                  │  │  │  DAG Plan   │ │  Step     │  │ │
-│  │                  │  │  │  Panel      │ │  Tracker  │  │ │
-│  └──────────────────┘  └──┴─────────────┴─┴───────────┴──┘ │
-└────────────────────────────┬────────────────────────────────┘
-                             │ HTTP/JSON
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Flask (app.py) — Thin routing layer                        │
-│                                                             │
-│  Normal routes          Pro routes                          │
-│  /api/chat              /api/pro/plan                       │
-│  /api/upload            /api/pro/approve                    │
-│  /api/sessions          /api/pro/status/<id>                │
-│  /api/...               /api/pro/profile                    │
-└──────────────┬──────────────────────┬───────────────────────┘
-               ▼                      ▼
-┌──────────────────────┐  ┌───────────────────────────────────┐
-│  engines_normal/     │  │  engines_pro/                     │
-│  normal_engine.py    │  │  ┌───────────┐  ┌──────────────┐ │
-│  (original logic,    │  │  │ dag_schema│  │  dag_planner │ │
-│   unchanged)         │  │  │ validator │  │  dag_executor│ │
-│                      │  │  └───────────┘  └──────────────┘ │
-│  engines.py          │  │  pro_engine.py (orchestrator)     │
-│  (re-export shim)    │  └───────────────────────────────────┘
-└──────────────────────┘
-               │                      │
-               └──────────┬───────────┘
-                          ▼
-           ┌──────────────────────────┐
-           │  core/                   │
-           │  config.py               │
-           │  dataset_profiler.py     │
-           │  execution_context.py    │
-           └──────────────────────────┘
-                          │
-           ┌──────────────────────────┐
-           │  models_api/             │
-           │  model_router.py         │
-           │  groq_models.py          │
-           │  openrouter_models.py    │
-           └──────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│  Browser — Multi-Page SaaS UI (Jinja2 + Vanilla JS)                │
+│                                                                     │
+│  base.html (App Shell: sidebar nav, topbar, theme toggle)          │
+│  ┌──────────────┐  ┌────────────────┐  ┌──────────────────────┐   │
+│  │  Dashboard   │  │  Quick Run     │  │  Workflow Studio      │   │
+│  │  Datasets    │  │  (chat panel + │  │  (3-panel resizable   │  │
+│  │  Sessions    │  │   results)     │  │   DAG layout)         │  │
+│  │  Plans       │  └────────────────┘  └──────────────────────┘   │
+│  │  Monitoring  │                                                   │
+│  │  Settings    │                                                   │
+│  └──────────────┘                                                   │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │ HTTP/JSON
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  Flask (app.py) — Thin routing layer                                │
+│                                                                     │
+│  Page routes         Normal routes       Pro routes                │
+│  /dashboard          /api/chat           /api/pro/plan             │
+│  /quick-run          /api/upload         /api/pro/approve          │
+│  /workflow           /api/sessions       /api/pro/status/<id>      │
+│  /datasets           /api/...            /api/pro/profile          │
+│  /sessions, /models                                                │
+│  /monitoring, /settings                                            │
+└───────────────┬───────────────────────────┬────────────────────────┘
+                ▼                           ▼
+┌──────────────────────┐    ┌───────────────────────────────────────┐
+│  engines_normal/     │    │  engines_pro/                         │
+│  normal_engine.py    │    │  ┌───────────┐  ┌──────────────────┐ │
+│  (Quick Run logic)   │    │  │ dag_schema│  │  dag_planner     │ │
+│                      │    │  │ validator │  │  dag_executor    │ │
+│  engines.py          │    │  └───────────┘  └──────────────────┘ │
+│  (re-export shim)    │    │  pro_engine.py (orchestrator)         │
+└──────────────────────┘    └───────────────────────────────────────┘
+               │                           │
+               └──────────────┬────────────┘
+                              ▼
+              ┌──────────────────────────┐
+              │  core/                   │
+              │  config.py               │
+              │  dataset_profiler.py     │
+              │  execution_context.py    │
+              └──────────────────────────┘
+                              │
+              ┌──────────────────────────┐
+              │  models_api/             │
+              │  model_router.py         │
+              │  groq_models.py          │
+              │  openrouter_models.py    │
+              └──────────────────────────┘
 ```
 
 ### Model Tiers
@@ -106,7 +114,7 @@ DatasetProfiler.profile()  ─── full column stats, correlations, warnings
     ▼
 DAGPlanner.create_plan()  ─── heavy model → DAGPlan (JSON)
     │
-    ▼ (user reviews plan in UI)
+    ▼ (user reviews plan in Workflow Studio UI)
 User clicks "Approve & Execute"
     │
     ▼
@@ -132,11 +140,11 @@ generate_final_summary()  ─── heavy model
 ## Project Structure
 
 ```
-v4.5 Architecture Transformation (Pro)/
+v4.8 Materilistic UI + Optimization/
 │
 ├── 🚀 Entry Points
 │   ├── run.py                       # Flask application entry point
-│   ├── app.py                       # App factory, all routes (Normal + Pro)
+│   ├── app.py                       # App factory, all routes (Normal + Pro + Pages)
 │   ├── engines.py                   # Re-export shim → engines_normal
 │   ├── config.py                    # Flask config (DB, uploads, JWT)
 │   └── api_config.py                # Legacy API config (Normal Mode)
@@ -153,11 +161,11 @@ v4.5 Architecture Transformation (Pro)/
 │       ├── groq_models.py           # Groq API wrapper
 │       └── openrouter_models.py     # OpenRouter API wrapper
 │
-├── ⚙️ Normal Engine (unchanged behavior)
+├── ⚙️ Normal Engine (Quick Run)
 │   └── engines_normal/
-│       └── normal_engine.py         # All original engines.py logic
+│       └── normal_engine.py         # All Quick Run AI operation logic
 │
-├── 🔬 Pro Engine (DAG system)
+├── 🔬 Pro Engine (Workflow Studio DAG)
 │   └── engines_pro/
 │       ├── dag_schema.py            # DAGPlan, DAGNode, Operand, NodeOutput, ExecutionMetadata
 │       ├── validator.py             # Operand resolution, condition eval, output validation
@@ -170,15 +178,32 @@ v4.5 Architecture Transformation (Pro)/
 │       ├── __init__.py              # SQLAlchemy instance
 │       └── models.py                # User, ChatSession, Message, Activity, CodeSnippet
 │
-├── 🎨 Frontend
-│   ├── templates/
-│   │   ├── base.html                # Base layout
-│   │   ├── dashboard.html           # Main UI with Normal/Pro toggle
-│   │   ├── login.html               # Login page
-│   │   └── register.html            # Registration page
+├── 🎨 Frontend — Multi-Page SaaS UI
+│   ├── templates/                   # 11 Jinja2 templates
+│   │   ├── base.html                # App shell: nav, topbar, theme toggle, ripple
+│   │   ├── dashboard.html           # Overview: stats, metrics, recent activity
+│   │   ├── quick_run.html           # Quick Run: chat + resizable results panel
+│   │   ├── workflow.html            # Workflow Studio: 3-panel DAG layout (resize, scroll-fix)
+│   │   ├── datasets.html            # Dataset upload + management
+│   │   ├── sessions.html            # Session history browser
+│   │   ├── models.html              # Plans & Capabilities: Free / Pro / Ultra cards
+│   │   ├── monitoring.html          # System health metrics
+│   │   ├── settings.html            # User preferences
+│   │   ├── login.html               # Auth — login
+│   │   └── register.html            # Auth — registration
+│   │
 │   └── static/
-│       ├── css/style.css            # Full dark theme + Pro enterprise theme
-│       └── js/app.js                # Normal + Pro Mode frontend logic
+│       ├── css/                     # 7-file split design system (load order matters)
+│       │   ├── base.css             # CSS variables, reset, app shell, sidebar, topbar
+│       │   ├── components.css       # Cards, buttons, badges, forms, tables, modals, auth
+│       │   ├── dashboard.css        # Dashboard page only
+│       │   ├── quick-run.css        # Quick Run / Normal mode
+│       │   ├── workflow.css         # Workflow Studio (theme-aware, scroll-fixed)
+│       │   ├── pages.css            # Datasets, sessions, plans, monitoring, settings
+│       │   └── responsive.css       # All breakpoints (must load last)
+│       └── js/
+│           ├── app.js               # Normal + Pro Mode frontend logic
+│           └── logger.js            # Frontend structured logger
 │
 ├── 📊 Data & Logs
 │   ├── uploads/                     # User CSV files (per-user dirs)
@@ -194,9 +219,62 @@ v4.5 Architecture Transformation (Pro)/
 └── 📄 Docs
     ├── PROJECT_GUIDE.md             # This file — full developer reference
     ├── README.md                    # Quick-start card
-    ├── requirements.txt             # Python dependencies
-    └── logger.py                    # Centralized structured logger
+    └── requirements.txt             # Python dependencies
 ```
+
+---
+
+## Frontend Design System
+
+### CSS Architecture — Load Order
+
+The 7 CSS files must be loaded in this exact order in `base.html`:
+
+```html
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quick-run.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/workflow.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+```
+
+`base.css` must be first (defines all CSS variables). `responsive.css` must be last (applies breakpoint overrides). The middle five can target independently per task.
+
+### Theme System
+
+The app ships with light and dark themes toggled via `[data-theme]` on `<html>`:
+
+```js
+document.documentElement.setAttribute('data-theme', 'dark');
+```
+
+All components use CSS variables (`var(--bg)`, `var(--text-primary)`, `var(--border)`, etc.) — **never hardcoded hex values** (especially in `workflow.css`, which historically used dark hex directly).
+
+### Pro Mode Visual Identity
+
+Pro mode is visually distinct through **gradient accents only** — not forced dark backgrounds:
+- `--pro-gradient: linear-gradient(135deg, var(--accent-500), var(--violet-500))`
+- Topbar gradient border stripe + indigo glow
+- Panel headers gradient left-bar accent
+- CTA buttons gradient fill with glow shadow
+- Progress bar gradient + animated glow
+
+### Navigation Structure
+
+The sidebar in `base.html` contains 8 nav items. The active page is highlighted via `active_page` Jinja2 variable passed from route handlers.
+
+| Route | `active_page` value | Icon |
+|-------|--------|------|
+| `/dashboard` | `dashboard` | `dashboard` |
+| `/quick-run` | `quick-run` | `bolt` |
+| `/workflow` | `workflow` | `account_tree` |
+| `/datasets` | `datasets` | `table_chart` |
+| `/sessions` | `sessions` | `history` |
+| `/models` | `models` | `workspace_premium` |
+| `/monitoring` | `monitoring` | `monitoring` |
+| `/settings` | `settings` | `settings` |
 
 ---
 
@@ -226,11 +304,11 @@ pip install -r requirements.txt
 
 Edit `core/config.py`:
 ```python
-GROQ_API_KEY    = "gsk_..."          # from console.groq.com
+GROQ_API_KEY       = "gsk_..."       # from console.groq.com
 OPENROUTER_API_KEY = "sk-or-..."     # from openrouter.ai
 ```
 
-Or set as environment variables (recommended):
+Or set as environment variables (recommended for production):
 ```bash
 set GROQ_API_KEY=gsk_...
 set OPENROUTER_API_KEY=sk-or-...
@@ -243,15 +321,15 @@ set SECRET_KEY=your-secret-key
 python run.py
 ```
 
-Server starts at `http://localhost:5000`
+Server starts at `http://localhost:5000`. Register an account, upload a CSV, and start chatting.
 
 ---
 
 ## User Guide
 
-### Normal Mode
+### Quick Run
 
-Works identically to v4.4. Use the chat input to:
+Navigate to **Quick Run** in the sidebar. Upload a CSV, then use the chat input:
 
 | Intent | Example phrases |
 |--------|----------------|
@@ -261,16 +339,27 @@ Works identically to v4.4. Use the chat input to:
 | **Undo** | "undo", "revert last change" |
 | **Chat** | "what insights can you give me?" |
 
-### Pro Mode
+### Workflow Studio (Pro Mode)
 
-1. **Toggle Pro** — click the **Normal/Pro** switch in the top navigation bar
-2. **Send a complex request** — e.g. *"Clean missing data, compute correlations, build a regression model, and summarize findings"*
-3. **Review the DAG Plan** — the right panel shows each planned step with type, description, and dependencies
-4. **Approve & Execute** — click the gold **Approve & Execute** button; the Step Tracker shows live status per node
-5. **Read the summary** — after completion, an AI-generated report appears in the tracker panel
-6. **Reject** — click **Reject** to dismiss the plan and start over
+Navigate to **Workflow** in the sidebar.
 
-#### Pro Mode Node Types
+1. **Type a complex multi-step request** in the Plan panel
+2. Click **Generate Plan** — the DAG plan appears in the step list
+3. **Review steps** — type, description, dependencies shown per step
+4. Click **Approve & Execute** — the output panel shows live step execution
+5. **Read the summary** — AI-generated report after completion
+6. Click **Reject** to dismiss the plan and start over
+
+#### Layout Modes
+
+Three layout toggle buttons in the topbar switch between:
+- **Layout 1** — default 3-column (Plan | Graph | Output)
+- **Layout 2** — Plan + Output top, Graph bottom
+- **Layout 3** — Plan + Graph stacked left, Output full-height right
+
+Each panel can also be expanded to full screen via the **expand** button in the panel header.
+
+#### Workflow Studio Node Types
 
 | Icon | Type | Description |
 |------|------|-------------|
@@ -281,11 +370,21 @@ Works identically to v4.4. Use the chat input to:
 | 📝 | `summary` | Aggregate findings, generate text |
 | ▶ | `operation` | Generic computation |
 
+### Plans Page
+
+Navigate to **Plans** in the sidebar to see the Free / Pro / Ultra tier comparison.
+
+| Plan | Key Capabilities |
+|------|----------------|
+| **Free** | Quick Run, basic profiling, light-tier AI, 25 MB datasets |
+| **Pro** | Workflow Studio, DAG execution, heavy-tier reasoning, 500 MB |
+| **Ultra** | Multi-agent orchestration, autonomous replanning, unlimited (local agent) |
+
 ---
 
 ## Developer Guide
 
-### Adding a New Normal Mode Operation
+### Adding a New Quick Run Operation
 
 1. Add keyword list to `engines_normal/normal_engine.py`
 2. Update `classify_intent()` to check new keywords
@@ -295,9 +394,16 @@ Works identically to v4.4. Use the chat input to:
 ### Adding a New Pro Node Type
 
 1. Add to `NodeType` enum in `engines_pro/dag_schema.py`
-2. Add icon and CSS class in `static/css/style.css` (`.pro-node-type-XXX`)
+2. Add the CSS icon class in `static/css/workflow.css` (`.pro-node-type-XXX`)
 3. Add icon to `NODE_ICONS` map in `static/js/app.js`
 4. The executor handles all types through `_execute_operation()` — no code change needed
+
+### Adding a New Page
+
+1. Create `templates/XXX.html` extending `base.html`
+2. Add a route in `app.py` that passes `active_page="XXX"` to `render_template`
+3. Add the nav item in `base.html` sidebar
+4. Add page-specific styles to `pages.css` (or a new CSS file if large)
 
 ### Adding a New Model Provider
 
@@ -351,7 +457,7 @@ Conditions use typed operands — no `eval()`:
 
 ## API Reference
 
-### Normal Mode Endpoints
+### Auth & User Endpoints
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -359,15 +465,25 @@ Conditions use typed operands — no `eval()`:
 | `POST` | `/api/login` | Authenticate (sets JWT cookie) |
 | `POST` | `/api/logout` | Clear session |
 | `GET` | `/api/me` | Current user info |
+
+### Data Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
 | `POST` | `/api/upload` | Upload CSV, creates session |
-| `POST` | `/api/chat` | Process Normal Mode message |
 | `GET` | `/api/sessions` | List user sessions |
 | `GET` | `/api/sessions/<id>/messages` | Load session history |
 | `GET` | `/api/download-modified` | Download transformed CSV |
 | `GET` | `/api/activities` | Activity log |
 | `GET` | `/api/code-snippets` | Generated code history |
 
-### Pro Mode Endpoints
+### Quick Run Endpoint
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/chat` | Process Quick Run message |
+
+### Pro / Workflow Studio Endpoints
 
 #### `POST /api/pro/plan`
 Generate a DAG plan for user review.
@@ -400,7 +516,7 @@ Generate a DAG plan for user review.
         "version": 1,
         "replan_count": 0
     },
-    "dataset_profile": { ... },
+    "dataset_profile": { "..." : "..." },
     "node_count": 3
 }
 ```
@@ -408,7 +524,7 @@ Generate a DAG plan for user review.
 **Response (dataset too large):**
 ```json
 {
-    "warning": "Dataset has 150,000 rows (limit: 100,000). ...",
+    "warning": "Dataset has 150,000 rows (limit: 100,000)...",
     "requires_confirmation": true,
     "rows": 150000,
     "max_rows": 100000
@@ -469,8 +585,8 @@ Get a full dataset profile for the current session.
 {
     "profile": {
         "rows": 1000, "columns": 8,
-        "column_names": [...],
-        "numeric_columns": [...],
+        "column_names": ["..."],
+        "numeric_columns": ["..."],
         "high_correlation_pairs": [
             {"column_a": "x", "column_b": "y", "correlation": 0.94}
         ],
@@ -525,41 +641,44 @@ JWT_EXPIRY_HOURS = 24
 ## Troubleshooting
 
 ### Server won't start
-
 ```
 ModuleNotFoundError: No module named 'flask'
 ```
 → Run `pip install -r requirements.txt`
 
-### Pro Mode plan returns error
+```
+TypeError: run_simple() got an unexpected keyword argument 'ost'
+```
+→ Typo in `run.py` — ensure `app.run(host="0.0.0.0", ...)` not `ost=`.
 
+### Pro Mode plan returns error
 ```json
 {"error": "Failed to generate plan. Try rephrasing your request."}
 ```
-→ Check `logs_and_debug/api_calls.log` for model response details. Usually caused by an ambiguous request or API rate limit. Try a more specific request.
+→ Check `logs_and_debug/api_calls.log` for model response details. Usually an ambiguous request or API rate limit. Try a more specific request.
 
 ### Pro Mode execution fails immediately
-
 ```
 CRITICAL: Node 'X' declared output_var='Y' but produced no output
 ```
 → The mid-tier model generated code that didn't set `_result`. This triggers retry automatically. If retry also fails, the plan is replanned. Check `logs_and_debug/errors.log`.
 
-### Database errors
+### Page missing CSS / unstyled
+→ Check `base.html` — all 7 CSS files must be linked in order. The `{% block body %}` override in auth pages (login, register) bypasses the app shell but still loads the same CSS.
 
+### Database errors
 ```
 OperationalError: no such table: users
 ```
-→ Delete `database/copilot.db` and restart — it will be recreated.
+→ Delete `database/copilot.db` and restart — it will be recreated automatically.
 
 ### File upload fails (413)
-
 → File exceeds `MAX_CONTENT_LENGTH` in `config.py`. Increase it or reduce file size.
 
 ### Logs
 
 | File | Contents |
-|------|----------|
+|------|---------|
 | `logs_and_debug/app.log` | General application events |
 | `logs_and_debug/api_calls.log` | Every model API call with timing |
 | `logs_and_debug/errors.log` | Errors and tracebacks |
@@ -569,14 +688,16 @@ OperationalError: no such table: users
 
 ## Deployment Checklist
 
-- [ ] Set `SECRET_KEY` environment variable (don't use default)
+- [ ] Set `SECRET_KEY` environment variable (don't use the default)
 - [ ] Set `GROQ_API_KEY` and/or `OPENROUTER_API_KEY` as env vars
 - [ ] Set `debug=False` in `run.py`
 - [ ] Use a production WSGI server: `gunicorn -w 4 "run:app"`
-- [ ] Set up HTTPS reverse proxy (nginx/caddy)
+- [ ] Set up HTTPS reverse proxy (nginx / caddy)
 - [ ] Configure log rotation for `logs_and_debug/`
 - [ ] Set up `uploads/` and `modified_files/backups/` with appropriate permissions
+- [ ] Verify all 7 CSS files present in `static/css/`
+- [ ] Confirm `static/js/logger.js` is present (loaded in `<head>` before other scripts)
 
 ---
 
-*Data Science Copilot v4.5 — Built with Flask, SQLAlchemy, Groq, OpenRouter*
+*DataCopilot v4.8 — Material SaaS UI · Flask · SQLAlchemy · Groq · OpenRouter*

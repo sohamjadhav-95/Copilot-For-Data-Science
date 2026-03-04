@@ -35,3 +35,18 @@ ASSISTANT: All set! I ran that query for you — take a look at","NoneType: None
 ",,,,,,,,,"[RuntimeError] All AI call attempts exhausted | context=prompt=Conversation:
 USER: Show first 10 rows
 ASSISTANT: All set! I ran that query for you — take a look at",
+2026-03-04T18:15:53.042599+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_8273cff2f596,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_8273cff2f596,

@@ -515,3 +515,59 @@
 {"timestamp": "2026-03-03T18:11:13.373560+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
 {"timestamp": "2026-03-03T18:16:41.935599+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
 {"timestamp": "2026-03-03T18:16:45.462451+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T06:48:55.130809+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:08:21.442492+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:11:04.726054+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:11:46.416992+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:11:49.724186+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:12:11.621013+00:00", "level": "INFO", "logger": "copilot.app", "message": "[login] User: soham.ai.engineer@gmail.com"}
+{"timestamp": "2026-03-04T18:12:46.580699+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-04T18:13:06.250848+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:06.297078+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:06.300692+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:13:17.336091+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Skipping malformed node: 'list' is not a valid OutputType"}
+{"timestamp": "2026-03-04T18:13:17.337090+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: Node 'node_7' depends on non-existent node 'node_3'"}
+{"timestamp": "2026-03-04T18:13:17.338715+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: Node 'node_8' depends on non-existent node 'node_3'"}
+{"timestamp": "2026-03-04T18:13:17.338715+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 7 nodes, plan_id=plan_16faeb98b5d1"}
+{"timestamp": "2026-03-04T18:13:23.970489+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:24.240617+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:24.243142+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:13:42.616013+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_4 → node_5 → node_4"}
+{"timestamp": "2026-03-04T18:13:42.617023+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-04T18:13:46.010920+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:46.036649+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:13:46.043282+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:00.580752+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User soham.ai.engineer@gmail.com uploaded diabetes.csv (768x9)"}
+{"timestamp": "2026-03-04T18:15:02.498927+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:15:02.514691+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Annlyse outcome most affect column plot all comparisions"}
+{"timestamp": "2026-03-04T18:15:02.517675+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] heavy → openrouter/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:15.003974+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_8273cff2f596"}
+{"timestamp": "2026-03-04T18:15:15.790265+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_6 → node_7 → node_6"}
+{"timestamp": "2026-03-04T18:15:15.794862+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-04T18:15:45.978377+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_8273cff2f596' (5 nodes)"}
+{"timestamp": "2026-03-04T18:15:45.981898+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 5 nodes"}
+{"timestamp": "2026-03-04T18:15:45.985423+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:48.996932+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-04T18:15:49.036285+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:49.848486+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-04T18:15:49.938873+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:51.069290+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'corr_matrix' is not defined, retrying..."}
+{"timestamp": "2026-03-04T18:15:51.118232+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] mid → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-04T18:15:52.377349+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dict"}
+{"timestamp": "2026-03-04T18:15:52.483765+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_4': missing_variable: node 'node_4' needs variable 'top_features_info.top_features' which doesn't exist"}
+{"timestamp": "2026-03-04T18:15:52.496553+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_4' needs variable 'top_features_info.top_features' which doesn't exist"}
+{"timestamp": "2026-03-04T18:19:36.849537+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:19:40.550247+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:23:15.227918+00:00", "level": "INFO", "logger": "copilot.app", "message": "[register] New user: testuser05"}
+{"timestamp": "2026-03-04T18:25:03.109886+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:25:15.795202+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:26:38.682149+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:26:46.600729+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:26:58.997942+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:09.711159+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:21.946648+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:35.186484+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:44.124527+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:51.174018+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:27:57.671676+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-04T18:40:14.421867+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
