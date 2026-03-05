@@ -114,3 +114,36 @@ TypeError: 'ExecutionMetadata' object is not subscriptable
 ",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
 2026-03-05T09:52:07.374661+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted,nvidia_model,"NoneType: None
 ",,,,,,,,,[RuntimeError] NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted | context=nvidia_model,
+2026-03-05T18:29:01.752752+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,ImportError,Import of 'numpy._core._dtype' is not allowed for security reasons,Exec failed during display: Summarize the dataset in a few lines.,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 115, in _safe_exec
+    exec(code, ns)
+    ~~~~^^^^^^^^^^
+  File ""<string>"", line 29, in <module>
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 130, in _restricted_import
+    raise ImportError(f""Import of '{name}' is not allowed for security reasons"")
+ImportError: Import of 'numpy._core._dtype' is not allowed for security reasons
+",,,,,,,,,[ImportError] Import of 'numpy._core._dtype' is not allowed for security reasons | context=Exec failed during display: Summarize the dataset in a few lines.,
+2026-03-05T18:29:03.161765+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,ImportError,Import of 'pandas.api.types' is not allowed for security reasons,Exec failed during display (fixed): Summarize the dataset in a few lines.,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 115, in _safe_exec
+    exec(code, ns)
+    ~~~~^^^^^^^^^^
+  File ""<string>"", line 2, in <module>
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 130, in _restricted_import
+    raise ImportError(f""Import of '{name}' is not allowed for security reasons"")
+ImportError: Import of 'pandas.api.types' is not allowed for security reasons
+",,,,,,,,,[ImportError] Import of 'pandas.api.types' is not allowed for security reasons | context=Exec failed during display (fixed): Summarize the dataset in a few lines.,
+2026-03-05T18:31:00.380997+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,All AI call attempts exhausted,"prompt=Conversation context:
+USER: Show first 10 rows
+ASSISTANT: Your data is ready! **Show first 10 rows**","NoneType: None
+",,,,,,,,,"[RuntimeError] All AI call attempts exhausted | context=prompt=Conversation context:
+USER: Show first 10 rows
+ASSISTANT: Your data is ready! **Show first 10 rows**",
+2026-03-05T18:35:51.483789+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,ImportError,Import of 'ast' is not allowed for security reasons,Exec failed during visualize: Find the top 10 most common genres and visualize them,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 115, in _safe_exec
+    exec(code, ns)
+    ~~~~^^^^^^^^^^
+  File ""<string>"", line 6, in <module>
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_normal\normal_engine.py"", line 130, in _restricted_import
+    raise ImportError(f""Import of '{name}' is not allowed for security reasons"")
+ImportError: Import of 'ast' is not allowed for security reasons
+",,,,,,,,,[ImportError] Import of 'ast' is not allowed for security reasons | context=Exec failed during visualize: Find the top 10 most common genres and visualize them,

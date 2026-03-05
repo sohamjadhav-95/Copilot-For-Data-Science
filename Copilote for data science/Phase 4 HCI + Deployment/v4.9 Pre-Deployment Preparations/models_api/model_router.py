@@ -4,7 +4,7 @@ import time
 from typing import Optional
 
 from core.model_plan_router import (
-    get_pro_model, get_pro_provider,
+    get_pro_model_config, get_pro_provider,
     get_quickrun_model, get_quickrun_provider,
 )
 from models_api.groq_models import groq_model
@@ -18,9 +18,9 @@ from logger import app_logger, log_error
 # ═══════════════════════════════════════════════════════════════════════
 
 _PROVIDER_FUNCTIONS = {
-    "groq": groq_model,
+    "groq":       groq_model,
     "openrouter": openrouter_model,
-    "nvidia": nvidia_model,
+    "nvidia":     nvidia_model,
 }
 
 
@@ -32,9 +32,9 @@ class ModelRouter:
     """Route AI calls based on task type.
 
     Task types:
-        reasoning — DAG planning, final reports, re-planning
-        coding    — Code generation, step execution
-        intent    — Intent classification, summaries
+        reasoning — DAG planning, final reports, re-planning  → GLM-5 (thinking ON)
+        coding    — Code generation, step execution           → GLM-4.7 (no thinking)
+        intent    — Intent classification, summaries          → Nemotron-3-Nano-30B (thinking ON)
 
     Usage:
         router = ModelRouter()
@@ -46,7 +46,7 @@ class ModelRouter:
         task: str,
         messages: list,
         temperature: float = 0.2,
-        max_tokens: int = 2048,
+        max_tokens: int = 4096,
         retries: int = 2,
     ) -> Optional[str]:
         """Call a Pro/Ultra model for the given task with provider fallback.
@@ -61,29 +61,46 @@ class ModelRouter:
         Returns:
             Cleaned response text, or None if all attempts failed.
         """
-        model_name = get_pro_model(task)
-        provider = get_pro_provider()
+        cfg = get_pro_model_config(task)
+        model_name    = cfg["model"]
+        use_reasoning = cfg.get("reasoning", False)
+        extra_body    = cfg.get("extra_body", None)
+        provider      = get_pro_provider()
 
-        app_logger.info(f"[ROUTER] task={task} → {provider}/{model_name}")
+        app_logger.info(
+            f"[ROUTER] task={task} → {provider}/{model_name} "
+            f"(reasoning={'ON' if use_reasoning else 'OFF'})"
+        )
 
-        call_fn = _PROVIDER_FUNCTIONS.get(provider)
-        if call_fn:
+        if provider == "nvidia":
+            result = nvidia_model(
+                model_name=model_name,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                retries=retries,
+                extra_body=extra_body,
+                use_reasoning=use_reasoning,
+            )
+        else:
+            call_fn = _PROVIDER_FUNCTIONS.get(provider)
             result = call_fn(
                 model_name=model_name,
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
                 retries=retries,
-            )
-            if result:
-                return result
-            app_logger.warning(f"[ROUTER] {provider}/{model_name} failed")
+            ) if call_fn else None
 
-        # Fallback: try openrouter with the same model
+        if result:
+            return result
+
+        app_logger.warning(f"[ROUTER] {provider}/{model_name} failed, trying openrouter fallback")
+
+        # Fallback: openrouter with the same model ID
         if provider != "openrouter":
             fallback_fn = _PROVIDER_FUNCTIONS.get("openrouter")
             if fallback_fn:
-                app_logger.info(f"[ROUTER] Falling back to openrouter/{model_name}")
                 result = fallback_fn(
                     model_name=model_name,
                     messages=messages,
@@ -106,13 +123,13 @@ class ModelRouter:
         system_prompt: str,
         user_content: str,
         temperature: float = 0.2,
-        max_tokens: int = 2048,
+        max_tokens: int = 4096,
         retries: int = 2,
     ) -> Optional[str]:
         """Convenience: build messages from system + user and call."""
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_content},
+            {"role": "user",   "content": user_content},
         ]
         return self.call(task, messages, temperature, max_tokens, retries)
 

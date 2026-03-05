@@ -391,6 +391,32 @@ function appendStepResult(stepIndex, stepData) {
     const existingId = `output-step-${stepData.id || stepIndex}`;
     if (document.getElementById(existingId)) return;
 
+    // Gather code and reasoning for action buttons
+    const nodeCode = stepData.metadata?.generated_code || '';
+    const nodeReason = stepData.reasoning || stepData.metadata?.reasoning || '';
+
+    const isUltra = window.userPlan === 'ultra';
+
+    // ── View Reasoning button (workflow only — shown to all) ──
+    const reasoningBtn = nodeReason
+        ? `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;"
+               onclick="showNodePanel('reasoning','Step ${stepIndex + 1} Reasoning',${JSON.stringify(nodeReason)})">
+               <span class="material-symbols-rounded" style="font-size:13px;">psychology</span>Reasoning
+           </button>`
+        : '';
+
+    // ── View Code button (Ultra only, others see locked state) ──
+    const codeBtn = nodeCode
+        ? (isUltra
+            ? `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;"
+                   onclick="showNodePanel('code','Step ${stepIndex + 1} • Code',${JSON.stringify(nodeCode)})">
+                   <span class="material-symbols-rounded" style="font-size:13px;">code</span>View Code
+               </button>`
+            : `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;opacity:0.45;position:relative;overflow:hidden;" onclick="showUpgradeRipple(this,'Ultra')">
+                   <span class="material-symbols-rounded" style="font-size:13px;">lock</span>View Code
+               </button>`)
+        : '';
+
     const block = document.createElement('div');
     block.className = 'output-block';
     block.id = existingId;
@@ -401,6 +427,7 @@ function appendStepResult(stepIndex, stepData) {
     <div class="output-block-header">
       <span class="output-block-label">Step ${stepIndex + 1} · ${esc(stepName)}</span>
       <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+        ${reasoningBtn}${codeBtn}
         <span style="font-size:0.65rem;color:var(--text-tertiary);">${rtype}</span>
         ${statusBadge}
       </span>
@@ -592,3 +619,66 @@ function showToast(msg, type = 'neutral') {
     clearTimeout(el._t);
     el._t = setTimeout(() => { el.style.opacity = '0'; }, 3500);
 }
+
+// ── Node Panel Modal (View Code / View Reasoning) ──────────────────
+function showNodePanel(type, title, content) {
+    let modal = document.getElementById('_node-panel-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = '_node-panel-modal';
+        modal.style.cssText = 'position:fixed;inset:0;z-index:950;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);';
+        modal.innerHTML = `
+            <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;width:min(680px,92vw);max-height:80vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,0.4);">
+                <div style="display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);gap:10px;">
+                    <span class="material-symbols-rounded" id="_npm-icon" style="font-size:18px;color:var(--accent-400);"></span>
+                    <span id="_npm-title" style="font-weight:600;font-size:0.9rem;color:var(--text-primary);flex:1;"></span>
+                    <button onclick="document.getElementById('_node-panel-modal').style.display='none'" style="background:none;border:none;color:var(--text-tertiary);cursor:pointer;font-size:20px;line-height:1;padding:2px;">×</button>
+                </div>
+                <div id="_npm-body" style="overflow-y:auto;padding:16px;flex:1;"></div>
+            </div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.style.display = 'none'; });
+    }
+
+    const icon = type === 'code' ? 'code' : 'psychology';
+    const isCode = type === 'code';
+    document.getElementById('_npm-icon').textContent = icon;
+    document.getElementById('_npm-title').textContent = title;
+    document.getElementById('_npm-body').innerHTML = isCode
+        ? `<pre style="margin:0;font-family:var(--font-mono,'monospace');font-size:0.78rem;color:var(--text-primary);background:var(--bg-subtle);border-radius:8px;padding:14px 16px;overflow-x:auto;white-space:pre;line-height:1.65;">${esc(content)}</pre>`
+        : `<div style="white-space:pre-wrap;font-size:0.83rem;color:var(--text-primary);line-height:1.75;">${esc(content)}</div>`;
+    modal.style.display = 'flex';
+}
+
+// ── Upgrade Ripple (lock animation for non-Ultra buttons) ──────────
+function showUpgradeRipple(btn, planName) {
+    // Show ripple wave animation
+    const ripple = document.createElement('span');
+    ripple.style.cssText = `
+        position:absolute;inset:0;border-radius:inherit;
+        background:radial-gradient(circle at center, rgba(99,102,241,0.35) 0%, transparent 70%);
+        animation:_ripple-wave 0.5s ease-out;pointer-events:none;`;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 550);
+
+    // Show label
+    const orig = btn.querySelector('span:last-child') || btn;
+    const origText = btn.textContent;
+    btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:13px;">lock</span> ${planName} Only`;
+    btn.style.color = '#818cf8';
+    setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:13px;">lock</span> View Code`;
+        btn.style.color = '';
+    }, 1600);
+}
+
+// Inject ripple animation CSS once
+(function injectRippleCSS() {
+    if (document.getElementById('_ripple-style')) return;
+    const s = document.createElement('style');
+    s.id = '_ripple-style';
+    s.textContent = `@keyframes _ripple-wave { from { opacity:1; transform:scale(0.5); } to { opacity:0; transform:scale(1.5); } }`;
+    document.head.appendChild(s);
+})();
+

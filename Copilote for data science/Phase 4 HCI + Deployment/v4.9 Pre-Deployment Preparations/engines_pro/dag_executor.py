@@ -412,6 +412,9 @@ class DAGExecutor:
             meta.error = "Code generation failed"
             return False
 
+        # Store generated code for View Code UI
+        meta.generated_code = code
+
         # Execute with timeout
         ns, err = _safe_exec_with_timeout(code, description=f"Node {node.id}: {node.operation}")
 

@@ -284,12 +284,22 @@ function appendResult(result) {
             bodyHtml = `<div style="font-size:0.8125rem;line-height:1.7;white-space:pre-wrap;">${formatMsg(String(rdata))}</div>`;
         }
 
-        // Safe code button: use _codeStore array, not inline JSON
+        // View Code button: visible to all, Ultra-only activation
         let codeBtn = '';
         if (result.code) {
             const idx = _codeStore.push(result.code) - 1;
             block.dataset.codeIdx = idx;
-            codeBtn = `<button class="btn btn-ghost btn-sm btn-icon" onclick="showCode(_codeStore[this.closest('.result-block').dataset.codeIdx])" title="View code"><span class="material-symbols-rounded">code</span></button>`;
+            if (window.userPlan === 'ultra') {
+                codeBtn = `<button class="btn btn-ghost btn-sm btn-icon" style="position:relative;overflow:hidden;"
+                    onclick="showCode(_codeStore[this.closest('.result-block').dataset.codeIdx])" title="View code (Ultra)">
+                    <span class="material-symbols-rounded">code</span>
+                </button>`;
+            } else {
+                codeBtn = `<button class="btn btn-ghost btn-sm btn-icon" style="position:relative;overflow:hidden;opacity:0.5;"
+                    onclick="showUpgradeRipple(this,'Ultra')" title="View Code — Ultra plan only">
+                    <span class="material-symbols-rounded">lock</span>
+                </button>`;
+            }
         }
 
         block.innerHTML = `
@@ -428,3 +438,28 @@ function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 120) + 'px';
 }
+
+// ── Upgrade Ripple — lock animation for plan-gated buttons ─────────
+// Guard: workflow.js may also define this; only define once.
+if (!window.showUpgradeRipple) {
+    window.showUpgradeRipple = function (btn, planName) {
+        const ripple = document.createElement('span');
+        ripple.style.cssText = 'position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at center,rgba(99,102,241,0.35) 0%,transparent 70%);animation:_ripple-wave 0.5s ease-out;pointer-events:none;';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 550);
+
+        const origHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-rounded" style="font-size:14px;">lock</span> ${planName} Only`;
+        btn.style.color = '#818cf8';
+        setTimeout(() => { btn.innerHTML = origHtml; btn.style.color = ''; }, 1600);
+    };
+
+    // Inject ripple CSS
+    if (!document.getElementById('_ripple-style')) {
+        const s = document.createElement('style');
+        s.id = '_ripple-style';
+        s.textContent = '@keyframes _ripple-wave { from { opacity:1; transform:scale(0.5); } to { opacity:0; transform:scale(1.5); } }';
+        document.head.appendChild(s);
+    }
+}
+

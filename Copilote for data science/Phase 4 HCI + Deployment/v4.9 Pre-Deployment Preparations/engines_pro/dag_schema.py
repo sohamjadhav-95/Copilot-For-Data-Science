@@ -166,6 +166,7 @@ class ExecutionMetadata:
     output_type: Optional[str] = None
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
+    generated_code: Optional[str] = None    # Python code generated for this node (View Code)
 
     def to_dict(self) -> dict:
         return {
@@ -179,6 +180,7 @@ class ExecutionMetadata:
             "output_type": self.output_type,
             "started_at": self.started_at,
             "completed_at": self.completed_at,
+            "generated_code": self.generated_code,
         }
 
 

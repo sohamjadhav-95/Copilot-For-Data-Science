@@ -759,3 +759,68 @@
 {"timestamp": "2026-03-05T14:08:02.240179+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
 {"timestamp": "2026-03-05T14:08:05.050672+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
 {"timestamp": "2026-03-05T14:27:40.726144+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T14:28:45.102126+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T14:28:47.075522+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T14:30:14.766096+00:00", "level": "INFO", "logger": "copilot.app", "message": "[login] User: soham.ai.engineer@gmail.com"}
+{"timestamp": "2026-03-05T18:01:07.117886+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:01:09.541419+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:17:51.351050+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:17:53.850272+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:23:50.956717+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:24:10.372315+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:24:34.472278+00:00", "level": "INFO", "logger": "copilot.app", "message": "[login] User: testuser05"}
+{"timestamp": "2026-03-05T18:28:15.334323+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T18:28:19.249883+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-05T18:28:19.253097+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-05T18:28:19.265909+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show first 10 rows"}
+{"timestamp": "2026-03-05T18:28:22.688381+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (279 chars)"}
+{"timestamp": "2026-03-05T18:28:22.736457+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #92: display — Show first 10 rows"}
+{"timestamp": "2026-03-05T18:28:59.663676+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'summerise data in few lines' -> display (keyword)"}
+{"timestamp": "2026-03-05T18:28:59.667080+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'summerise data in few lines' -> Intent: display"}
+{"timestamp": "2026-03-05T18:29:00.052881+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'summerise data in few lines' -> 'Summarize the dataset in a few lines.'"}
+{"timestamp": "2026-03-05T18:29:00.054320+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'summerise data in few lines' -> 'Summarize the dataset in a few lines.'"}
+{"timestamp": "2026-03-05T18:29:00.070899+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Summarize the dataset in a few lines."}
+{"timestamp": "2026-03-05T18:29:01.711809+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1370 chars)"}
+{"timestamp": "2026-03-05T18:29:01.754803+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DISPLAY] Code exec failed: Import of 'numpy._core._dtype' is not allowed for security reasons"}
+{"timestamp": "2026-03-05T18:29:03.158473+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1642 chars)"}
+{"timestamp": "2026-03-05T18:29:03.163922+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DISPLAY] Fixed code also failed: Import of 'pandas.api.types' is not allowed for security reasons"}
+{"timestamp": "2026-03-05T18:29:12.407792+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'summerise data in few lines' -> display (keyword)"}
+{"timestamp": "2026-03-05T18:29:12.409637+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'summerise data in few lines' -> Intent: display"}
+{"timestamp": "2026-03-05T18:29:12.877004+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'summerise data in few lines' -> 'Summarize the loaded dataset in a few lines.'"}
+{"timestamp": "2026-03-05T18:29:12.878421+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'summerise data in few lines' -> 'Summarize the loaded dataset in a few lines.'"}
+{"timestamp": "2026-03-05T18:29:12.892984+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Summarize the loaded dataset in a few lines."}
+{"timestamp": "2026-03-05T18:29:14.631968+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1320 chars)"}
+{"timestamp": "2026-03-05T18:29:14.690002+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #93: display — Summarize the loaded dataset in a few lines."}
+{"timestamp": "2026-03-05T18:29:24.963887+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-20b: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T18:29:25.086810+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-20b: empty response (attempt 2)"}
+{"timestamp": "2026-03-05T18:29:25.514862+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T18:29:25.658046+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b: empty response (attempt 2)"}
+{"timestamp": "2026-03-05T18:29:26.318556+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Switching provider: groq -> openrouter"}
+{"timestamp": "2026-03-05T18:29:28.465427+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-20b:free: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T18:29:31.345426+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-20b:free: empty response (attempt 2)"}
+{"timestamp": "2026-03-05T18:30:27.916132+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b:free: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T18:31:00.160623+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b:free: empty response (attempt 2)"}
+{"timestamp": "2026-03-05T18:31:00.381716+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[INTENT] 'what is data about' -> chat (default)"}
+{"timestamp": "2026-03-05T18:31:00.382975+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'what is data about' -> Intent: chat"}
+{"timestamp": "2026-03-05T18:31:00.813437+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVE] 'what is data about' -> 'Provide a brief summary describing what the loaded dataset is about, in a few sentences'"}
+{"timestamp": "2026-03-05T18:31:00.815034+00:00", "level": "INFO", "logger": "copilot.app", "message": "[RESOLVED] 'what is data about' -> 'Provide a brief summary describing what the loaded dataset is about, in a few sentences'"}
+{"timestamp": "2026-03-05T18:35:30.072248+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T18:35:34.846730+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-05T18:35:34.848928+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-05T18:35:34.862267+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show first 10 rows"}
+{"timestamp": "2026-03-05T18:35:35.454200+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (256 chars)"}
+{"timestamp": "2026-03-05T18:35:35.500554+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #94: display — Show first 10 rows"}
+{"timestamp": "2026-03-05T18:35:49.023328+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Find the top 10 most common genres and visualize them' -> visualize (keyword)"}
+{"timestamp": "2026-03-05T18:35:49.154269+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Find the top 10 most common genres and visualize them' -> Intent: visualize"}
+{"timestamp": "2026-03-05T18:35:49.543008+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Find the top 10 most common genres and visualize them"}
+{"timestamp": "2026-03-05T18:35:51.481137+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (2332 chars)"}
+{"timestamp": "2026-03-05T18:35:51.484553+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[VIZ] Code exec failed: Import of 'ast' is not allowed for security reasons"}
+{"timestamp": "2026-03-05T18:35:53.494152+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (2705 chars)"}
+{"timestamp": "2026-03-05T18:35:53.814544+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-05T18:35:53.823444+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #95: visualize — Find the top 10 most common genres and visualize them"}
+{"timestamp": "2026-03-05T18:36:38.595272+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Analyze how Netflix content has grown over time and visualize number of releases per year.' -> visualize (keyword)"}
+{"timestamp": "2026-03-05T18:36:38.615324+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Analyze how Netflix content has grown over time and visualize number of releases per year.' -> Intent: visualize"}
+{"timestamp": "2026-03-05T18:36:38.637491+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Analyze how Netflix content has grown over time and visualize number of releases per year."}
+{"timestamp": "2026-03-05T18:36:43.640376+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (2365 chars)"}
+{"timestamp": "2026-03-05T18:36:45.237940+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-05T18:36:45.256999+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #96: visualize — Analyze how Netflix content has grown over time and visualize number of releases..."}
