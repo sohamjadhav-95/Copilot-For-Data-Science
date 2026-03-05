@@ -486,7 +486,62 @@ def register_routes(app):
     def api_sessions():
         sessions = ChatSession.query.filter_by(user_id=request.current_user.id)\
             .order_by(ChatSession.created_at.desc()).all()
-        return jsonify({"sessions": [s.to_dict() for s in sessions]})
+
+        result = []
+        for s in sessions:
+            d = s.to_dict()
+            # Auto-generate session name from first user message
+            first_msg = Message.query.filter_by(
+                session_id=s.id, role="user"
+            ).order_by(Message.created_at.asc()).first()
+            if first_msg and first_msg.content:
+                words = first_msg.content.strip().split()
+                auto_name = " ".join(words[:6])
+                if len(words) > 6:
+                    auto_name += "…"
+                d["auto_name"] = auto_name
+            else:
+                d["auto_name"] = s.filename or f"Session #{s.id}"
+            result.append(d)
+
+        return jsonify({"sessions": result})
+
+    @app.route("/api/sessions/workflow")
+    @login_required
+    def api_workflow_sessions():
+        """Return workflow plan sessions from the in-memory execution store."""
+        from engines_pro.pro_engine import _execution_store
+        uid = request.current_user.id
+        wf_sessions = []
+        for plan_id, entry in _execution_store.items():
+            if entry.get("user_id") != uid:
+                continue
+            plan = entry.get("plan")
+            if not plan:
+                continue
+            context = entry.get("context")
+            filename = ""
+            if context and hasattr(context, "file_path") and context.file_path:
+                filename = os.path.basename(context.file_path)
+            result = entry.get("result")
+            wf_sessions.append({
+                "plan_id": plan_id,
+                "goal": plan.user_goal or "Workflow",
+                "status": plan.status,
+                "node_count": len(plan.nodes),
+                "created_at": entry.get("created_at", ""),
+                "filename": filename,
+                "completed": len([n for n in plan.nodes
+                                  if plan.metadata.get(n.id) and
+                                  plan.metadata[n.id].status.value == "success"]),
+                "failed": len([n for n in plan.nodes
+                               if plan.metadata.get(n.id) and
+                               plan.metadata[n.id].status.value == "failed"]),
+                "session_id": entry.get("session_id"),
+            })
+        # Sort newest first
+        wf_sessions.sort(key=lambda x: x["created_at"], reverse=True)
+        return jsonify({"workflow_sessions": wf_sessions})
 
     @app.route("/api/sessions/clear", methods=["DELETE"])
     @login_required
@@ -494,6 +549,7 @@ def register_routes(app):
         ChatSession.query.filter_by(user_id=request.current_user.id).delete()
         db.session.commit()
         return jsonify({"message": "All sessions cleared"})
+
 
     @app.route("/api/change-password", methods=["POST"])
     @login_required

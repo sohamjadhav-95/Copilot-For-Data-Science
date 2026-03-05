@@ -19,10 +19,10 @@ PRO_MODELS = {
     # ── Reasoning: GLM-5 with thinking enabled ──────────────────────────
     "reasoning": {
         "model":            "z-ai/glm5",
-        "reasoning":        True,
+        "reasoning":        False,
         "extra_body": {
             "chat_template_kwargs": {
-                "enable_thinking": True,
+                "enable_thinking": False,
                 "clear_thinking":  False,
             },
         },

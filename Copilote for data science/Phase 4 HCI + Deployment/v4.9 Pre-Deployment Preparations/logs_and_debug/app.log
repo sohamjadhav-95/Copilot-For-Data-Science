@@ -824,3 +824,98 @@
 {"timestamp": "2026-03-05T18:36:43.640376+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (2365 chars)"}
 {"timestamp": "2026-03-05T18:36:45.237940+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
 {"timestamp": "2026-03-05T18:36:45.256999+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #96: visualize — Analyze how Netflix content has grown over time and visualize number of releases..."}
+{"timestamp": "2026-03-05T18:39:19.616999+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T18:39:22.766958+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:39:22.866545+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:39:22.868092+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=ON)"}
+{"timestamp": "2026-03-05T18:42:28.364912+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[NVIDIA] Reasoning tokens: 5253 chars"}
+{"timestamp": "2026-03-05T18:42:28.450949+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_b93b2286ef96"}
+{"timestamp": "2026-03-05T18:45:30.217370+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:45:32.179851+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:53:32.574295+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:53:35.546661+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:53:50.224401+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T18:53:51.194969+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:53:51.319435+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:53:51.320637+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=ON)"}
+{"timestamp": "2026-03-05T18:54:43.883643+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:54:44.284097+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:54:44.314449+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T18:54:44.315586+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=ON)"}
+{"timestamp": "2026-03-05T18:56:02.789596+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:56:17.327088+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:57:02.166225+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:57:04.733745+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[NVIDIA] Reasoning tokens: 4574 chars"}
+{"timestamp": "2026-03-05T18:57:04.735703+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 7 nodes, plan_id=plan_44c63a71ff7b"}
+{"timestamp": "2026-03-05T18:59:57.265356+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T18:59:59.443447+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:00:21.959833+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T19:00:23.107090+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:00:23.562965+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:00:23.572554+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=ON)"}
+{"timestamp": "2026-03-05T19:04:44.749072+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:04:45.205431+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:04:45.241859+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:04:45.242884+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=ON)"}
+{"timestamp": "2026-03-05T19:05:12.260284+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:07:52.754972+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:07:54.882252+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:08:11.967367+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T19:08:14.363563+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:08:14.497512+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:08:14.499665+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:09:32.628941+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 9 nodes, plan_id=plan_a6096cc16b3b"}
+{"timestamp": "2026-03-05T19:10:05.388564+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_a6096cc16b3b' (9 nodes)"}
+{"timestamp": "2026-03-05T19:10:05.391434+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 9 nodes"}
+{"timestamp": "2026-03-05T19:10:05.393680+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:10:13.509382+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dict"}
+{"timestamp": "2026-03-05T19:10:13.514601+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:11:10.509002+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-05T19:11:10.524837+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:11:22.884326+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: Import of 'ast' is not allowed in Pro Mode sandbox, retrying..."}
+{"timestamp": "2026-03-05T19:11:22.912319+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:11:36.473674+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-05T19:11:36.520867+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:11:55.969409+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-05T19:11:56.049580+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_4', profile updated"}
+{"timestamp": "2026-03-05T19:11:56.169479+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:13:19.355464+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed: Code blocked: Blocked dangerous pattern: \\beval\\s*\\(, retrying..."}
+{"timestamp": "2026-03-05T19:13:19.437787+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:14:02.108796+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_5' failed after retry"}
+{"timestamp": "2026-03-05T19:29:39.819352+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:29:42.217603+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-05T19:30:25.749665+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-05T19:30:26.588610+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:30:26.692378+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-05T19:30:26.693551+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:31:43.168921+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 8 nodes, plan_id=plan_2c5a986b9a44"}
+{"timestamp": "2026-03-05T19:31:49.063209+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_2c5a986b9a44' (8 nodes)"}
+{"timestamp": "2026-03-05T19:31:49.064813+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 8 nodes"}
+{"timestamp": "2026-03-05T19:31:49.065770+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:32:00.370359+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' failed: name 'ImportError' is not defined, retrying..."}
+{"timestamp": "2026-03-05T19:32:00.372477+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:32:59.094785+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-05T19:32:59.106427+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:33:16.453044+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: Import of 'ast' is not allowed in Pro Mode sandbox, retrying..."}
+{"timestamp": "2026-03-05T19:33:16.771207+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:33:43.739707+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan trigger set: double_failure: node 'node_2' failed after retry (continuing other nodes)"}
+{"timestamp": "2026-03-05T19:33:43.742446+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' skipped — deps failed: ['node_2']"}
+{"timestamp": "2026-03-05T19:33:43.797922+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:34:02.131190+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-05T19:34:02.172853+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:34:36.739469+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed: name 'ImportError' is not defined, retrying..."}
+{"timestamp": "2026-03-05T19:34:36.751130+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:35:37.251631+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[NVIDIA] z-ai/glm4.7: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T19:36:09.781028+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[VALIDATOR] Type mismatch: node 'node_5' expected 'dataframe' but received 'scalar'. Continuing — value is usable."}
+{"timestamp": "2026-03-05T19:36:09.782562+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: scalar"}
+{"timestamp": "2026-03-05T19:36:09.802653+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:36:59.115368+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_7' failed: name 'ImportError' is not defined, retrying..."}
+{"timestamp": "2026-03-05T19:36:59.157805+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:37:31.258119+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[NVIDIA] z-ai/glm4.7: empty response (attempt 1)"}
+{"timestamp": "2026-03-05T19:38:11.461089+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:38:47.127828+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' failed: Code blocked: Blocked dangerous pattern: \\beval\\s*\\(, retrying..."}
+{"timestamp": "2026-03-05T19:38:47.169887+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → nvidia/z-ai/glm4.7 (reasoning=OFF)"}
+{"timestamp": "2026-03-05T19:39:19.501688+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' completed: artifact"}
+{"timestamp": "2026-03-05T19:39:19.503233+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_8' skipped — deps failed: ['node_7']"}
+{"timestamp": "2026-03-05T19:39:19.503807+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Done: 4 ok / 2 failed / 4 skipped — status=partial"}
+{"timestamp": "2026-03-05T19:39:19.514992+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=OFF)"}

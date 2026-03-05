@@ -6,13 +6,12 @@ client = OpenAI(
 )
 
 completion = client.chat.completions.create(
-  model="nvidia/nemotron-3-nano-30b-a3b",
+  model="nvidia/z-ai/glm5",
   messages=[{"role":"user","content":"What is meaning of life?"}],
   temperature=0.15,
   top_p=0.95,
   max_tokens=8192,
   seed=42,
-  extra_body={"chat_template_kwargs":{"enable_thinking":True,"clear_thinking":True}},
   stream=True
 )
 

@@ -4,108 +4,327 @@
 {% block page_title %}Sessions{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
+<div class="page-header" style="margin-bottom:20px;">
     <h1>Sessions</h1>
-    <p>Complete history of all your analysis sessions</p>
+    <p>History of your Quick Run chats and Workflow executions</p>
 </div>
 
-<div class="table-wrap">
-    <div class="table-toolbar">
-        <div class="table-toolbar-left">
-            <div class="search-input-wrap">
-                <span class="material-symbols-rounded">search</span>
-                <input type="text" class="input" placeholder="Search sessions..." oninput="filterSessions(this.value)"
-                    style="width:240px;">
+<!-- ── Two-column layout ────────────────────────────────────────── -->
+<div style="display:flex;gap:20px;align-items:flex-start;">
+
+    <!-- ── Quick Run Sessions (70%) ─────────────────────────────── -->
+    <div style="flex:0 0 70%;min-width:0;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span class="material-symbols-rounded" style="font-size:18px;color:var(--accent-400);">bolt</span>
+                <span style="font-weight:600;font-size:0.95rem;color:var(--text-primary);">Quick Run</span>
+                <span id="qr-count"
+                    style="font-size:0.7rem;color:var(--text-tertiary);background:var(--bg-muted);padding:1px 7px;border-radius:20px;">—</span>
+            </div>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+                <div style="position:relative;">
+                    <span class="material-symbols-rounded"
+                        style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--text-tertiary);pointer-events:none;">search</span>
+                    <input type="text" class="input" placeholder="Search sessions…" oninput="filterQR(this.value)"
+                        style="padding-left:32px;height:32px;font-size:0.8rem;width:200px;">
+                </div>
             </div>
         </div>
-        <div class="table-toolbar-right">
-            <span style="font-size:0.75rem;color:var(--text-tertiary);" id="sess-count">Loading...</span>
+
+        <!-- Session list -->
+        <div id="qr-list" style="display:flex;flex-direction:column;gap:8px;">
+            <div id="qr-loading" style="padding:40px;text-align:center;color:var(--text-tertiary);font-size:0.85rem;">
+                <span class="spinner sm" style="margin-bottom:8px;display:block;margin:0 auto 8px;"></span>
+                Loading sessions…
+            </div>
         </div>
     </div>
-    <div class="table-scroll">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th class="sortable" onclick="sortSess('filename')">Dataset <span class="sort-indicator"></span>
-                    </th>
-                    <th class="sortable" onclick="sortSess('created_at')">Created <span class="sort-indicator"></span>
-                    </th>
-                    <th>Messages</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="sessions-tbody">
-                <tr>
-                    <td colspan="6" class="table-empty">
-                        <span class="material-symbols-rounded">history</span>
-                        Loading sessions...
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+    <!-- ── Workflow Sessions (25%) ──────────────────────────────── -->
+    <div style="flex:0 0 calc(30% - 20px);min-width:200px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;">
+            <span class="material-symbols-rounded" style="font-size:18px;color:#a78bfa;">account_tree</span>
+            <span style="font-weight:600;font-size:0.95rem;color:var(--text-primary);">Workflow</span>
+            <span id="wf-count"
+                style="font-size:0.7rem;color:var(--text-tertiary);background:var(--bg-muted);padding:1px 7px;border-radius:20px;">—</span>
+        </div>
+
+        <div id="wf-list" style="display:flex;flex-direction:column;gap:8px;">
+            <div id="wf-loading"
+                style="padding:40px 16px;text-align:center;color:var(--text-tertiary);font-size:0.8rem;">
+                <span class="spinner sm" style="display:block;margin:0 auto 8px;"></span>
+                Loading…
+            </div>
+        </div>
     </div>
+
 </div>
 {% endblock %}
 
 {% block page_scripts %}
-<script>
-    let allSessions = [], sortKey = 'created_at', sortDir = -1, filterQ = '';
-
-    async function loadSessions() {
-        const res = await fetch('/api/sessions');
-        const data = await res.json();
-        allSessions = data.sessions || [];
-        renderSessions();
+<style>
+    /* Quick Run session card */
+    .qr-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        cursor: default;
     }
 
-    function renderSessions() {
-        let rows = allSessions.filter(s => !filterQ || (s.filename || '').toLowerCase().includes(filterQ) || String(s.id).includes(filterQ));
-        rows.sort((a, b) => {
-            const av = a[sortKey] || '', bv = b[sortKey] || '';
-            return sortDir * (av < bv ? -1 : av > bv ? 1 : 0);
-        });
-        document.getElementById('sess-count').textContent = rows.length + ' session' + (rows.length !== 1 ? 's' : '');
-        const tbody = document.getElementById('sessions-tbody');
+    .qr-card:hover {
+        border-color: var(--accent-400);
+        box-shadow: 0 2px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    .qr-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(99, 102, 241, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--accent-400);
+    }
+
+    .qr-card-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .qr-card-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .qr-card-sub {
+        font-size: 0.72rem;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .qr-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    /* Workflow session card */
+    .wf-card {
+        padding: 12px 14px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        transition: border-color 0.15s;
+    }
+
+    .wf-card:hover {
+        border-color: #a78bfa;
+    }
+
+    .wf-card-goal {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 6px;
+    }
+
+    .wf-card-meta {
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .wf-status-pill {
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 20px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .wf-status-completed {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+    }
+
+    .wf-status-executing {
+        background: rgba(99, 102, 241, 0.15);
+        color: #818cf8;
+    }
+
+    .wf-status-failed {
+        background: rgba(225, 29, 72, 0.15);
+        color: #f87171;
+    }
+
+    .wf-status-planned {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+    }
+
+    .wf-status-approved {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+    }
+</style>
+
+<script>
+    let _allQR = [], _filterQ = '';
+
+    // ── Load both columns in parallel
+    async function loadAll() {
+        await Promise.all([loadQR(), loadWF()]);
+    }
+
+    // ── Quick Run sessions
+    async function loadQR() {
+        try {
+            const res = await fetch('/api/sessions');
+            const data = await res.json();
+            _allQR = data.sessions || [];
+            renderQR();
+        } catch (e) {
+            document.getElementById('qr-list').innerHTML = errState('Could not load sessions');
+        }
+    }
+
+    function renderQR() {
+        const list = document.getElementById('qr-list');
+        let rows = _allQR.filter(s =>
+            !_filterQ
+            || (s.auto_name || '').toLowerCase().includes(_filterQ)
+            || (s.filename || '').toLowerCase().includes(_filterQ)
+        );
+        document.getElementById('qr-count').textContent = rows.length;
+
         if (!rows.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="table-empty"><span class="material-symbols-rounded">history</span>No sessions found</td></tr>';
+            list.innerHTML = emptyState('bolt', _filterQ ? 'No sessions match your search' : 'No Quick Run sessions yet');
             return;
         }
-        tbody.innerHTML = rows.map((s, i) => `
-        <tr>
-            <td style="color:var(--text-tertiary);font-size:0.8rem;">#${s.id}</td>
-            <td>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <div class="dataset-file-icon" style="width:28px;height:28px;"><span class="material-symbols-rounded" style="font-size:14px;">table_chart</span></div>
-                    <span style="font-weight:500;">${esc(s.filename || 'Untitled')}</span>
-                </div>
-            </td>
-            <td style="color:var(--text-tertiary);font-size:0.8rem;">${fmtDate(s.created_at)}</td>
-            <td><span class="badge neutral">${s.message_count || 0} msgs</span></td>
-            <td><span class="badge green"><span class="dot"></span>Active</span></td>
-            <td>
-                <div style="display:flex;gap:6px;">
-                    <a href="/quick-run?session=${s.id}" class="btn btn-sm btn-primary md-ripple">
-                        <span class="material-symbols-rounded">bolt</span> Open
-                    </a>
-                    <a href="/workflow?session=${s.id}" class="btn btn-sm btn-secondary md-ripple">
-                        <span class="material-symbols-rounded">account_tree</span>
-                    </a>
-                </div>
-            </td>
-        </tr>`).join('');
+
+        list.innerHTML = rows.map(s => {
+            const name = esc(s.auto_name || s.filename || `Session #${s.id}`);
+            const file = esc(s.filename || '');
+            const msgs = s.message_count || 0;
+            const age = relTime(s.created_at);
+            const msgLabel = msgs === 1 ? '1 message' : `${msgs} messages`;
+            return `
+        <div class="qr-card">
+          <div class="qr-card-icon">
+            <span class="material-symbols-rounded" style="font-size:17px;">table_chart</span>
+          </div>
+          <div class="qr-card-body">
+            <div class="qr-card-name" title="${name}">${name}</div>
+            <div class="qr-card-sub">${file ? file + ' · ' : ''}${msgLabel} · ${age}</div>
+          </div>
+          <div class="qr-card-actions">
+            <a href="/quick-run?session=${s.id}" class="btn btn-sm btn-primary md-ripple" title="Open in Quick Run" style="height:28px;font-size:0.75rem;gap:4px;">
+              <span class="material-symbols-rounded" style="font-size:14px;">bolt</span>Open
+            </a>
+          </div>
+        </div>`;
+        }).join('');
     }
 
-    function sortSess(key) {
-        if (sortKey === key) sortDir *= -1;
-        else { sortKey = key; sortDir = -1; }
-        renderSessions();
+    function filterQR(q) { _filterQ = q.toLowerCase(); renderQR(); }
+
+    // ── Workflow sessions
+    async function loadWF() {
+        try {
+            const res = await fetch('/api/sessions/workflow');
+            const data = await res.json();
+            const sessions = data.workflow_sessions || [];
+            document.getElementById('wf-count').textContent = sessions.length;
+
+            const list = document.getElementById('wf-list');
+            if (!sessions.length) {
+                list.innerHTML = emptyState('account_tree', 'No Workflow sessions yet — run a plan to see it here');
+                return;
+            }
+
+            list.innerHTML = sessions.map(w => {
+                const goal = esc(w.goal || 'Workflow');
+                const shortGoal = goal.length > 80 ? goal.slice(0, 78) + '…' : goal;
+                const statusClass = `wf-status-${w.status || 'planned'}`;
+                const file = esc(w.filename || '');
+                const age = relTime(w.created_at);
+                const steps = `${w.node_count} step${w.node_count !== 1 ? 's' : ''}`;
+                const done = w.completed > 0 ? `<span style="color:#34d399;">✓${w.completed}</span>` : '';
+                const fail = w.failed > 0 ? `<span style="color:#f87171;">✗${w.failed}</span>` : '';
+                const href = w.session_id ? `/workflow?session=${w.session_id}` : '/workflow';
+                return `
+            <div class="wf-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px;">
+                <div class="wf-card-goal" title="${goal}">${shortGoal}</div>
+                <span class="wf-status-pill ${statusClass}">${esc(w.status)}</span>
+              </div>
+              <div class="wf-card-meta">
+                ${file ? `<span>${file}</span>` : ''}
+                <span>${steps} ${done}${done && fail ? ' ' : ''}${fail}</span>
+                <span>${age}</span>
+              </div>
+              <a href="${href}" class="btn btn-sm btn-secondary md-ripple" style="height:26px;font-size:0.72rem;gap:4px;width:100%;justify-content:center;">
+                <span class="material-symbols-rounded" style="font-size:13px;">account_tree</span>Open Workflow
+              </a>
+            </div>`;
+            }).join('');
+        } catch (e) {
+            document.getElementById('wf-list').innerHTML = errState('Could not load workflow sessions');
+        }
     }
-    function filterSessions(q) { filterQ = q.toLowerCase(); renderSessions(); }
+
+    // ── Helpers
     function esc(s) { return String(s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-    function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
 
-    loadSessions();
+    function relTime(iso) {
+        if (!iso) return '—';
+        const diff = Date.now() - new Date(iso).getTime();
+        const s = Math.round(diff / 1000);
+        if (s < 60) return 'just now';
+        const m = Math.round(s / 60);
+        if (m < 60) return `${m}m ago`;
+        const h = Math.round(m / 60);
+        if (h < 24) return `${h}h ago`;
+        const d = Math.round(h / 24);
+        if (d < 7) return `${d}d ago`;
+        return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function emptyState(icon, msg) {
+        return `<div style="padding:36px 16px;text-align:center;color:var(--text-tertiary);">
+        <span class="material-symbols-rounded" style="font-size:36px;display:block;margin-bottom:8px;opacity:0.4;">${icon}</span>
+        <span style="font-size:0.8rem;">${msg}</span>
+    </div>`;
+    }
+
+    function errState(msg) {
+        return `<div style="padding:20px;text-align:center;color:var(--error);font-size:0.8rem;">${msg}</div>`;
+    }
+
+    loadAll();
 </script>
 {% endblock %}

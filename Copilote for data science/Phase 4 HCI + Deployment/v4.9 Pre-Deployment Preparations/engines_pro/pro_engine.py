@@ -16,6 +16,7 @@ from engines_pro.dag_schema import DAGPlan, NodeStatus
 from engines_pro.dag_planner import DAGPlanner
 from engines_pro.dag_executor import DAGExecutor
 from models_api.model_router import router
+from core.model_plan_router import get_pro_model
 from logger import app_logger, log_error
 
 
@@ -134,7 +135,7 @@ class ProEngine:
         )
 
         result = router.call_with_system(
-            tier="light",
+            task="intent",
             system_prompt="""You are a complexity analyzer for a data science copilot.
 Determine if a user request needs simple execution (Normal Mode) or multi-step planning (Pro Mode).
 
@@ -243,7 +244,7 @@ Reply with ONLY valid JSON:
         _cleanup_old_executions()
 
         # Return plan for frontend
-        model_info = router.get_model_info("heavy")
+        model_info = get_pro_model("reasoning")
 
         return {
             "plan_id": plan.plan_id,
