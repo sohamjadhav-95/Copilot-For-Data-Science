@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Register — DataCopilot{% endblock %}
+{% block body %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="auth-brand-icon"><span class="material-symbols-rounded">smart_toy</span></div>
+            <span class="auth-brand-name">DataCopilot</span>
+        </div>
+
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Join Data Science Copilot to get started</p>
+
+        <div id="auth-error" class="auth-error"></div>
+
+        <form id="register-form" onsubmit="return handleRegister(event)">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input type="text" class="input" id="username" name="username" placeholder="Choose a username" required
+                    autofocus>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" class="input" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="input" id="password" name="password" placeholder="Min 6 characters"
+                    required minlength="6">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="confirm_password">Confirm Password</label>
+                <input type="password" class="input" id="confirm_password" placeholder="Re-enter password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg md-ripple" id="register-btn"
+                style="width:100%;margin-top:8px;">
+                <span id="btn-text">Create Account</span>
+                <span id="btn-spinner" class="spinner sm"
+                    style="display:none;border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a href="/login">Sign in</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    async function handleRegister(e) {
+        e.preventDefault();
+        const errDiv = document.getElementById('auth-error');
+        const btn = document.getElementById('register-btn');
+        const pw = document.getElementById('password').value;
+        const cpw = document.getElementById('confirm_password').value;
+
+        if (pw !== cpw) {
+            errDiv.textContent = 'Passwords do not match';
+            errDiv.className = 'auth-error show';
+            return false;
+        }
+
+        document.getElementById('btn-text').style.display = 'none';
+        document.getElementById('btn-spinner').style.display = 'inline-block';
+        btn.disabled = true;
+        errDiv.className = 'auth-error';
+
+        try {
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: pw,
+                }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = '/dashboard';
+            } else {
+                errDiv.textContent = data.error || 'Registration failed';
+                errDiv.className = 'auth-error show';
+            }
+        } catch (err) {
+            errDiv.textContent = 'Network error. Please try again.';
+            errDiv.className = 'auth-error show';
+        } finally {
+            document.getElementById('btn-text').style.display = 'inline';
+            document.getElementById('btn-spinner').style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

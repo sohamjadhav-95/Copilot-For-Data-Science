@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — DataCopilot{% endblock %}
+{% block page_icon %}dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block topbar_actions %}
+<a href="/quick-run" class="topbar-action-btn primary md-ripple">
+    <span class="material-symbols-rounded">bolt</span> Quick Run
+</a>
+<a href="/workflow" class="topbar-action-btn secondary md-ripple">
+    <span class="material-symbols-rounded">account_tree</span> Workflow
+</a>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Welcome back, {{ user.username }} 👋</h1>
+    <p>Here's an overview of your data science activity</p>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <a href="/quick-run" class="quick-action-card md-ripple">
+        <div class="qa-icon"><span class="material-symbols-rounded">bolt</span></div>
+        <div class="qa-body">
+            <h3>Quick Run</h3>
+            <p>Chat with your data using natural language</p>
+        </div>
+    </a>
+    <a href="/workflow" class="quick-action-card md-ripple">
+        <div class="qa-icon"><span class="material-symbols-rounded">account_tree</span></div>
+        <div class="qa-body">
+            <h3>Workflow Studio</h3>
+            <p>Build multi-step AI DAG pipelines (Pro)</p>
+        </div>
+    </a>
+    <a href="/datasets" class="quick-action-card md-ripple">
+        <div class="qa-icon amber"><span class="material-symbols-rounded">table_chart</span></div>
+        <div class="qa-body">
+            <h3>Datasets</h3>
+            <p>Upload and manage your CSV datasets</p>
+        </div>
+    </a>
+    <a href="/sessions" class="quick-action-card md-ripple">
+        <div class="qa-icon green"><span class="material-symbols-rounded">history</span></div>
+        <div class="qa-body">
+            <h3>Session History</h3>
+            <p>View past executions and their results</p>
+        </div>
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" id="stats-grid">
+    <div class="stat-card">
+        <div class="card-icon purple"><span class="material-symbols-rounded">history</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Total Sessions</div>
+            <div class="stat-value" id="stat-sessions">—</div>
+            <div class="stat-delta neutral">All time</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon green"><span class="material-symbols-rounded">check_circle</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Analyses Run</div>
+            <div class="stat-value" id="stat-analyses">—</div>
+            <div class="stat-delta up">Today</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon amber"><span class="material-symbols-rounded">table_chart</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Datasets</div>
+            <div class="stat-value" id="stat-datasets">—</div>
+            <div class="stat-delta neutral">Uploaded</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon blue"><span class="material-symbols-rounded">account_tree</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Workflows</div>
+            <div class="stat-value" id="stat-workflows">—</div>
+            <div class="stat-delta neutral">Pro executions</div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Grid -->
+<div class="content-grid sidebar-right">
+    <!-- Recent Sessions -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <span class="section-title">Recent Sessions</span>
+            <a href="/sessions" class="section-link">View all →</a>
+        </div>
+        <div class="table-wrap">
+            <div class="table-scroll">
+                <table class="data-table" id="sessions-table">
+                    <thead>
+                        <tr>
+                            <th>Dataset</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessions-tbody">
+                        <tr>
+                            <td colspan="4" class="table-empty">
+                                <span class="material-symbols-rounded">history</span>
+                                No sessions yet
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Feed -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <span class="section-title">Recent Activity</span>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+            <div style="padding:16px 20px;" id="activity-list">
+                <div class="empty-state" style="padding:32px 16px;">
+                    <div class="empty-icon"><span class="material-symbols-rounded">timeline</span></div>
+                    <h3>No activity yet</h3>
+                    <p>Start a Quick Run or Workflow to see activity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    async function loadDashboard() {
+        try {
+            const [sessRes, actRes] = await Promise.all([
+                fetch('/api/sessions'), fetch('/api/activities')
+            ]);
+            const sessData = await sessRes.json();
+            const actData = await actRes.json();
+
+            const sessions = sessData.sessions || [];
+            document.getElementById('stat-sessions').textContent = sessions.length;
+            document.getElementById('stat-datasets').textContent = [...new Set(sessions.map(s => s.filename).filter(Boolean))].length;
+
+            const tbody = document.getElementById('sessions-tbody');
+            if (sessions.length > 0) {
+                tbody.innerHTML = sessions.slice(0, 8).map(s => `
+                <tr>
+                    <td><strong>${escDash(s.filename || 'Untitled')}</strong></td>
+                    <td style="color:var(--text-tertiary);font-size:0.75rem;">${fmtDate(s.created_at)}</td>
+                    <td><span class="badge green"><span class="dot"></span>Active</span></td>
+                    <td><a href="/quick-run?session=${s.id}" class="btn btn-ghost btn-sm">Open</a></td>
+                </tr>`).join('');
+            }
+
+            const acts = actData.activities || [];
+            document.getElementById('stat-analyses').textContent = acts.filter(a => a.action === 'display' || a.action === 'visualize').length;
+            document.getElementById('stat-workflows').textContent = acts.filter(a => a.action === 'pro_execute').length;
+
+            const actEl = document.getElementById('activity-list');
+            if (acts.length > 0) {
+                actEl.innerHTML = '<div class="activity-list">' + acts.slice(0, 8).map(a => `
+                <div class="activity-item">
+                    <div class="activity-dot ${colorForAction(a.action)}"></div>
+                    <div class="activity-body">
+                        <div class="activity-title">${labelForAction(a.action)}</div>
+                        <div class="activity-meta">${escDash(a.details || '')} · ${fmtDate(a.created_at)}</div>
+                    </div>
+                </div>`).join('') + '</div>';
+            }
+        } catch (e) { console.warn('Dashboard load error:', e); }
+    }
+
+    function escDash(s) { return String(s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function fmtDate(d) { if (!d) return '—'; const dt = new Date(d); return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+    function colorForAction(a) { return a === 'pro_execute' ? 'purple' : a === 'visualize' ? 'blue' : a === 'modify' ? 'amber' : a === 'error' ? 'red' : 'green'; }
+    function labelForAction(a) { const m = { display: 'Data Display', visualize: 'Visualization', modify: 'Data Modification', pro_execute: 'Pro Workflow', pro_plan: 'Plan Generated', upload: 'Dataset Upload', login: 'Login', register: 'Account Created' }; return m[a] || a; }
+
+    loadDashboard();
+</script>
+{% endblock %}

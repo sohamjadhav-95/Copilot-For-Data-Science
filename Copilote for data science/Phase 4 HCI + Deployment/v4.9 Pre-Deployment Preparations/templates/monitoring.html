@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% block title %}Monitoring — DataCopilot{% endblock %}
+{% block page_icon %}monitoring{% endblock %}
+{% block page_title %}Monitoring{% endblock %}
+
+{% block topbar_actions %}
+<button class="topbar-action-btn secondary md-ripple" onclick="loadMonitoring()" title="Refresh now">
+    <span class="material-symbols-rounded">refresh</span> Refresh
+</button>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Monitoring Dashboard</h1>
+    <p>Real-time usage metrics, activity logs, and system health</p>
+</div>
+
+<!-- ═══ Section 1: Plan & Limits ═══ -->
+<div class="card" style="margin-bottom:20px;padding:20px 24px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div
+            style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-rounded" style="color:#fff;font-size:20px;">workspace_premium</span>
+        </div>
+        <div>
+            <div style="font-weight:700;font-size:1rem;color:var(--text-primary);">Current Plan: <span id="mon-plan"
+                    style="text-transform:uppercase;">—</span></div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);">Your plan determines feature access and usage
+                limits</div>
+        </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:12px;" id="limits-grid">
+        <div class="limit-item">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--accent-400);">storage</span>
+            <span class="limit-label">Dataset Limit</span>
+            <span class="limit-value" id="lim-dataset">—</span>
+        </div>
+        <div class="limit-item">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--violet-400);">toll</span>
+            <span class="limit-label">Credits Limit</span>
+            <span class="limit-value" id="lim-credits">—</span>
+        </div>
+        <div class="limit-item">
+            <span class="material-symbols-rounded" style="font-size:16px;color:var(--success);">account_tree</span>
+            <span class="limit-label">Workflow Access</span>
+            <span class="limit-value" id="lim-workflow">—</span>
+        </div>
+        <div class="limit-item">
+            <span class="material-symbols-rounded" style="font-size:16px;color:#f59e0b;">bolt</span>
+            <span class="limit-label">High Tier Toggle</span>
+            <span class="limit-value" id="lim-hightier">—</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Section 2: Usage Metrics Cards ═══ -->
+<div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));margin-bottom:20px;">
+    <div class="stat-card">
+        <div class="card-icon green"><span class="material-symbols-rounded">table_chart</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Datasets</div>
+            <div class="stat-value" id="met-datasets">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon purple"><span class="material-symbols-rounded">history</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Sessions</div>
+            <div class="stat-value" id="met-sessions">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon violet"><span class="material-symbols-rounded">chat</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Total Queries</div>
+            <div class="stat-value" id="met-queries">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon amber"><span class="material-symbols-rounded">bar_chart</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Charts Generated</div>
+            <div class="stat-value" id="met-charts">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon green"><span class="material-symbols-rounded">code</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Code Snippets</div>
+            <div class="stat-value" id="met-snippets">—</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="card-icon purple"><span class="material-symbols-rounded">toll</span></div>
+        <div class="stat-body">
+            <div class="stat-label">Credits Used</div>
+            <div class="stat-value" id="met-credits">—</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Section 3 + 4: Model Usage & Workflow Stats ═══ -->
+<div class="content-grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+    <!-- Model Usage -->
+    <div class="card" style="padding:20px;">
+        <div class="card-header" style="margin-bottom:14px;">
+            <div class="card-title">Model Usage</div>
+            <div class="card-icon violet"><span class="material-symbols-rounded">model_training</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-secondary);margin-bottom:5px;">
+                    <span>Coding</span><span id="model-coding">0</span>
+                </div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar purple" id="bar-coding" style="width:0%;transition:width 0.5s;"></div>
+                </div>
+            </div>
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-secondary);margin-bottom:5px;">
+                    <span>Reasoning</span><span id="model-reasoning">0</span>
+                </div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar green" id="bar-reasoning" style="width:0%;transition:width 0.5s;"></div>
+                </div>
+            </div>
+            <div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-secondary);margin-bottom:5px;">
+                    <span>Intent</span><span id="model-intent">0</span>
+                </div>
+                <div class="mini-bar-wrap">
+                    <div class="mini-bar violet" id="bar-intent" style="width:0%;transition:width 0.5s;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Stats -->
+    <div class="card" style="padding:20px;">
+        <div class="card-header" style="margin-bottom:14px;">
+            <div class="card-title">Workflow Executions</div>
+            <div class="card-icon green"><span class="material-symbols-rounded">account_tree</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:var(--text-tertiary);"></span>
+                <span style="font-size:0.85rem;color:var(--text-secondary);flex:1;">Total Workflows</span>
+                <span style="font-weight:700;font-size:1rem;" id="wf-total">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:var(--success);"></span>
+                <span style="font-size:0.85rem;color:var(--text-secondary);flex:1;">Successful</span>
+                <span style="font-weight:700;font-size:1rem;color:var(--success);" id="wf-success">0</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:var(--error);"></span>
+                <span style="font-size:0.85rem;color:var(--text-secondary);flex:1;">Failed</span>
+                <span style="font-weight:700;font-size:1rem;color:var(--error);" id="wf-failed">0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Section 5: Activity Timeline ═══ -->
+<div class="card" style="padding:20px;margin-bottom:20px;">
+    <div class="card-header" style="margin-bottom:14px;">
+        <div class="card-title">Activity Timeline</div>
+        <div class="card-icon purple"><span class="material-symbols-rounded">timeline</span></div>
+    </div>
+    <div class="activity-list" id="activity-list" style="max-height:340px;overflow-y:auto;">
+        <div class="activity-item" style="justify-content:center;color:var(--text-tertiary);font-size:0.8rem;">
+            Loading activities...
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Section 6: Health Checks ═══ -->
+<div class="card" style="padding:20px;">
+    <div class="card-header" style="margin-bottom:14px;">
+        <div class="card-title">System Health</div>
+        <div class="card-icon green"><span class="material-symbols-rounded">monitor_heart</span></div>
+    </div>
+    <div class="activity-list" id="health-list">
+        <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div class="activity-body">
+                <div class="activity-title">Flask Application</div>
+                <div class="activity-meta">Running normally</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-dot" id="db-dot" style="background:var(--text-tertiary);"></div>
+            <div class="activity-body">
+                <div class="activity-title">Database</div>
+                <div class="activity-meta" id="db-status">Checking...</div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <div class="activity-dot" id="ai-dot" style="background:var(--text-tertiary);"></div>
+            <div class="activity-body">
+                <div class="activity-title">AI Provider</div>
+                <div class="activity-meta" id="ai-status">Checking...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .limit-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: var(--bg-muted);
+    }
+
+    .limit-label {
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        flex: 1;
+    }
+
+    .limit-value {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .act-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .act-icon.upload {
+        background: rgba(34, 197, 94, 0.12);
+        color: var(--success);
+    }
+
+    .act-icon.query {
+        background: rgba(99, 102, 241, 0.12);
+        color: var(--accent-400);
+    }
+
+    .act-icon.viz {
+        background: rgba(245, 158, 11, 0.12);
+        color: #f59e0b;
+    }
+
+    .act-icon.workflow {
+        background: rgba(139, 92, 246, 0.12);
+        color: var(--violet-400);
+    }
+
+    .act-icon.default {
+        background: var(--bg-muted);
+        color: var(--text-tertiary);
+    }
+</style>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    const ACTION_ICONS = {
+        upload: { icon: 'upload_file', cls: 'upload' },
+        login: { icon: 'login', cls: 'default' },
+        register: { icon: 'person_add', cls: 'default' },
+        display: { icon: 'table_chart', cls: 'query' },
+        visualize: { icon: 'bar_chart', cls: 'viz' },
+        modify: { icon: 'edit', cls: 'query' },
+        chat: { icon: 'chat', cls: 'query' },
+        workflow_plan: { icon: 'edit_square', cls: 'workflow' },
+        workflow_execute: { icon: 'play_circle', cls: 'workflow' },
+        plan_activated: { icon: 'workspace_premium', cls: 'viz' },
+    };
+
+    async function loadMonitoring() {
+        try {
+            const res = await fetch('/api/monitoring');
+            if (!res.ok) return;
+            const d = await res.json();
+
+            // ── Plan & Limits ──
+            const planEl = document.getElementById('mon-plan');
+            planEl.textContent = d.plan.toUpperCase();
+            if (d.plan === 'ultra') planEl.style.color = '#f59e0b';
+            else if (d.plan === 'pro') planEl.style.color = '#8b5cf6';
+            else planEl.style.color = 'var(--text-primary)';
+
+            document.getElementById('lim-dataset').textContent = d.limits.dataset_size_limit;
+            document.getElementById('lim-credits').textContent = d.limits.credits_limit;
+            document.getElementById('lim-workflow').textContent = d.limits.workflow_enabled ? 'Enabled' : 'Disabled';
+            document.getElementById('lim-workflow').style.color = d.limits.workflow_enabled ? 'var(--success)' : 'var(--error)';
+            document.getElementById('lim-hightier').textContent = d.limits.high_tier_toggle ? 'Available' : 'Locked';
+            document.getElementById('lim-hightier').style.color = d.limits.high_tier_toggle ? 'var(--success)' : 'var(--text-tertiary)';
+
+            // ── Usage Metrics ──
+            document.getElementById('met-datasets').textContent = d.metrics.datasets.toLocaleString();
+            document.getElementById('met-sessions').textContent = d.metrics.sessions.toLocaleString();
+            document.getElementById('met-queries').textContent = d.metrics.queries.toLocaleString();
+            document.getElementById('met-charts').textContent = d.metrics.charts_generated.toLocaleString();
+            document.getElementById('met-snippets').textContent = d.metrics.code_snippets.toLocaleString();
+            document.getElementById('met-credits').textContent = d.metrics.credits_used.toLocaleString();
+
+            // ── Model Usage ──
+            const maxModel = Math.max(d.model_usage.coding, d.model_usage.reasoning, d.model_usage.intent, 1);
+            document.getElementById('model-coding').textContent = d.model_usage.coding;
+            document.getElementById('model-reasoning').textContent = d.model_usage.reasoning;
+            document.getElementById('model-intent').textContent = d.model_usage.intent;
+            document.getElementById('bar-coding').style.width = (d.model_usage.coding / maxModel * 100) + '%';
+            document.getElementById('bar-reasoning').style.width = (d.model_usage.reasoning / maxModel * 100) + '%';
+            document.getElementById('bar-intent').style.width = (d.model_usage.intent / maxModel * 100) + '%';
+
+            // ── Workflow Stats ──
+            document.getElementById('wf-total').textContent = d.workflow_stats.total;
+            document.getElementById('wf-success').textContent = d.workflow_stats.success;
+            document.getElementById('wf-failed').textContent = d.workflow_stats.failed;
+
+            // ── Activity Timeline ──
+            const list = document.getElementById('activity-list');
+            if (d.activities.length === 0) {
+                list.innerHTML = '<div class="activity-item" style="justify-content:center;color:var(--text-tertiary);font-size:0.8rem;">No activities yet</div>';
+            } else {
+                list.innerHTML = d.activities.map(a => {
+                    const ai = ACTION_ICONS[a.action] || { icon: 'circle', cls: 'default' };
+                    const detail = a.details || a.action.replace(/_/g, ' ');
+                    return `
+                        <div class="activity-item" style="gap:10px;padding:8px 0;">
+                            <div class="act-icon ${ai.cls}">
+                                <span class="material-symbols-rounded" style="font-size:16px;">${ai.icon}</span>
+                            </div>
+                            <div class="activity-body" style="flex:1;">
+                                <div class="activity-title" style="font-size:0.82rem;">${esc(detail)}</div>
+                                <div class="activity-meta" style="font-size:0.7rem;color:var(--text-tertiary);">${a.time}</div>
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+
+            // ── Health ──
+            document.getElementById('db-dot').style.background = 'var(--success)';
+            document.getElementById('db-status').textContent = 'SQLite — ' + d.health.database;
+            document.getElementById('ai-dot').style.background = d.health.ai_status === 'connected' ? 'var(--success)' : 'var(--error)';
+            document.getElementById('ai-status').textContent = d.health.ai_provider + ' — ' + d.health.ai_status;
+        } catch (e) {
+            console.error('[Monitor]', e);
+        }
+    }
+
+    function esc(s) { return String(s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+    loadMonitoring();
+    setInterval(loadMonitoring, 5000);
+</script>
+{% endblock %}

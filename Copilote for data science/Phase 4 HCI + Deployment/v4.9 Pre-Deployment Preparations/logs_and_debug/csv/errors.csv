@@ -1,0 +1,116 @@
+timestamp,level,logger,session_id,user_id,plan_id,provider,model,latency_ms,tokens,status,intent,query,result_type,node_id,node_type,operation,execution_time_ms,completed_nodes,failed_nodes,replan_count,endpoint,method,http_status,response_ms,memory_mb,error_type,error_detail,context,stack_trace,action,ip_address,user_agent,page,component,event_type,browser,viewport,message,extra_json
+2026-03-02T19:38:20.016405+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_55399c1d9bcb,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_55399c1d9bcb,
+2026-03-02T19:38:49.790628+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_d0722e3e3a5e,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_d0722e3e3a5e,
+2026-03-02T19:48:03.207244+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,All AI call attempts exhausted,"prompt=Conversation:
+USER: Show first 10 rows
+ASSISTANT: All set! I ran that query for you — take a look at","NoneType: None
+",,,,,,,,,"[RuntimeError] All AI call attempts exhausted | context=prompt=Conversation:
+USER: Show first 10 rows
+ASSISTANT: All set! I ran that query for you — take a look at",
+2026-03-04T18:15:53.042599+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_8273cff2f596,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.8 Materilistic UI + Optimization\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_8273cff2f596,
+2026-03-05T08:53:37.885146+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,cannot use 'dict' as a dict key (unhashable type: 'dict'),Background execution of plan plan_87cd15d973e4,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 281, in execute
+    result = self._executor.execute(plan, context)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 312, in execute
+    success = self._execute_operation(node, context, meta, plan)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 449, in _execute_operation
+    context.set_variable(node.output_var, output.value)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\core\execution_context.py"", line 50, in set_variable
+    self.variables[name] = value
+    ~~~~~~~~~~~~~~^^^^^^
+TypeError: cannot use 'dict' as a dict key (unhashable type: 'dict')
+",,,,,,,,,[TypeError] cannot use 'dict' as a dict key (unhashable type: 'dict') | context=Background execution of plan plan_87cd15d973e4,
+2026-03-05T08:58:39.184607+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_9e860bf42ad2,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 618, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 291, in execute
+    new_plan = self._planner.replan(
+        original_plan=plan,
+    ...<2 lines>...
+        reason=result.get(""replan_reason"", ""Unknown""),
+    )
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ~~~~~~~~~^
+        f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        for h in (original_plan.metadata.values())
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        if hasattr(h, 'to_dict')
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_9e860bf42ad2,
+2026-03-05T09:50:31.541204+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:08.974483+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:28.620564+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:42.943405+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:45.053605+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:47.118604+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:49.226055+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:51.651365+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:55.864035+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:51:58.093830+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:52:02.608836+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA deepseek-coder-v2-lite-instruct: all attempts exhausted | context=nvidia_model,
+2026-03-05T09:52:07.374661+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted,nvidia_model,"NoneType: None
+",,,,,,,,,[RuntimeError] NVIDIA llama-3.3-nemotron-super-49b: all attempts exhausted | context=nvidia_model,

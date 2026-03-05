@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Login — DataCopilot{% endblock %}
+{% block body %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="auth-brand-icon"><span class="material-symbols-rounded">smart_toy</span></div>
+            <span class="auth-brand-name">DataCopilot</span>
+        </div>
+
+        <h2>Welcome back</h2>
+        <p class="auth-subtitle">Sign in to your account to continue</p>
+
+        <div id="auth-error" class="auth-error"></div>
+
+        <form id="login-form" onsubmit="return handleLogin(event)">
+            <div class="form-group">
+                <label class="form-label" for="login_id">Username or Email</label>
+                <input type="text" class="input" id="login_id" placeholder="Enter username or email" required autofocus>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" class="input" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg md-ripple" id="login-btn"
+                style="width:100%;margin-top:8px;">
+                <span id="btn-text">Sign In</span>
+                <span id="btn-spinner" class="spinner sm"
+                    style="display:none;border-color:rgba(255,255,255,0.3);border-top-color:#fff;"></span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="/register">Create one</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    async function handleLogin(e) {
+        e.preventDefault();
+        const btn = document.getElementById('login-btn');
+        const errDiv = document.getElementById('auth-error');
+        document.getElementById('btn-text').style.display = 'none';
+        document.getElementById('btn-spinner').style.display = 'inline-block';
+        btn.disabled = true;
+        errDiv.className = 'auth-error';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    login_id: document.getElementById('login_id').value,
+                    password: document.getElementById('password').value,
+                }),
+            });
+            const data = await res.json();
+            if (res.ok) { window.location.href = '/dashboard'; }
+            else {
+                errDiv.textContent = data.error || 'Invalid credentials';
+                errDiv.className = 'auth-error show';
+            }
+        } catch (err) {
+            errDiv.textContent = 'Network error. Please try again.';
+            errDiv.className = 'auth-error show';
+        } finally {
+            document.getElementById('btn-text').style.display = 'inline';
+            document.getElementById('btn-spinner').style.display = 'none';
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

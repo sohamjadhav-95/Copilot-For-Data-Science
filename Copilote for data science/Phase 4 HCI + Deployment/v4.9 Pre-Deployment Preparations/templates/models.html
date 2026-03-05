@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+{% block title %}Plans — DataCopilot{% endblock %}
+{% block page_icon %}workspace_premium{% endblock %}
+{% block page_title %}Plans & Capabilities{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Plans &amp; Capabilities</h1>
+    <p>Scale your data reasoning workflows with different levels of AI power.</p>
+</div>
+
+<!-- ── Plan Cards ─────────────────────────────────────────────────── -->
+<div class="plans-grid">
+
+    <!-- ─── FREE ─── -->
+    <div class="plan-card">
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Free</span>
+            </div>
+            <p class="plan-tagline">Essential tools for simple data exploration and quick analysis.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Individuals</span>
+                <span class="audience-chip">Students</span>
+                <span class="audience-chip">Learning</span>
+                <span class="audience-chip">Small datasets</span>
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Core Access</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Quick Run Mode
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Basic dataset profiling
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Simple dataframe operations
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Basic visualizations
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">AI Capabilities</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Light-tier model routing
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Intent detection
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Result summarization
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max dataset: 25 MB
+            </div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max rows: 100k</div>
+            <div class="plan-limit plan-limit-no"><span class="material-symbols-rounded limit-no">block</span>No Pro
+                Workflow DAG</div>
+            <div class="plan-limit plan-limit-no"><span class="material-symbols-rounded limit-no">block</span>No
+                conditional execution</div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-free btn md-ripple" onclick="choosePlan('free')">Choose Free</button>
+    </div>
+
+    <!-- ─── PRO (Recommended) ─── -->
+    <div class="plan-card plan-card-pro">
+        <div class="plan-recommended-badge">
+            <span class="material-symbols-rounded">star</span> Recommended
+        </div>
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Pro</span>
+            </div>
+            <p class="plan-tagline">Advanced workflow automation for structured data reasoning.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Data analysts</span>
+                <span class="audience-chip">AI builders</span>
+                <span class="audience-chip">Research workflows</span>
+                <span class="audience-chip">Professional use</span>
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Workflow Engine</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Pro Mode Workflow Studio
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                DAG-based execution engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Plan generation and approval
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Conditional branching
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Step-by-step execution
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">AI Capabilities</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Heavy-tier reasoning models
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Code generation for complex analysis
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                ExecutionContext memory
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Replanning engine
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Data Operations</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Feature engineering
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Statistical analysis
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced visualization generation
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max dataset: 500 MB
+            </div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Max rows: 5M</div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Parallel workflow
+                execution</div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-pro btn md-ripple" onclick="choosePlan('pro')">Choose Pro</button>
+    </div>
+
+    <!-- ─── ULTRA ─── -->
+    <div class="plan-card plan-card-ultra">
+        <div class="plan-top">
+            <div class="plan-name-row">
+                <span class="plan-name">Ultra</span>
+            </div>
+            <p class="plan-tagline">State-of-the-art agentic reasoning for large-scale data workflows.</p>
+            <div class="plan-audience">
+                <span class="audience-chip">Enterprises</span>
+                <span class="audience-chip">AI teams</span>
+                <span class="audience-chip">Large data</span>
+                <span class="audience-chip">Research labs</span>
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+            <div class="feature-group-label">Agentic Intelligence</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Multi-stage planning engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Autonomous replanning
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced failure recovery
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Dynamic graph mutation
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Advanced Execution</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Multi-agent orchestration
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Advanced optimization engine
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Execution monitoring dashboard
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Workflow templates
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Large Dataset Support</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Local execution agent
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Hybrid cloud execution
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Dataset connectors (DB, APIs)
+            </div>
+
+            <div class="feature-group-label" style="margin-top:12px;">Priority AI Routing</div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Premium reasoning models
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                Faster execution queues
+            </div>
+            <div class="plan-feature">
+                <span class="material-symbols-rounded feature-check">check_circle</span>
+                High token limits
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-limits">
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Dataset size:
+                Unlimited (local agent)</div>
+            <div class="plan-limit"><span class="material-symbols-rounded limit-dot">remove</span>Custom compute support
+            </div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <button class="plan-cta plan-cta-ultra btn md-ripple" onclick="choosePlan('ultra')">Choose Ultra</button>
+    </div>
+</div>
+
+<!-- ── Enterprise Footer ─────────────────────────────────────────── -->
+<div class="plans-enterprise-bar">
+    <span class="material-symbols-rounded plans-enterprise-icon">corporate_fare</span>
+    <div class="plans-enterprise-text">
+        <strong>Need enterprise deployment?</strong>
+        Contact us for custom on-premise solutions, dedicated compute, and SLA support.
+    </div>
+    <button class="btn btn-secondary md-ripple">Contact Us</button>
+</div>
+
+<!-- ── Token Activation Modal ────────────────────────────────────── -->
+<div id="token-modal"
+    style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+    <div
+        style="background:var(--surface-1,#fff);border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.15);text-align:center;">
+        <span class="material-symbols-rounded" style="font-size:48px;color:var(--primary,#6366f1);">key</span>
+        <h3 style="margin:12px 0 4px;" id="modal-title">Activate Plan</h3>
+        <p style="color:var(--text-secondary,#666);font-size:14px;margin-bottom:20px;">Enter your activation token to
+            unlock this plan.</p>
+        <input id="token-input" type="text" placeholder="e.g. PRO-ALPHA-90210"
+            style="width:100%;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border,#e0e0e0);font-size:15px;box-sizing:border-box;outline:none;font-family:inherit;margin-bottom:12px;">
+        <div id="token-error" style="color:#ef4444;font-size:13px;min-height:20px;margin-bottom:8px;"></div>
+        <div style="display:flex;gap:10px;justify-content:center;">
+            <button class="btn btn-secondary md-ripple" onclick="closeTokenModal()">Cancel</button>
+            <button class="btn md-ripple" id="token-submit-btn" onclick="submitToken()"
+                style="background:var(--primary,#6366f1);color:#fff;border:none;">Activate</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Current Plan Badge ────────────────────────────────────────── -->
+<div id="current-plan-toast"
+    style="display:none;position:fixed;bottom:24px;right:24px;z-index:9998;background:var(--primary,#6366f1);color:#fff;padding:12px 24px;border-radius:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.15);font-size:14px;">
+    <span class="material-symbols-rounded" style="vertical-align:middle;margin-right:6px;">check_circle</span>
+    <span id="toast-text"></span>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    let pendingPlan = '';
+
+    function choosePlan(plan) {
+        if (plan === 'free') {
+            // Free is default — no token needed
+            showToast('You are on the Free plan');
+            return;
+        }
+        pendingPlan = plan;
+        document.getElementById('modal-title').textContent = 'Activate ' + plan.charAt(0).toUpperCase() + plan.slice(1) + ' Plan';
+        document.getElementById('token-input').value = '';
+        document.getElementById('token-error').textContent = '';
+        const modal = document.getElementById('token-modal');
+        modal.style.display = 'flex';
+        setTimeout(() => document.getElementById('token-input').focus(), 100);
+    }
+
+    function closeTokenModal() {
+        document.getElementById('token-modal').style.display = 'none';
+        pendingPlan = '';
+    }
+
+    async function submitToken() {
+        const token = document.getElementById('token-input').value.trim();
+        const errEl = document.getElementById('token-error');
+        const btn = document.getElementById('token-submit-btn');
+        if (!token) { errEl.textContent = 'Please enter a token'; return; }
+
+        btn.disabled = true;
+        btn.textContent = 'Activating...';
+        errEl.textContent = '';
+
+        try {
+            const res = await fetch('/api/activate-plan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            const data = await res.json();
+            if (data.success) {
+                closeTokenModal();
+                window.userPlan = data.plan;
+                showToast('Plan activated: ' + data.plan.toUpperCase());
+                highlightActivePlan(data.plan);
+                // Hide lock badges
+                document.querySelectorAll('.nav-lock-badge').forEach(b => b.style.display = 'none');
+                setTimeout(() => location.reload(), 1200);
+            } else {
+                errEl.textContent = data.message || 'Invalid token';
+            }
+        } catch (e) {
+            errEl.textContent = 'Network error. Please try again.';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Activate';
+        }
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('current-plan-toast');
+        document.getElementById('toast-text').textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+    }
+
+    function highlightActivePlan(plan) {
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('plan-active'));
+        if (plan === 'pro') document.querySelector('.plan-card-pro')?.classList.add('plan-active');
+        else if (plan === 'ultra') document.querySelector('.plan-card-ultra')?.classList.add('plan-active');
+    }
+
+    // On load: highlight current plan
+    (async function () {
+        try {
+            const res = await fetch('/api/me');
+            if (res.ok) {
+                const data = await res.json();
+                const plan = (data.user && data.user.plan) || 'free';
+                highlightActivePlan(plan);
+                if (plan !== 'free') {
+                    showToast('Current plan: ' + plan.toUpperCase());
+                }
+            }
+        } catch (e) { }
+    })();
+
+    // Close modal on background click
+    document.getElementById('token-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeTokenModal();
+    });
+
+    // Enter key in token input
+    document.getElementById('token-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') submitToken();
+    });
+</script>
+{% endblock %}

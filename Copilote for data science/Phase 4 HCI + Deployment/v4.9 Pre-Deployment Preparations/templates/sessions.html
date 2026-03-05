@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Sessions — DataCopilot{% endblock %}
+{% block page_icon %}history{% endblock %}
+{% block page_title %}Sessions{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Sessions</h1>
+    <p>Complete history of all your analysis sessions</p>
+</div>
+
+<div class="table-wrap">
+    <div class="table-toolbar">
+        <div class="table-toolbar-left">
+            <div class="search-input-wrap">
+                <span class="material-symbols-rounded">search</span>
+                <input type="text" class="input" placeholder="Search sessions..." oninput="filterSessions(this.value)"
+                    style="width:240px;">
+            </div>
+        </div>
+        <div class="table-toolbar-right">
+            <span style="font-size:0.75rem;color:var(--text-tertiary);" id="sess-count">Loading...</span>
+        </div>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="sortable" onclick="sortSess('filename')">Dataset <span class="sort-indicator"></span>
+                    </th>
+                    <th class="sortable" onclick="sortSess('created_at')">Created <span class="sort-indicator"></span>
+                    </th>
+                    <th>Messages</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="sessions-tbody">
+                <tr>
+                    <td colspan="6" class="table-empty">
+                        <span class="material-symbols-rounded">history</span>
+                        Loading sessions...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+    let allSessions = [], sortKey = 'created_at', sortDir = -1, filterQ = '';
+
+    async function loadSessions() {
+        const res = await fetch('/api/sessions');
+        const data = await res.json();
+        allSessions = data.sessions || [];
+        renderSessions();
+    }
+
+    function renderSessions() {
+        let rows = allSessions.filter(s => !filterQ || (s.filename || '').toLowerCase().includes(filterQ) || String(s.id).includes(filterQ));
+        rows.sort((a, b) => {
+            const av = a[sortKey] || '', bv = b[sortKey] || '';
+            return sortDir * (av < bv ? -1 : av > bv ? 1 : 0);
+        });
+        document.getElementById('sess-count').textContent = rows.length + ' session' + (rows.length !== 1 ? 's' : '');
+        const tbody = document.getElementById('sessions-tbody');
+        if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="table-empty"><span class="material-symbols-rounded">history</span>No sessions found</td></tr>';
+            return;
+        }
+        tbody.innerHTML = rows.map((s, i) => `
+        <tr>
+            <td style="color:var(--text-tertiary);font-size:0.8rem;">#${s.id}</td>
+            <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="dataset-file-icon" style="width:28px;height:28px;"><span class="material-symbols-rounded" style="font-size:14px;">table_chart</span></div>
+                    <span style="font-weight:500;">${esc(s.filename || 'Untitled')}</span>
+                </div>
+            </td>
+            <td style="color:var(--text-tertiary);font-size:0.8rem;">${fmtDate(s.created_at)}</td>
+            <td><span class="badge neutral">${s.message_count || 0} msgs</span></td>
+            <td><span class="badge green"><span class="dot"></span>Active</span></td>
+            <td>
+                <div style="display:flex;gap:6px;">
+                    <a href="/quick-run?session=${s.id}" class="btn btn-sm btn-primary md-ripple">
+                        <span class="material-symbols-rounded">bolt</span> Open
+                    </a>
+                    <a href="/workflow?session=${s.id}" class="btn btn-sm btn-secondary md-ripple">
+                        <span class="material-symbols-rounded">account_tree</span>
+                    </a>
+                </div>
+            </td>
+        </tr>`).join('');
+    }
+
+    function sortSess(key) {
+        if (sortKey === key) sortDir *= -1;
+        else { sortKey = key; sortDir = -1; }
+        renderSessions();
+    }
+    function filterSessions(q) { filterQ = q.toLowerCase(); renderSessions(); }
+    function esc(s) { return String(s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+
+    loadSessions();
+</script>
+{% endblock %}
