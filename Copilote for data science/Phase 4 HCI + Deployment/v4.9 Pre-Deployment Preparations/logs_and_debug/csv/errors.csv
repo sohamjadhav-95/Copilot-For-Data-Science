@@ -510,3 +510,25 @@ TypeError: 'ExecutionMetadata' object is not subscriptable
            ~^^^^^^^^^^^
 TypeError: 'ExecutionMetadata' object is not subscriptable
 ",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_2962e9804b4d,
+2026-03-06T14:24:05.794480+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,[Errno 2] No such file or directory: 'e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_2d5f5657a7be.csv',Exec failed during Node node_3: plot_survival_rates,"NoneType: None
+",,,,,,,,,[RuntimeError] [Errno 2] No such file or directory: 'e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_2d5f5657a7be.csv' | context=Exec failed during Node node_3: plot_survival_rates,
+2026-03-06T14:24:09.964287+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,NameError,name 'router' is not defined,Background execution of plan plan_eb825a4c8e6d,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 944, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 348, in execute
+    summary = self._executor.generate_final_summary(plan, context, result)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 590, in generate_final_summary
+    result = router.call(
+             ^^^^^^
+NameError: name 'router' is not defined
+",,,,,,,,,[NameError] name 'router' is not defined | context=Background execution of plan plan_eb825a4c8e6d,
+2026-03-06T14:27:08.254416+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,NameError,name 'router' is not defined,Background execution of plan plan_a550e0f57a19,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 944, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 348, in execute
+    summary = self._executor.generate_final_summary(plan, context, result)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 590, in generate_final_summary
+    result = router.call(
+             ^^^^^^
+NameError: name 'router' is not defined
+",,,,,,,,,[NameError] name 'router' is not defined | context=Background execution of plan plan_a550e0f57a19,

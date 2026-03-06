@@ -1,12 +1,12 @@
 # engines_pro/dag_executor.py — Graph execution engine with topological sort
 # Executes DAG nodes sequentially, handles retries, timeouts, re-planning triggers.
+# Code execution is delegated to the unified _safe_exec from normal_engine.
 from __future__ import annotations
 
 import io
 import re
 import time
 import base64
-import threading
 from collections import deque
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
@@ -26,160 +26,13 @@ from engines_pro.dag_schema import (
 from engines_pro.validator import (
     evaluate_condition, validate_node_output, detect_schema_change, resolve_operand,
 )
-from models_api.model_router import router
 from logger import app_logger, log_error, log_workflow_node
 
-
 # ═══════════════════════════════════════════════════════════════════════
-# SAFE EXEC — isolated execution with restricted globals
+# UNIFIED ENGINE — import sandbox + AI call from normal_engine
 # ═══════════════════════════════════════════════════════════════════════
 
-# Reuse safe execution patterns from normal engine
-_DANGEROUS_PATTERNS = [
-    # Block dangerous os calls — but NOT os.path (which is safe)
-    r"\bos\.(system|popen|execv|execve|execvp|execl|spawnv|fork|kill|remove|unlink|rmdir|makedirs|rename|replace|chmod|chown)\s*\(",
-    r"\bsys\.(exit|path\.insert|path\.append|modules)\b",
-    r"\bsubprocess\b", r"\b__import__\b",
-    r"\bopen\s*\(", r"\bexec\s*\(", r"\beval\s*\(", r"\bcompile\s*\(",
-    # globals/locals are NOT blocked — safe shims are injected into the sandbox namespace
-    r"\bimport\s+os(?!\s*,|\s*as)\b",  # block `import os` but allow `import os.path`
-    r"\bimport\s+sys\b",
-    r"\bimport\s+subprocess\b", r"\bimport\s+shutil\b",
-    r"\bfrom\s+sys\b",
-]
-
-
-def _restricted_import(name, *args, **kwargs):
-    allowed = {
-        # Data science core
-        "pandas", "numpy", "scipy", "scipy.stats", "scipy.spatial",
-        "scipy.cluster", "scipy.signal",
-        # Visualization
-        "matplotlib", "matplotlib.pyplot", "matplotlib.dates",
-        "matplotlib.patches", "matplotlib.colors", "matplotlib.ticker",
-        "matplotlib.gridspec", "matplotlib.cm",
-        "seaborn", "plotly", "plotly.express", "plotly.graph_objects",
-        # Graph / network
-        "networkx",
-        # ML
-        "sklearn", "sklearn.preprocessing", "sklearn.decomposition",
-        "sklearn.cluster", "sklearn.metrics", "sklearn.model_selection",
-        "sklearn.linear_model", "sklearn.tree", "sklearn.ensemble",
-        # Safe stdlib
-        "math", "statistics", "collections", "datetime", "re",
-        "time", "functools", "itertools", "operator", "string",
-        "decimal", "copy", "json", "csv", "io", "textwrap",
-        "warnings", "ast", "typing", "pathlib", "random",
-        "heapq", "bisect", "struct", "array", "fractions",
-    }
-    if name in allowed:
-        return __import__(name, *args, **kwargs)
-    raise ImportError(f"Import of '{name}' is not allowed in Pro Mode sandbox")
-
-
-def _validate_code(code: str) -> Tuple[bool, str]:
-    """Check if code is safe to execute."""
-    import re as re_mod
-    for pattern in _DANGEROUS_PATTERNS:
-        if re_mod.search(pattern, code):
-            return False, f"Blocked dangerous pattern: {pattern}"
-    return True, ""
-
-
-def _safe_exec_with_timeout(
-    code: str, timeout: int = PRO_EXECUTION_TIMEOUT, description: str = ""
-) -> Tuple[dict, Optional[str]]:
-    """Execute code with restricted globals and a hard timeout.
-
-    Returns (namespace, error_or_None).
-    """
-    is_safe, reason = _validate_code(code)
-    if not is_safe:
-        return {}, f"Code blocked: {reason}"
-
-    import numpy as np
-    import seaborn as sns
-
-    restricted_globals = {
-        "__builtins__": {
-            "range": range, "len": len, "int": int, "float": float,
-            "str": str, "bool": bool, "list": list, "dict": dict, "tuple": tuple,
-            "set": set, "frozenset": frozenset, "sorted": sorted, "reversed": reversed,
-            "enumerate": enumerate, "zip": zip, "map": map, "filter": filter,
-            "sum": sum, "min": min, "max": max, "abs": abs, "round": round, "pow": pow,
-            "any": any, "all": all, "isinstance": isinstance, "issubclass": issubclass,
-            "type": type, "id": id, "hash": hash, "repr": repr, "hex": hex, "oct": oct,
-            "bin": bin, "ord": ord, "chr": chr, "format": format, "vars": vars,
-            "getattr": getattr, "setattr": setattr, "hasattr": hasattr, "delattr": delattr,
-            "callable": callable, "iter": iter, "next": next, "slice": slice, "object": object,
-            "print": lambda *a, **k: None,  # suppress prints
-            "True": True, "False": False, "None": None,
-            "__import__": _restricted_import,
-            "property": property, "staticmethod": staticmethod,
-            "classmethod": classmethod, "super": super,
-            # Exceptions — keep this list complete so try/except blocks don't break
-            "Exception": Exception, "BaseException": BaseException,
-            "ValueError": ValueError, "TypeError": TypeError,
-            "KeyError": KeyError, "IndexError": IndexError,
-            "AttributeError": AttributeError, "NameError": NameError,
-            "StopIteration": StopIteration, "StopAsyncIteration": StopAsyncIteration,
-            "RuntimeError": RuntimeError, "RecursionError": RecursionError,
-            "NotImplementedError": NotImplementedError, "ZeroDivisionError": ZeroDivisionError,
-            "OverflowError": OverflowError, "MemoryError": MemoryError,
-            "FileNotFoundError": FileNotFoundError, "IOError": IOError,
-            "ImportError": ImportError, "ModuleNotFoundError": ModuleNotFoundError,
-            "AssertionError": AssertionError, "ArithmeticError": ArithmeticError,
-            "LookupError": LookupError, "UnicodeError": UnicodeError,
-            "UnicodeDecodeError": UnicodeDecodeError, "UnicodeEncodeError": UnicodeEncodeError,
-            "UserWarning": UserWarning, "FutureWarning": FutureWarning,
-            "DeprecationWarning": DeprecationWarning, "Warning": Warning,
-        },
-    }
-    ns = dict(restricted_globals)
-
-    # Pre-inject common libraries so code never needs to import them
-    import os as _os_mod
-    ns["pd"] = pd
-    ns["os"] = type('SafeOS', (), {
-        'path': _os_mod.path,
-        'getcwd': _os_mod.getcwd,
-        'sep': _os_mod.sep,
-        'linesep': _os_mod.linesep,
-    })()  # safe os shim: only path helpers, no shell exec
-    ns["np"] = np
-    ns["plt"] = plt
-    ns["sns"] = sns
-    # Safe globals()/locals() shims — return the sandbox namespace
-    # so patterns like `if 'x' in globals()` work without exposing __import__
-    ns["globals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
-    ns["locals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
-    try:
-        import networkx as nx
-        ns["nx"] = nx
-    except ImportError:
-        pass
-    try:
-        import plotly.express as px
-        ns["px"] = px
-    except ImportError:
-        pass
-
-    result = {"ns": ns, "error": None}
-
-    def _exec_target():
-        try:
-            exec(code, result["ns"])
-        except Exception as e:
-            result["error"] = str(e)
-
-    thread = threading.Thread(target=_exec_target, daemon=True)
-    thread.start()
-    thread.join(timeout=timeout)
-
-    if thread.is_alive():
-        return result["ns"], f"Execution timed out after {timeout}s"
-
-    return result["ns"], result["error"]
+from engines_normal.normal_engine import _safe_exec, _ai_call, _validate_code
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -455,11 +308,10 @@ class DAGExecutor:
             meta.error = "Code generation failed"
             return False
 
-        # Store generated code for View Code UI
         meta.generated_code = code
 
-        # Execute with timeout
-        ns, err = _safe_exec_with_timeout(code, description=f"Node {node.id}: {node.operation}")
+        # Execute via unified sandbox
+        ns, err = _safe_exec(code, description=f"Node {node.id}: {node.operation}")
 
         # Retry once on failure
         if err:
@@ -471,7 +323,7 @@ class DAGExecutor:
             fixed_code = self._generate_fix(code, err, node, context)
             if fixed_code:
                 code = fixed_code
-                ns, err = _safe_exec_with_timeout(code, description=f"Node {node.id} (retry): {node.operation}")
+                ns, err = _safe_exec(code, description=f"Node {node.id} (retry): {node.operation}")
 
         if err:
             meta.status = NodeStatus.FAILED
@@ -612,12 +464,9 @@ STRICT RULES:
 
         user_content += f"\nEXPECTED OUTPUT TYPE: {node.expected_output_type.value}"
 
-        raw = router.call(
-            task="coding",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content},
-            ],
+        raw = _ai_call(
+            system_prompt=system_prompt,
+            user_content=user_content,
             temperature=0.2,
             max_tokens=4000,
         )
@@ -646,12 +495,9 @@ Return ONLY the corrected code inside ```python ... ``` block.
 Fix the specific error while keeping the original intent.
 Column names are CASE-SENSITIVE."""
 
-        raw = router.call(
-            task="coding",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": "Fix the code."},
-            ],
+        raw = _ai_call(
+            system_prompt=system_prompt,
+            user_content="Fix the code.",
             temperature=0.2,
             max_tokens=4000,
         )

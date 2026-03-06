@@ -42,27 +42,20 @@ def get_high_tier():
     """Legacy alias for get_max_mode."""
     return get_max_mode()
 
-
 # =====================================================================
 # CODE SAFETY — validate AI-generated code before exec()
 # =====================================================================
 
 _DANGEROUS_PATTERNS = [
-    r"\bos\.\w+",            # os.system, os.remove, etc.
-    r"\bsys\.\w+",           # sys.exit, etc.
-    r"\bsubprocess\b",       # subprocess.run, etc.
-    r"\b__import__\b",       # __import__('os')
-    r"\beval\s*\(",          # eval(...)
-    r"\bexec\s*\(",          # nested exec(...)
-    r"\bopen\s*\(",          # file open (except pd.read_csv)
-    r"\bshutil\b",           # shutil.rmtree, etc.
-    r"\bglobals\s*\(",       # globals()
-    r"\bcompile\s*\(",       # compile(...)
-    r"\bimport\s+os\b",      # import os
-    r"\bimport\s+sys\b",     # import sys
-    r"\bimport\s+subprocess\b",
-    r"\bimport\s+shutil\b",
-    r"\bfrom\s+os\b",        # from os import ...
+    # Block dangerous os calls — but NOT os.path (which is safe)
+    r"\bos\.(system|popen|execv|execve|execvp|execl|spawnv|fork|kill|remove|unlink|rmdir|makedirs|rename|replace|chmod|chown)\s*\(",
+    r"\bsys\.(exit|path\.insert|path\.append|modules)\b",
+    r"\bsubprocess\b", r"\b__import__\b",
+    r"\bopen\s*\(", r"\bexec\s*\(", r"\beval\s*\(", r"\bcompile\s*\(",
+    # globals/locals are NOT blocked — safe shims are injected into the sandbox namespace
+    r"\bimport\s+os(?!\s*,|\s*as)\b",  # block `import os` but allow `import os.path`
+    r"\bimport\s+sys\b",
+    r"\bimport\s+subprocess\b", r"\bimport\s+shutil\b",
     r"\bfrom\s+sys\b",
 ]
 
@@ -76,17 +69,29 @@ def _validate_code(code):
     for pattern in _DANGEROUS_PATTERNS:
         match = re.search(pattern, code)
         if match:
-            return False, f"Dangerous pattern detected: {match.group()}"
+            return False, f"Blocked dangerous pattern: {match.group()}"
     return True, "OK"
 
 
 def _safe_exec(code, description="code execution"):
-    """Execute code with restricted globals. Returns (namespace, error_or_None)."""
+    """Execute code with restricted globals. Returns (namespace, error_or_None).
+
+    This is the SINGLE authoritative sandbox used by both Quick Run and Workflow.
+    """
+    import threading
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
     is_safe, reason = _validate_code(code)
     if not is_safe:
         app_logger.warning(f"[SAFETY] Blocked unsafe code: {reason}")
         log_error(ValueError(reason), context=f"Code validation failed during {description}")
         return {}, f"Code blocked: {reason}"
+
+    import pandas as pd
+    import numpy as np
+    import seaborn as sns
 
     restricted_globals = {
         "__builtins__": {
@@ -101,18 +106,33 @@ def _safe_exec(code, description="code execution"):
             "filter": filter, "reversed": reversed,
             # Boolean / checking
             "all": all, "any": any, "isinstance": isinstance, "issubclass": issubclass,
-            "hasattr": hasattr, "getattr": getattr, "setattr": setattr, "callable": callable,
+            "hasattr": hasattr, "getattr": getattr, "setattr": setattr,
+            "delattr": delattr, "callable": callable,
+            # Iteration helpers
+            "iter": iter, "next": next,
             # String / repr
-            "repr": repr, "chr": chr, "ord": ord, "format": format, "hash": hash, "id": id,
+            "repr": repr, "chr": chr, "ord": ord, "format": format,
+            "hash": hash, "id": id, "hex": hex, "oct": oct, "bin": bin,
             # Math helpers
-            "pow": pow, "divmod": divmod,
+            "pow": pow, "divmod": divmod, "vars": vars,
             # Suppressed
             "print": lambda *a, **k: None,
-            # Exceptions
+            # Exceptions — complete list so try/except blocks don't break
+            "Exception": Exception, "BaseException": BaseException,
             "ValueError": ValueError, "TypeError": TypeError,
             "KeyError": KeyError, "IndexError": IndexError,
-            "AttributeError": AttributeError, "RuntimeError": RuntimeError,
-            "StopIteration": StopIteration, "Exception": Exception,
+            "AttributeError": AttributeError, "NameError": NameError,
+            "StopIteration": StopIteration, "StopAsyncIteration": StopAsyncIteration,
+            "RuntimeError": RuntimeError, "RecursionError": RecursionError,
+            "NotImplementedError": NotImplementedError, "ZeroDivisionError": ZeroDivisionError,
+            "OverflowError": OverflowError, "MemoryError": MemoryError,
+            "FileNotFoundError": FileNotFoundError, "IOError": IOError,
+            "ImportError": ImportError, "ModuleNotFoundError": ModuleNotFoundError,
+            "AssertionError": AssertionError, "ArithmeticError": ArithmeticError,
+            "LookupError": LookupError, "UnicodeError": UnicodeError,
+            "UnicodeDecodeError": UnicodeDecodeError, "UnicodeEncodeError": UnicodeEncodeError,
+            "UserWarning": UserWarning, "FutureWarning": FutureWarning,
+            "DeprecationWarning": DeprecationWarning, "Warning": Warning,
             # Constants
             "True": True, "False": False, "None": None,
             # Controlled import
@@ -123,23 +143,84 @@ def _safe_exec(code, description="code execution"):
         },
     }
     ns = dict(restricted_globals)
+
+    # Pre-inject common libraries so code never needs to import them
+    import os as _os_mod
+    ns["pd"] = pd
+    ns["os"] = type('SafeOS', (), {
+        'path': _os_mod.path,
+        'getcwd': _os_mod.getcwd,
+        'sep': _os_mod.sep,
+        'linesep': _os_mod.linesep,
+    })()  # safe os shim: only path helpers, no shell exec
+    ns["np"] = np
+    ns["plt"] = plt
+    ns["sns"] = sns
+    # Safe globals()/locals() shims — return the sandbox namespace
+    ns["globals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
+    ns["locals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
     try:
-        exec(code, ns)
-        return ns, None
-    except Exception as e:
-        log_error(e, context=f"Exec failed during {description}")
-        return ns, str(e)
+        import networkx as nx
+        ns["nx"] = nx
+    except ImportError:
+        pass
+    try:
+        import plotly.express as px
+        ns["px"] = px
+    except ImportError:
+        pass
+
+    # Execute with timeout for safety
+    result = {"ns": ns, "error": None}
+
+    def _exec_target():
+        try:
+            exec(code, result["ns"])
+        except Exception as e:
+            result["error"] = str(e)
+
+    thread = threading.Thread(target=_exec_target, daemon=True)
+    thread.start()
+    thread.join(timeout=120)
+
+    if thread.is_alive():
+        app_logger.warning(f"[EXEC] Timed out during {description}")
+        return result["ns"], f"Execution timed out after 120s"
+
+    if result["error"]:
+        log_error(RuntimeError(result["error"]), context=f"Exec failed during {description}")
+
+    return result["ns"], result["error"]
 
 
 def _restricted_import(name, *args, **kwargs):
-    """Only allow safe imports."""
-    allowed = {"pandas", "numpy", "matplotlib", "matplotlib.pyplot", "matplotlib.dates",
-               "seaborn", "math", "statistics", "collections", "datetime", "re",
-               "time", "functools", "itertools", "operator", "string", "decimal",
-               "copy", "json", "csv", "io", "textwrap", "warnings"}
+    """Only allow safe imports — unified allowlist for Quick Run and Workflow."""
+    allowed = {
+        # Data science core
+        "pandas", "numpy", "scipy", "scipy.stats", "scipy.spatial",
+        "scipy.cluster", "scipy.signal",
+        # Visualization
+        "matplotlib", "matplotlib.pyplot", "matplotlib.dates",
+        "matplotlib.patches", "matplotlib.colors", "matplotlib.ticker",
+        "matplotlib.gridspec", "matplotlib.cm",
+        "seaborn", "plotly", "plotly.express", "plotly.graph_objects",
+        # Graph / network
+        "networkx",
+        # ML
+        "sklearn", "sklearn.preprocessing", "sklearn.decomposition",
+        "sklearn.cluster", "sklearn.metrics", "sklearn.model_selection",
+        "sklearn.linear_model", "sklearn.tree", "sklearn.ensemble",
+        # Safe stdlib
+        "math", "statistics", "collections", "datetime", "re",
+        "time", "functools", "itertools", "operator", "string",
+        "decimal", "copy", "json", "csv", "io", "textwrap",
+        "warnings", "ast", "typing", "pathlib", "random",
+        "heapq", "bisect", "struct", "array", "fractions",
+    }
     if name in allowed:
         return __import__(name, *args, **kwargs)
     raise ImportError(f"Import of '{name}' is not allowed for security reasons")
+
 
 
 # =====================================================================
