@@ -14,13 +14,13 @@
         <span id="dataset-badge-name">—</span>
     </span>
 </div>
-<!-- High-Tier toggle: visible to all, only Ultra can activate -->
-<div id="high-tier-toggle" style="margin-right:8px;">
-    <button id="high-tier-btn" class="topbar-action-btn secondary md-ripple" onclick="toggleHighTier()"
-        title="Switch to high-tier NVIDIA models (Ultra only)"
+<!-- Max Power toggle: visible to all, only Pro/Ultra can activate -->
+<div id="max-power-wrapper" style="margin-right:8px;">
+    <button id="max-power-toggle" class="topbar-action-btn secondary md-ripple" onclick="toggleMaxMode()"
+        title="Switch to Max Power mode — GPT & Claude via browser-agent (Pro/Ultra)"
         style="font-size:12px;gap:4px;padding:4px 10px;border-radius:8px;opacity:0.5;">
         <span class="material-symbols-rounded" style="font-size:16px;">bolt</span>
-        <span id="high-tier-label">High Tier</span>
+        <span id="max-power-indicator">Max Power</span>
     </button>
 </div>
 <button class="topbar-action-btn secondary md-ripple" onclick="document.getElementById('upload-file').click()">
@@ -260,47 +260,52 @@
         if (e.key === 'Escape') collapsePane();
     });
 
-    // ── High-Tier Toggle ──────────────────────────────────────────
-    function toggleHighTier() {
-        const btn = document.getElementById('high-tier-btn');
-        const label = document.getElementById('high-tier-label');
+    // ── Max Power Toggle (inline override for Quick Run) ─────────
+    // The main toggleMaxMode lives in app.js; this adds visual styling
+    const _origToggle = window.toggleMaxMode;
+    window.toggleMaxMode = function () {
+        const btn = document.getElementById('max-power-toggle');
+        const indicator = document.getElementById('max-power-indicator');
+        const userPlan = window.userPlan || 'free';
 
-        // Only Ultra users can activate
-        if (window.userPlan !== 'ultra') {
-            label.textContent = '⚡ Ultra Only';
-            btn.style.background = 'var(--bg-muted)';
-            btn.style.color = 'var(--text-tertiary)';
-            setTimeout(() => {
-                label.textContent = 'High Tier';
-                btn.style.background = '';
-                btn.style.color = '';
-            }, 1500);
+        // Only Pro/Ultra users can activate
+        if (!['pro', 'ultra'].includes(userPlan)) {
+            if (indicator) {
+                indicator.textContent = '🔒 Pro/Ultra Only';
+                btn.style.background = 'var(--bg-muted)';
+                btn.style.color = 'var(--text-tertiary)';
+                setTimeout(() => {
+                    indicator.textContent = 'Max Power';
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 1500);
+            }
             return;
         }
 
-        state.highTierEnabled = !state.highTierEnabled;
-        if (state.highTierEnabled) {
-            label.textContent = 'High Tier ON';
-            btn.style.background = 'linear-gradient(135deg, #f59e0b, #ef4444)';
+        state.maxModeEnabled = !state.maxModeEnabled;
+        if (state.maxModeEnabled) {
+            indicator.textContent = 'Max Power ON';
+            btn.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
             btn.style.color = '#fff';
             btn.style.borderColor = 'transparent';
             btn.style.opacity = '1';
         } else {
-            label.textContent = 'High Tier OFF';
+            indicator.textContent = 'Max Power OFF';
             btn.style.background = '';
             btn.style.color = '';
             btn.style.borderColor = '';
         }
-    }
+    };
 
-    // Enable full opacity for Ultra users
-    (function initHighTierBtn() {
+    // Enable full opacity for Pro/Ultra users
+    (function initMaxPowerBtn() {
         function check() {
-            if (window.userPlan === 'ultra') {
-                const btn = document.getElementById('high-tier-btn');
-                const label = document.getElementById('high-tier-label');
+            if (['pro', 'ultra'].includes(window.userPlan)) {
+                const btn = document.getElementById('max-power-toggle');
+                const indicator = document.getElementById('max-power-indicator');
                 if (btn) { btn.style.opacity = '1'; }
-                if (label) { label.textContent = 'High Tier OFF'; }
+                if (indicator) { indicator.textContent = 'Max Power OFF'; }
             }
         }
         setTimeout(check, 500);

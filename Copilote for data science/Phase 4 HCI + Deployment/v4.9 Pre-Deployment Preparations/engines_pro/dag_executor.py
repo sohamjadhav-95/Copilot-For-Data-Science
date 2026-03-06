@@ -36,22 +36,41 @@ from logger import app_logger, log_error, log_workflow_node
 
 # Reuse safe execution patterns from normal engine
 _DANGEROUS_PATTERNS = [
-    r"\bos\.\w+", r"\bsys\.\w+", r"\bsubprocess\b", r"\b__import__\b",
+    # Block dangerous os calls — but NOT os.path (which is safe)
+    r"\bos\.(system|popen|execv|execve|execvp|execl|spawnv|fork|kill|remove|unlink|rmdir|makedirs|rename|replace|chmod|chown)\s*\(",
+    r"\bsys\.(exit|path\.insert|path\.append|modules)\b",
+    r"\bsubprocess\b", r"\b__import__\b",
     r"\bopen\s*\(", r"\bexec\s*\(", r"\beval\s*\(", r"\bcompile\s*\(",
     r"\bglobals\s*\(", r"\blocals\s*\(",
-    r"\bimport\s+os\b", r"\bimport\s+sys\b",
+    r"\bimport\s+os(?!\s*,|\s*as)\b",  # block `import os` but allow `import os.path`
+    r"\bimport\s+sys\b",
     r"\bimport\s+subprocess\b", r"\bimport\s+shutil\b",
-    r"\bfrom\s+os\b", r"\bfrom\s+sys\b",
+    r"\bfrom\s+sys\b",
 ]
 
 
 def _restricted_import(name, *args, **kwargs):
     allowed = {
-        "pandas", "numpy", "matplotlib", "matplotlib.pyplot", "matplotlib.dates",
-        "seaborn", "math", "statistics", "collections", "datetime", "re",
-        "time", "functools", "itertools", "operator", "string", "decimal",
-        "copy", "json", "csv", "io", "textwrap", "warnings", "scipy",
-        "scipy.stats", "sklearn", "sklearn.preprocessing",
+        # Data science core
+        "pandas", "numpy", "scipy", "scipy.stats", "scipy.spatial",
+        "scipy.cluster", "scipy.signal",
+        # Visualization
+        "matplotlib", "matplotlib.pyplot", "matplotlib.dates",
+        "matplotlib.patches", "matplotlib.colors", "matplotlib.ticker",
+        "matplotlib.gridspec", "matplotlib.cm",
+        "seaborn", "plotly", "plotly.express", "plotly.graph_objects",
+        # Graph / network
+        "networkx",
+        # ML
+        "sklearn", "sklearn.preprocessing", "sklearn.decomposition",
+        "sklearn.cluster", "sklearn.metrics", "sklearn.model_selection",
+        "sklearn.linear_model", "sklearn.tree", "sklearn.ensemble",
+        # Safe stdlib
+        "math", "statistics", "collections", "datetime", "re",
+        "time", "functools", "itertools", "operator", "string",
+        "decimal", "copy", "json", "csv", "io", "textwrap",
+        "warnings", "ast", "typing", "pathlib", "random",
+        "heapq", "bisect", "struct", "array", "fractions",
     }
     if name in allowed:
         return __import__(name, *args, **kwargs)
@@ -96,16 +115,36 @@ def _safe_exec_with_timeout(
             "classmethod": classmethod, "super": super,
             "ValueError": ValueError, "TypeError": TypeError,
             "KeyError": KeyError, "IndexError": IndexError,
+            "AttributeError": AttributeError, "StopIteration": StopIteration,
             "RuntimeError": RuntimeError, "Exception": Exception,
+            "NotImplementedError": NotImplementedError, "ZeroDivisionError": ZeroDivisionError,
+            "OverflowError": OverflowError, "MemoryError": MemoryError,
         },
     }
     ns = dict(restricted_globals)
 
     # Pre-inject common libraries
+    import os as _os_mod
     ns["pd"] = pd
+    ns["os"] = type('SafeOS', (), {
+        'path': _os_mod.path,
+        'getcwd': _os_mod.getcwd,
+        'sep': _os_mod.sep,
+        'linesep': _os_mod.linesep,
+    })()  # safe os shim: only path helpers, no shell exec
     ns["np"] = np
     ns["plt"] = plt
     ns["sns"] = sns
+    try:
+        import networkx as nx
+        ns["nx"] = nx
+    except ImportError:
+        pass
+    try:
+        import plotly.express as px
+        ns["px"] = px
+    except ImportError:
+        pass
 
     result = {"ns": ns, "error": None}
 
@@ -341,27 +380,13 @@ class DAGExecutor:
                     status="failed", execution_time_ms=elapsed,
                     error=meta.error,
                 )
-                # Check double failure for replan
-                should_replan, reason = ReplanTrigger.check_double_failure(node_id, plan.metadata)
-                if should_replan:
-                    replan_reason = reason
-                    # Abort remaining nodes
-                    remaining_idx = execution_order.index(node_id) + 1
-                    for remaining_id in execution_order[remaining_idx:]:
-                        if remaining_id not in self._skipped_nodes:
-                            plan.metadata[remaining_id] = ExecutionMetadata(
-                                node_id=remaining_id, status=NodeStatus.ABORTED
-                            )
-                    break
-                else:
-                    # Single failure — already retried in _execute_operation, abort chain
-                    remaining_idx = execution_order.index(node_id) + 1
-                    for remaining_id in execution_order[remaining_idx:]:
-                        if remaining_id not in self._skipped_nodes:
-                            plan.metadata[remaining_id] = ExecutionMetadata(
-                                node_id=remaining_id, status=NodeStatus.ABORTED
-                            )
-                    break
+                # Single failure (after one retry inside _execute_operation) →
+                # skip this node and continue with remaining steps.
+                # Only replan if 3+ distinct nodes fail (catastrophic failure).
+                app_logger.warning(
+                    f"[EXECUTOR] Node '{node_id}' failed — skipping and continuing."
+                )
+
 
             # Post-execution: check schema change
             if node.type in (NodeType.TRANSFORMATION, NodeType.OPERATION):
@@ -453,10 +478,20 @@ class DAGExecutor:
 
         context.store_step_output(node.id, output.value)
 
-        # If output is a DataFrame update, replace context df
+        # If output is a DataFrame update, replace context df AND persist to disk
         if output.output_type == OutputType.DATAFRAME and isinstance(output.value, pd.DataFrame):
-            if node.type == NodeType.TRANSFORMATION:
+            if node.type in (NodeType.TRANSFORMATION, NodeType.OPERATION):
                 context.update_df(output.value)
+                # Auto-save to disk so the next step's pd.read_csv() gets fresh data
+                if context.file_path:
+                    try:
+                        output.value.to_csv(context.file_path, index=False)
+                        app_logger.info(
+                            f"[EXECUTOR] Node '{node.id}' persisted DataFrame "
+                            f"({output.value.shape[0]}×{output.value.shape[1]}) → {context.file_path}"
+                        )
+                    except Exception as _save_err:
+                        app_logger.warning(f"[EXECUTOR] DataFrame save failed: {_save_err}")
 
         # If output is an artifact (chart), store it
         if output.output_type == OutputType.ARTIFACT and output.value:
@@ -522,17 +557,27 @@ FILE PATH: {context.file_path}
 YOUR TASK: Generate Python code for this specific operation.
 
 STRICT RULES:
-1. Import pandas as pd at the top.
+1. Import pandas as pd at the top if needed.
 2. Load data: df = pd.read_csv(r'{context.file_path}')
-3. You have access to: pd, np, plt, sns, scipy, sklearn
-4. Store the primary result in a variable called _result
-5. _result should be: a scalar, a DataFrame, a dict, or a matplotlib figure
-6. For visualizations: create the chart and set _result_fig = plt.gcf()
-7. For DataFrames that modify data: save with df.to_csv(r'{context.file_path}', index=False) and set _result = df
-8. Column names are CASE-SENSITIVE.
-9. NO print() statements.
-10. NO os/sys/subprocess imports.
-11. Return code inside ```python ... ``` block ONLY."""
+   IMPORTANT: The CSV file is ALWAYS up-to-date — previous steps that created/modified columns
+   have already saved their changes to this file. Do NOT recreate columns that were created in
+   earlier steps — just read the file and the column will already be there.
+3. You have access to: pd, np, plt, sns, nx (networkx), px (plotly.express), scipy, sklearn
+4. You can also import: ast, typing, collections, math, statistics, json, re, datetime, random, pathlib
+5. Store the primary result in a variable called _result
+6. _result should be: a scalar, a DataFrame, a dict, or a matplotlib figure
+7. For visualizations: create the chart and set _result_fig = plt.gcf() — DO NOT CALL plt.show()
+   - Use any chart type: bar, line, scatter, heatmap, pie, histogram, box, violin, area, bubble
+   - For complex visualizations: decision trees, network graphs (nx), dendrograms, treemaps, sunburst, chord diagrams
+   - For networks/graphs: use networkx (nx) for graph construction, then matplotlib or plotly for rendering
+   - For trees: use sklearn.tree.plot_tree() or draw custom trees with matplotlib patches
+   - Add proper titles, axis labels, legends, and color scales
+   - Use tight_layout() for clean spacing
+8. For DataFrames that modify data: save with df.to_csv(r'{context.file_path}', index=False) and set _result = df
+9. Column names are CASE-SENSITIVE.
+10. NO print() statements.
+11. NO os/sys/subprocess imports.
+12. Return code inside ```python ... ``` block ONLY."""
 
         user_content = (
             f"NODE: {node.id}\n"

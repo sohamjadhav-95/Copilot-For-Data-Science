@@ -11,7 +11,7 @@ let state = {
     isLoading: false,
     chartInstances: {},
     currentCode: '',
-    highTierEnabled: false,
+    maxModeEnabled: false,
 };
 const _codeStore = []; // safe code storage — avoids unsafe JSON in onclick attrs
 
@@ -153,7 +153,7 @@ async function sendMessage(msg) {
         const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ session_id: state.sessionId, message: msg, high_tier: state.highTierEnabled })
+            body: JSON.stringify({ session_id: state.sessionId, message: msg, max_mode: state.maxModeEnabled })
         });
         const data = await res.json();
         removeTyping();
@@ -437,6 +437,25 @@ function clearResults() {
 function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── Max Power toggle ──────────────────────────────────────────────
+function toggleMaxMode() {
+    const userPlan = window.userPlan || 'free';
+    if (!['pro', 'ultra'].includes(userPlan)) {
+        // Free users can't activate
+        const btn = document.getElementById('max-power-toggle');
+        if (btn) {
+            btn.classList.add('shake');
+            setTimeout(() => btn.classList.remove('shake'), 500);
+        }
+        return;
+    }
+    state.maxModeEnabled = !state.maxModeEnabled;
+    const btn = document.getElementById('max-power-toggle');
+    const indicator = document.getElementById('max-power-indicator');
+    if (btn) btn.classList.toggle('active', state.maxModeEnabled);
+    if (indicator) indicator.textContent = state.maxModeEnabled ? 'ON' : 'OFF';
 }
 
 // ── Upgrade Ripple — lock animation for plan-gated buttons ─────────

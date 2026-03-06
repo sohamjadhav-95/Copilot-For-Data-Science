@@ -4,75 +4,68 @@
 # ╚══════════════════════════════════════════════════════════════════════╝
 
 # ═══════════════════════════════════════════════════════════════════════
-# QUICK RUN MODEL  (used by Normal Engine for all plans by default)
+# DEFAULT MODEL  (used by both Quick Run and Workflow for all users)
 # ═══════════════════════════════════════════════════════════════════════
 
-QUICKRUN_MODEL    = "openai/gpt-oss-120b"     # Groq-hosted model for Quick Run
-QUICKRUN_PROVIDER = "groq"                     # Provider for Quick Run
+DEFAULT_MODEL    = "openai/gpt-oss-120b"   # Groq-hosted model for all modes
+DEFAULT_PROVIDER = "groq"                  # Provider for default mode
+
+# Aliases for backward compatibility
+QUICKRUN_MODEL    = DEFAULT_MODEL
+QUICKRUN_PROVIDER = DEFAULT_PROVIDER
 
 # ═══════════════════════════════════════════════════════════════════════
-# PRO / ULTRA MODELS  (used in Pro Mode + Ultra Quick Run "High Tier")
+# MAX POWER MODEL TARGETS  (browser-agent → GPT for reasoning, Claude for coding)
+# Activated when Pro/Ultra users enable the Max Power toggle.
 # ═══════════════════════════════════════════════════════════════════════
-# >>> PUT YOUR MODEL IDs BELOW — swap anytime <<<
 
-PRO_MODELS = {
-    # ── Reasoning: GLM-5 with thinking enabled ──────────────────────────
-    "reasoning": {
-        "model":            "z-ai/glm5",
-        "reasoning":        False,
-        "extra_body": {
-            "chat_template_kwargs": {
-                "enable_thinking": False,
-                "clear_thinking":  False,
-            },
-        },
-    },
-    # ── Coding: GLM-4.7 — reasoning OFF, standard completion ────────────
-    "coding": {
-        "model":            "z-ai/glm4.7",
-        "reasoning":        False,
-        "extra_body":       None,
-    },
-    # ── Intent: Nemotron-3-Nano-30B with thinking enabled ───────────────
-    "intent": {
-        "model":            "nvidia/nemotron-3-nano-30b-a3b",
-        "reasoning":        True,
-        "extra_body": {
-            "reasoning_budget": 8192,
-            "chat_template_kwargs": {
-                "enable_thinking": True,
-            },
-        },
-    },
+MAX_POWER_TARGETS = {
+    "reasoning": "gpt",   # GPT via browser-agent for reasoning/planning
+    "coding":    "gpt",   # GPT for code generation (Claude bypassed — bot check issues)
+    "intent":    "gpt",   # GPT via browser-agent for intent classification
 }
-
-PRO_PROVIDER = "nvidia"   # Provider for Pro/Ultra models
 
 
 # ═══════════════════════════════════════════════════════════════════════
 # HELPERS  (used by ModelRouter and engines — do NOT edit below)
 # ═══════════════════════════════════════════════════════════════════════
 
-def get_pro_model_config(task: str) -> dict:
-    """Return the full config dict for a task: 'reasoning', 'coding', or 'intent'."""
-    return PRO_MODELS.get(task, PRO_MODELS["coding"])
+def get_max_power_target(task: str) -> str:
+    """Return the browser-agent target ('gpt' or 'claude') for a task."""
+    return MAX_POWER_TARGETS.get(task, "gpt")
 
 
+def get_default_model() -> str:
+    """Return the default model name (Groq)."""
+    return DEFAULT_MODEL
+
+
+def get_default_provider() -> str:
+    """Return the default provider."""
+    return DEFAULT_PROVIDER
+
+
+# Legacy aliases (keep for backward compat with pro_engine.py etc.)
 def get_pro_model(task: str) -> str:
-    """Return just the model ID for a task."""
-    return get_pro_model_config(task)["model"]
+    """Return the model ID for a task. In default mode, always returns the Groq model."""
+    return DEFAULT_MODEL
 
+def get_pro_model_config(task: str) -> dict:
+    """Return config dict for a task. Default mode uses Groq for all tasks."""
+    return {
+        "model": DEFAULT_MODEL,
+        "reasoning": False,
+        "extra_body": None,
+    }
 
 def get_pro_provider() -> str:
-    """Return the provider for Pro/Ultra models."""
-    return PRO_PROVIDER
-
+    """Return the provider. Always Groq in default mode."""
+    return DEFAULT_PROVIDER
 
 def get_quickrun_model() -> str:
     """Return the Quick Run model name."""
-    return QUICKRUN_MODEL
-
+    return DEFAULT_MODEL
 
 def get_quickrun_provider() -> str:
     """Return the Quick Run provider."""
-    return QUICKRUN_PROVIDER
+    return DEFAULT_PROVIDER

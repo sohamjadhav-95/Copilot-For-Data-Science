@@ -17,6 +17,16 @@
 </button>
 <input type="file" id="wf-upload" accept=".csv" style="display:none" onchange="wfHandleUpload(this)">
 
+<!-- Max Power toggle: visible to all, only Pro/Ultra can activate -->
+<div id="wf-max-power-wrapper" style="margin-right:8px;">
+    <button id="wf-max-power-toggle" class="topbar-action-btn secondary md-ripple" onclick="toggleWfMaxMode()"
+        title="Switch to Max Power mode — GPT & Claude via browser-agent (Pro/Ultra)"
+        style="font-size:12px;gap:4px;padding:4px 10px;border-radius:8px;opacity:0.5;">
+        <span class="material-symbols-rounded" style="font-size:16px;">bolt</span>
+        <span id="wf-max-power-indicator">Max Power</span>
+    </button>
+</div>
+
 <!-- Layout Toggle Buttons -->
 <div class="wf-layout-toggles" id="wf-layout-toggles" title="Switch layout">
     <button class="wf-layout-btn active" id="layout-btn-1" onclick="setWfLayout(1)" title="3-column (default)">

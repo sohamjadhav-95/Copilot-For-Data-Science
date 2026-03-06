@@ -1,10 +1,10 @@
-# api_config.py -- Dual-Provider API Configuration
-# Groq (gpt-oss-120b) is PRIMARY for speed. OpenRouter is FALLBACK only.
+# api_config.py -- Groq API Configuration
+# Groq (gpt-oss-120b) is the SOLE provider for default mode.
 import os
 from openai import OpenAI
 
 # ═══════════════════════════════════════════════════════════════════════
-# PROVIDER CONFIGURATIONS
+# PROVIDER CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════
 
 PROVIDERS = {
@@ -20,26 +20,13 @@ PROVIDERS = {
             "coder": "openai/gpt-oss-120b",
         },
     },
-    "openrouter": {
-        "base_url": "https://openrouter.ai/api/v1",
-        "api_key": os.environ.get(
-            "OPENROUTER_API_KEY",
-            "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"
-        ),
-        "models": {
-            # Use FAST non-thinking models for fallback (not qwen3-thinking)
-            "primary": "openai/gpt-oss-120b:free",
-            "lite": "openai/gpt-oss-20b:free",
-            "coder": "openai/gpt-oss-120b:free",
-        },
-    },
 }
 
 # ═══════════════════════════════════════════════════════════════════════
-# ACTIVE PROVIDER STATE  (Groq is default / prioritized for speed)
+# ACTIVE PROVIDER STATE  (Groq is the only provider)
 # ═══════════════════════════════════════════════════════════════════════
 
-_active_provider = os.environ.get("API_PROVIDER", "groq")
+_active_provider = "groq"
 _client = None
 
 
@@ -64,6 +51,7 @@ def get_active_provider():
 
 
 def switch_provider(provider_name):
+    """Switch provider — currently only 'groq' is supported."""
     global _active_provider, _client
     provider_name = provider_name.lower().strip()
     if provider_name not in PROVIDERS:
@@ -71,14 +59,3 @@ def switch_provider(provider_name):
     _active_provider = provider_name
     _client = _build_client(provider_name)
     return _active_provider
-
-
-def auto_fallback_on_error():
-    global _active_provider, _client
-    others = [p for p in PROVIDERS if p != _active_provider]
-    if not others:
-        return None
-    new_provider = others[0]
-    _active_provider = new_provider
-    _client = _build_client(new_provider)
-    return new_provider

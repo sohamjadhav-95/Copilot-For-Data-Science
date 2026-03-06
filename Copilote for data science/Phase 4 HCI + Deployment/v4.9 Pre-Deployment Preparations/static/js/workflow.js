@@ -11,6 +11,7 @@ let wfState = {
     steps: [],
     isExecuting: false,
     stepResults: {},
+    maxModeEnabled: false,
 };
 
 // ── Init ──────────────────────────────────────────────────────────
@@ -18,9 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add workflow-page class for dark styling
     document.body.classList.add('workflow-page');
 
-    // Check URL for session param
+    // Check URL for session param or plan_id param (from Sessions page)
     const params = new URLSearchParams(window.location.search);
-    if (params.get('session')) {
+    if (params.get('plan_id')) {
+        loadWorkflowByPlanId(params.get('plan_id'));
+    } else if (params.get('session')) {
         wfState.sessionId = parseInt(params.get('session'));
         loadExistingSession(wfState.sessionId);
     }
@@ -32,7 +35,57 @@ document.addEventListener('DOMContentLoaded', () => {
             generatePlan();
         }
     });
+
+    // Init Max Power toggle for Pro/Ultra users
+    (function initWfMaxPowerBtn() {
+        function check() {
+            if (['pro', 'ultra'].includes(window.userPlan)) {
+                const btn = document.getElementById('wf-max-power-toggle');
+                const indicator = document.getElementById('wf-max-power-indicator');
+                if (btn) { btn.style.opacity = '1'; }
+                if (indicator) { indicator.textContent = 'Max Power OFF'; }
+            }
+        }
+        setTimeout(check, 500);
+        setTimeout(check, 1500);
+    })();
 });
+
+// ── Max Power Toggle for Workflow Mode ──────────────────────────
+function toggleWfMaxMode() {
+    const btn = document.getElementById('wf-max-power-toggle');
+    const indicator = document.getElementById('wf-max-power-indicator');
+    const userPlan = window.userPlan || 'free';
+
+    // Only Pro/Ultra users can activate
+    if (!['pro', 'ultra'].includes(userPlan)) {
+        if (indicator) {
+            indicator.textContent = '\uD83D\uDD12 Pro/Ultra Only';
+            btn.style.background = 'var(--bg-muted)';
+            btn.style.color = 'var(--text-tertiary)';
+            setTimeout(() => {
+                indicator.textContent = 'Max Power';
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 1500);
+        }
+        return;
+    }
+
+    wfState.maxModeEnabled = !wfState.maxModeEnabled;
+    if (wfState.maxModeEnabled) {
+        indicator.textContent = 'Max Power ON';
+        btn.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'transparent';
+        btn.style.opacity = '1';
+    } else {
+        indicator.textContent = 'Max Power OFF';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+    }
+}
 
 // ── Upload Dataset (for workflow header button) ───────────────────
 async function wfHandleUpload(input) {
@@ -68,6 +121,119 @@ async function loadExistingSession(id) {
     } catch (e) { }
 }
 
+// ── Load a persisted workflow session by plan_id (from Sessions page) ─
+async function loadWorkflowByPlanId(planId) {
+    try {
+        const res = await fetch(`/api/pro/load/${encodeURIComponent(planId)}`);
+        if (!res.ok) {
+            showToast('Workflow session not found', 'error');
+            return;
+        }
+        const w = await res.json();
+
+        // Restore wfState
+        wfState.planData = { plan_id: planId };
+        if (w.session_id) wfState.sessionId = w.session_id;
+
+        // Show dataset badge
+        if (w.filename) {
+            const badge = document.getElementById('wf-dataset-badge');
+            const name = document.getElementById('wf-dataset-name');
+            if (badge) badge.style.display = 'inline-flex';
+            if (name) name.textContent = w.filename;
+        }
+
+        // Fill goal input
+        const planInput = document.getElementById('plan-input');
+        if (planInput && w.goal) planInput.value = w.goal;
+
+        // If we have full plan data, use it to reconstruct the full UI
+        if (w.plan && w.plan.nodes && w.plan.nodes.length) {
+            const planObj = w.plan;
+            wfState.steps = planObj.nodes;
+
+            // Build the response shape renderPlan() expects
+            const fakeApiResponse = {
+                plan_id: planId,
+                plan: planObj,
+                node_count: planObj.nodes.length,
+            };
+            renderPlan(fakeApiResponse);
+
+            // Hide approve bar — workflow was already executed
+            const approveBar = document.getElementById('approve-bar');
+            if (approveBar) approveBar.style.display = 'none';
+
+            // Restore per-node status icons using saved metadata
+            const meta = planObj.metadata || {};  // { node_id: { status, error, ... } }
+            planObj.nodes.forEach((node, i) => {
+                const nodeId = node.id;
+                const m = meta[nodeId];
+                const status = m ? (m.status || 'pending') : 'pending';
+
+                const icon = document.getElementById(`step-icon-${i}`);
+                const dagRow = document.getElementById(`dag-step-${i}`);
+
+                if (status === 'success') {
+                    if (icon) icon.textContent = '✓';
+                    if (dagRow) dagRow.classList.add('done');
+                } else if (status === 'failed') {
+                    if (icon) icon.textContent = '✗';
+                    if (dagRow) dagRow.classList.add('failed');
+                } else if (status === 'skipped') {
+                    if (icon) icon.textContent = '—';
+                    if (dagRow) dagRow.style.opacity = '0.5';
+                }
+
+                // Render a result block for each completed node using stored output
+                if (m && (status === 'success' || status === 'failed')) {
+                    const nodeOutput = (w.step_outputs && w.step_outputs[nodeId]) || null;
+                    const fakeNode = {
+                        id: nodeId,
+                        status,
+                        description: node.description || node.operation || '',
+                        metadata: m,
+                        output: nodeOutput,  // real {type, data} from DB
+                    };
+                    appendStepResult(i, fakeNode);
+                }
+            });
+
+            // Render summary if available
+            if (w.result && w.result.summary) {
+                appendSummaryBlock(w.result.summary, w.result);
+            }
+
+            showToast(`Restored: ${w.goal ? w.goal.slice(0, 40) : 'Workflow'} (${w.status})`, 'success');
+        } else {
+            // Fallback: only basic info available — show a summary card
+            const statusColor = { completed: '#34d399', failed: '#f87171', planned: '#fbbf24', executing: '#818cf8' }[w.status] || '#94a3b8';
+            const outputScroll = document.getElementById('output-scroll');
+            const outputEmpty = document.getElementById('output-empty');
+            if (outputEmpty) outputEmpty.style.display = 'none';
+            if (outputScroll) {
+                outputScroll.insertAdjacentHTML('afterbegin', `
+                <div class="output-block">
+                  <div class="output-block-header">
+                    <span class="output-block-label">📋 Restored Session — ${w.node_count || 0} step${w.node_count !== 1 ? 's' : ''}</span>
+                    <span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:12px;background:${statusColor}25;color:${statusColor};text-transform:uppercase;">${w.status}</span>
+                  </div>
+                  <div class="output-block-body" style="font-size:0.8rem;color:var(--text-secondary);">
+                    ${esc(w.goal || 'Workflow')}
+                    ${w.result && w.result.summary ? '<hr style="border-color:var(--border);margin:10px 0;">' + esc(w.result.summary) : ''}
+                  </div>
+                </div>`);
+            }
+            showToast(`Loaded: ${w.goal ? w.goal.slice(0, 40) : 'Workflow'}`, 'success');
+        }
+    } catch (e) {
+        showToast('Failed to load workflow session', 'error');
+        console.error(e);
+    }
+}
+
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
 // ── Plan Generation ───────────────────────────────────────────────
 async function generatePlan() {
     if (!wfState.sessionId) {
@@ -88,7 +254,7 @@ async function generatePlan() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             // API expects `message`, not `goal`
-            body: JSON.stringify({ session_id: wfState.sessionId, message: goal })
+            body: JSON.stringify({ session_id: wfState.sessionId, message: goal, max_mode: wfState.maxModeEnabled })
         });
         const data = await res.json();
 
@@ -212,7 +378,7 @@ async function approvePlan() {
         const res = await fetch('/api/pro/approve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan_id })
+            body: JSON.stringify({ plan_id, max_mode: wfState.maxModeEnabled })
         });
         const kickoff = await res.json();
 

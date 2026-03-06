@@ -919,3 +919,382 @@
 {"timestamp": "2026-03-05T19:39:19.503233+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_8' skipped — deps failed: ['node_7']"}
 {"timestamp": "2026-03-05T19:39:19.503807+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Done: 4 ok / 2 failed / 4 skipped — status=partial"}
 {"timestamp": "2026-03-05T19:39:19.514992+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → nvidia/z-ai/glm5 (reasoning=OFF)"}
+{"timestamp": "2026-03-06T07:52:41.531175+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T07:52:44.047646+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T08:13:16.437459+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T08:18:50.155368+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T08:23:28.173748+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T08:23:30.414613+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T08:24:01.819411+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T08:24:04.227633+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show first 10 rows' -> display (keyword)"}
+{"timestamp": "2026-03-06T08:24:04.248213+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show first 10 rows' -> Intent: display"}
+{"timestamp": "2026-03-06T08:24:04.284071+00:00", "level": "INFO", "logger": "copilot.app", "message": "[DISPLAY] AI code generation for: Show first 10 rows"}
+{"timestamp": "2026-03-06T08:24:06.937166+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (211 chars)"}
+{"timestamp": "2026-03-06T08:24:06.960994+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #97: display — Show first 10 rows"}
+{"timestamp": "2026-03-06T08:24:18.293146+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Plot a histogram of the first numeric column' -> visualize (keyword)"}
+{"timestamp": "2026-03-06T08:24:18.320367+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Plot a histogram of the first numeric column' -> Intent: visualize"}
+{"timestamp": "2026-03-06T08:24:18.352981+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Plot a histogram of the first numeric column"}
+{"timestamp": "2026-03-06T08:24:18.369793+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Max Power ON → routing via ModelRouter (coding)"}
+{"timestamp": "2026-03-06T08:24:18.382064+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:24:18.394955+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (6727 chars)"}
+{"timestamp": "2026-03-06T08:25:59.594456+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:25:59.598190+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:25:59.603980+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:26:01.776164+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1064 chars)"}
+{"timestamp": "2026-03-06T08:26:02.550800+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-06T08:26:02.564221+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #98: visualize — Plot a histogram of the first numeric column"}
+{"timestamp": "2026-03-06T08:26:38.756130+00:00", "level": "INFO", "logger": "copilot.app", "message": "[INTENT] 'Show correlation heatmap' -> visualize (keyword)"}
+{"timestamp": "2026-03-06T08:26:38.790405+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CHAT] User: 'Show correlation heatmap' -> Intent: visualize"}
+{"timestamp": "2026-03-06T08:26:38.811052+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Max Power ON → routing via ModelRouter (coding)"}
+{"timestamp": "2026-03-06T08:26:38.824519+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:26:38.834392+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (929 chars)"}
+{"timestamp": "2026-03-06T08:28:18.611893+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:28:18.617567+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:28:18.625891+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:28:19.114681+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[GROQ] openai/gpt-oss-120b: empty response (attempt 1)"}
+{"timestamp": "2026-03-06T08:28:19.120866+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] Max Power routing failed, falling back to Groq"}
+{"timestamp": "2026-03-06T08:28:19.679301+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[AI] openai/gpt-oss-120b: empty response (attempt 1)"}
+{"timestamp": "2026-03-06T08:28:19.703614+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] AI chart code generation for: Show correlation heatmap"}
+{"timestamp": "2026-03-06T08:28:19.705861+00:00", "level": "INFO", "logger": "copilot.app", "message": "[AI] Max Power ON → routing via ModelRouter (coding)"}
+{"timestamp": "2026-03-06T08:28:19.708245+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:28:19.710504+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (6834 chars)"}
+{"timestamp": "2026-03-06T08:30:00.306411+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:30:00.308523+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:30:00.311576+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:30:01.699603+00:00", "level": "DEBUG", "logger": "copilot.app", "message": "[EXTRACT] Fenced block (1243 chars)"}
+{"timestamp": "2026-03-06T08:30:02.395748+00:00", "level": "INFO", "logger": "copilot.app", "message": "[VIZ] Chart generated successfully"}
+{"timestamp": "2026-03-06T08:30:02.413860+00:00", "level": "INFO", "logger": "copilot.app", "message": "[CODE] Saved snippet #99: visualize — Show correlation heatmap"}
+{"timestamp": "2026-03-06T08:34:23.512428+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T08:34:30.150096+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Analyze sales performance by category and region, identify the most profitable categories, visualize"}
+{"timestamp": "2026-03-06T08:34:30.232465+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Analyze sales performance by category and region, identify the most profitable categories, visualize"}
+{"timestamp": "2026-03-06T08:34:30.233576+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:34:30.234521+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (4226 chars)"}
+{"timestamp": "2026-03-06T08:35:33.958175+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T08:35:40.677303+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:35:40.757234+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:35:40.758595+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:35:40.759733+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (4191 chars)"}
+{"timestamp": "2026-03-06T08:36:10.017831+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:36:10.019757+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=reasoning, falling back to Groq"}
+{"timestamp": "2026-03-06T08:36:10.021690+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:36:13.607817+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 9 nodes, plan_id=plan_50f8e31656ba"}
+{"timestamp": "2026-03-06T08:37:20.568848+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:37:20.570930+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=reasoning, falling back to Groq"}
+{"timestamp": "2026-03-06T08:37:20.572389+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:37:24.437733+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_fe74df5f36b4"}
+{"timestamp": "2026-03-06T08:38:36.757733+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_fe74df5f36b4' (6 nodes)"}
+{"timestamp": "2026-03-06T08:38:36.759383+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T08:38:36.760579+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'clean_missing': missing_variable: node 'clean_missing' needs variable 'df' which doesn't exist"}
+{"timestamp": "2026-03-06T08:38:36.761754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'clean_missing' needs variable 'df' which doesn't exist"}
+{"timestamp": "2026-03-06T08:38:59.468309+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T08:39:01.645615+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:39:01.716953+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:39:01.718369+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:39:04.625452+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_29cd41410988"}
+{"timestamp": "2026-03-06T08:39:07.016102+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_29cd41410988' (5 nodes)"}
+{"timestamp": "2026-03-06T08:39:07.017614+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 5 nodes"}
+{"timestamp": "2026-03-06T08:39:07.018789+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:39:08.440345+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T08:39:08.483790+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:39:10.439413+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: Import of 'ast' is not allowed in Pro Mode sandbox, retrying..."}
+{"timestamp": "2026-03-06T08:39:10.477908+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:39:12.267760+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_2' failed after retry"}
+{"timestamp": "2026-03-06T08:41:09.209255+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T08:41:13.314264+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:41:13.437041+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T08:41:13.443058+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:41:13.447283+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (4191 chars)"}
+{"timestamp": "2026-03-06T08:42:53.447875+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:42:53.458257+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=reasoning, falling back to Groq"}
+{"timestamp": "2026-03-06T08:42:53.468303+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:42:57.713906+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 8 nodes, plan_id=plan_f59839fbae42"}
+{"timestamp": "2026-03-06T08:43:16.456761+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_f59839fbae42' (8 nodes)"}
+{"timestamp": "2026-03-06T08:43:16.480915+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 8 nodes"}
+{"timestamp": "2026-03-06T08:43:16.491226+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:43:16.530542+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (1941 chars)"}
+{"timestamp": "2026-03-06T08:44:56.587367+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:44:56.596748+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:44:56.613263+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:44:58.401027+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T08:44:58.410471+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:44:58.411237+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (2260 chars)"}
+{"timestamp": "2026-03-06T08:46:14.694367+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:46:14.696905+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:46:14.699290+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:46:16.504040+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: Import of 'ast' is not allowed in Pro Mode sandbox, retrying..."}
+{"timestamp": "2026-03-06T08:46:16.538913+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=coding → browser-agent/gpt"}
+{"timestamp": "2026-03-06T08:46:16.541205+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (2429 chars)"}
+{"timestamp": "2026-03-06T08:47:56.297466+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T08:47:56.299697+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=coding, falling back to Groq"}
+{"timestamp": "2026-03-06T08:47:56.301754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T08:47:58.621676+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:10:01.913789+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:10:05.128290+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:10:37.049462+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:10:39.106515+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:10:39.216877+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:10:39.218643+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:10:45.717713+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_2 → node_3a → node_2"}
+{"timestamp": "2026-03-06T09:10:45.718879+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-06T09:10:54.970142+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:10:55.044858+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:10:55.046403+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:10:58.404887+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_aaad30fee229"}
+{"timestamp": "2026-03-06T09:11:02.507724+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_aaad30fee229' (6 nodes)"}
+{"timestamp": "2026-03-06T09:11:02.517688+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:11:02.528113+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:11:04.698817+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:11:04.715027+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:11:06.423229+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: Code blocked: Blocked dangerous pattern: \\bglobals\\s*\\(, retrying..."}
+{"timestamp": "2026-03-06T09:11:06.480858+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:11:07.723366+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_2' failed after retry"}
+{"timestamp": "2026-03-06T09:11:31.026620+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:11:32.511186+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:11:32.600395+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:11:32.602028+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:11:35.621815+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_eaa9d4f4ea2b"}
+{"timestamp": "2026-03-06T09:11:36.953227+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_eaa9d4f4ea2b' (6 nodes)"}
+{"timestamp": "2026-03-06T09:11:36.955014+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:11:36.957008+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_1': missing_variable: node 'node_1' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:11:36.958145+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_1' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:11:44.258805+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:11:44.339905+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:11:44.341266+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:11:48.391627+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_e69b8af19118"}
+{"timestamp": "2026-03-06T09:11:50.101078+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_e69b8af19118' (6 nodes)"}
+{"timestamp": "2026-03-06T09:11:50.102633+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:11:50.104789+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_1': missing_variable: node 'node_1' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:11:50.106573+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_1' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:12:32.933205+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:12:35.016963+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:12:44.090183+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:12:47.184044+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:12:47.273692+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:12:47.274910+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:12:52.001717+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_9fd9e6359231"}
+{"timestamp": "2026-03-06T09:12:54.792819+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_9fd9e6359231' (6 nodes)"}
+{"timestamp": "2026-03-06T09:12:54.794525+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:12:54.796022+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:12:57.109581+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:12:57.157926+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:12:58.427118+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: name 'cleaned_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:12:58.457177+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:12:59.826451+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:12:59.881030+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:13:00.894518+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'exploded_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:13:00.956841+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:13:02.483317+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_3' failed after retry"}
+{"timestamp": "2026-03-06T09:17:44.251162+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:18:22.797202+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:18:44.556409+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:20:02.347666+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:23:24.773279+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:24:25.899280+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:28:49.692560+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:28:51.733141+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:29:06.320456+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:29:09.925573+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:29:10.058499+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:29:10.061235+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:15.610386+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_03dd149b8c8f"}
+{"timestamp": "2026-03-06T09:29:18.054133+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_03dd149b8c8f' (6 nodes)"}
+{"timestamp": "2026-03-06T09:29:18.055543+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:29:18.056731+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:20.789895+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:29:20.832814+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:21.744067+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' failed: name 'clean_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:29:21.772706+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:23.375156+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:29:23.437312+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:24.357248+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'exploded_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:29:24.415522+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:26.342724+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_3' failed after retry"}
+{"timestamp": "2026-03-06T09:29:47.776466+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:29:49.301532+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:29:49.374455+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:29:49.376139+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:52.944617+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_3b5d005af885"}
+{"timestamp": "2026-03-06T09:29:56.499609+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_3b5d005af885' (6 nodes)"}
+{"timestamp": "2026-03-06T09:29:56.501720+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:29:56.503581+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:57.817834+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:29:57.846902+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:29:59.362324+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:29:59.410789+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:30:00.223156+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T09:30:00.322628+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_3', profile updated"}
+{"timestamp": "2026-03-06T09:30:00.412767+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:30:09.942862+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-06T09:30:10.032130+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:30:23.743901+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: artifact"}
+{"timestamp": "2026-03-06T09:30:23.844148+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:30:37.324634+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' completed: scalar"}
+{"timestamp": "2026-03-06T09:30:37.420762+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:43:18.494459+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:43:20.520780+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:43:49.584639+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:43:51.063241+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:43:51.161762+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_bf8471ebba32.csv"}
+{"timestamp": "2026-03-06T09:43:51.163997+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:43:51.165295+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:43:55.786988+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 7 nodes, plan_id=plan_1f020785c08a"}
+{"timestamp": "2026-03-06T09:44:11.093623+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_1f020785c08a' (7 nodes)"}
+{"timestamp": "2026-03-06T09:44:11.095567+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 7 nodes"}
+{"timestamp": "2026-03-06T09:44:11.097296+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:44:13.001019+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dict"}
+{"timestamp": "2026-03-06T09:44:13.006056+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_2': missing_variable: node 'node_2' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:44:13.007580+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_2' needs variable 'raw_df' which doesn't exist"}
+{"timestamp": "2026-03-06T09:44:48.356140+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:44:50.131265+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:44:50.220839+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_4bf829790bb3.csv"}
+{"timestamp": "2026-03-06T09:44:50.222952+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:44:50.224385+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:44:55.710123+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 9 nodes, plan_id=plan_a387757106eb"}
+{"timestamp": "2026-03-06T09:44:58.540074+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_a387757106eb' (9 nodes)"}
+{"timestamp": "2026-03-06T09:44:58.541919+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 9 nodes"}
+{"timestamp": "2026-03-06T09:44:58.542877+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:44:59.988684+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_4bf829790bb3.csv"}
+{"timestamp": "2026-03-06T09:44:59.990681+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:45:00.032453+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:01.614119+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_4bf829790bb3.csv"}
+{"timestamp": "2026-03-06T09:45:01.615599+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:45:01.693424+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:02.546830+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' persisted DataFrame (5806×14) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_4bf829790bb3.csv"}
+{"timestamp": "2026-03-06T09:45:02.547561+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T09:45:02.574559+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_3', profile updated"}
+{"timestamp": "2026-03-06T09:45:02.600040+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:04.231123+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dict"}
+{"timestamp": "2026-03-06T09:45:04.334583+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:05.181620+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: scalar"}
+{"timestamp": "2026-03-06T09:45:05.269503+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:19.156094+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_7' completed: artifact"}
+{"timestamp": "2026-03-06T09:45:19.158150+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Conditional 'node_6' → FALSE (executing: ['node_8'])"}
+{"timestamp": "2026-03-06T09:45:19.191965+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:33.298774+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_8' completed: scalar"}
+{"timestamp": "2026-03-06T09:45:33.396092+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:45:49.816873+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_9' failed: name 'insufficient_data_warning' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:45:49.892373+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:46:04.917635+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_9' failed after retry"}
+{"timestamp": "2026-03-06T09:46:46.242474+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:46:46.927056+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:46:47.007583+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_dbb9e7eafc92.csv"}
+{"timestamp": "2026-03-06T09:46:47.009231+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:46:47.010457+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:46:50.598382+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_786cb05c3b12"}
+{"timestamp": "2026-03-06T09:46:52.655065+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_786cb05c3b12' (6 nodes)"}
+{"timestamp": "2026-03-06T09:46:52.656746+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:46:52.657908+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:46:53.948577+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_dbb9e7eafc92.csv"}
+{"timestamp": "2026-03-06T09:46:53.949970+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:46:53.976028+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:46:55.800026+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (14626×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_dbb9e7eafc92.csv"}
+{"timestamp": "2026-03-06T09:46:55.801623+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:46:55.868283+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:46:58.276285+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'exploded_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:46:58.331201+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:47:00.569558+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: double_failure: node 'node_3' failed after retry"}
+{"timestamp": "2026-03-06T09:52:00.749990+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:53:33.217542+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:54:12.199761+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:54:42.799164+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:56:49.107149+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:56:51.694930+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T09:57:24.512048+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:57:26.692403+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:57:26.778583+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_cc58b90478b9.csv"}
+{"timestamp": "2026-03-06T09:57:26.779768+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:57:26.781215+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:57:33.139353+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_f8dab9066b07"}
+{"timestamp": "2026-03-06T09:57:33.142160+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to save workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_f8dab9066b07', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+{"timestamp": "2026-03-06T09:57:36.291137+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_f8dab9066b07' (6 nodes)"}
+{"timestamp": "2026-03-06T09:57:36.292956+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:57:36.294812+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:57:38.746086+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_cc58b90478b9.csv"}
+{"timestamp": "2026-03-06T09:57:38.747341+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:57:38.780486+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:57:44.788558+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (14626×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_cc58b90478b9.csv"}
+{"timestamp": "2026-03-06T09:57:44.790594+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:57:44.872389+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:57:46.663109+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: Code blocked: Blocked dangerous pattern: \\bglobals\\s*\\(, retrying..."}
+{"timestamp": "2026-03-06T09:57:46.721595+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:57:47.994180+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T09:57:47.995926+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_4': missing_variable: node 'node_4' needs variable 'df_decade' which doesn't exist"}
+{"timestamp": "2026-03-06T09:57:47.996980+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_4' needs variable 'df_decade' which doesn't exist"}
+{"timestamp": "2026-03-06T09:58:12.283026+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T09:58:14.917559+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:58:14.995719+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_1c8588c1b4de.csv"}
+{"timestamp": "2026-03-06T09:58:14.999256+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:58:15.001926+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:58:21.239591+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[PLANNER] Validation: DAG contains a cycle: node_2 → node_3_drop → node_2"}
+{"timestamp": "2026-03-06T09:58:21.242652+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[PLANNER] Plan contains cycle — rejected"}
+{"timestamp": "2026-03-06T09:58:24.986599+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:58:25.099982+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_12277c500591.csv"}
+{"timestamp": "2026-03-06T09:58:25.102359+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T09:58:25.104775+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:58:28.403700+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_96e7308b8a2c"}
+{"timestamp": "2026-03-06T09:58:28.406267+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to save workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_96e7308b8a2c', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+{"timestamp": "2026-03-06T09:58:30.361542+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_96e7308b8a2c' (6 nodes)"}
+{"timestamp": "2026-03-06T09:58:30.363640+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T09:58:30.364738+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:58:36.935260+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_12277c500591.csv"}
+{"timestamp": "2026-03-06T09:58:36.936271+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T09:58:36.964021+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:58:47.175687+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (14626×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_12277c500591.csv"}
+{"timestamp": "2026-03-06T09:58:47.177009+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T09:58:47.231004+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:58:56.608814+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'exploded_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:58:56.663552+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:59:03.686135+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' persisted DataFrame (14626×14) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_12277c500591.csv"}
+{"timestamp": "2026-03-06T09:59:03.687670+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T09:59:03.836191+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_3', profile updated"}
+{"timestamp": "2026-03-06T09:59:03.914816+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:59:14.762721+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-06T09:59:14.857374+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:59:26.390647+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed: name 'top_genres_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:59:26.480787+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:59:38.771219+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: artifact"}
+{"timestamp": "2026-03-06T09:59:38.881205+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T09:59:51.599556+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' failed: name 'top_genres_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T09:59:51.690138+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:00:05.021602+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T10:00:05.118513+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:00:16.929252+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to update workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_96e7308b8a2c', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+{"timestamp": "2026-03-06T10:00:31.796856+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T10:00:33.501588+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T10:00:33.612686+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_75bae101b9d2.csv"}
+{"timestamp": "2026-03-06T10:00:33.614776+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T10:00:33.616383+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:00:38.252125+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 10 nodes, plan_id=plan_da4af3b54409"}
+{"timestamp": "2026-03-06T10:00:38.254658+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to save workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_da4af3b54409', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+{"timestamp": "2026-03-06T10:00:39.777870+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_da4af3b54409' (10 nodes)"}
+{"timestamp": "2026-03-06T10:00:39.781406+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 10 nodes"}
+{"timestamp": "2026-03-06T10:00:39.785544+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:00:46.046142+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_75bae101b9d2.csv"}
+{"timestamp": "2026-03-06T10:00:46.047917+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T10:00:46.135186+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_1', profile updated"}
+{"timestamp": "2026-03-06T10:00:46.162074+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:00:54.318076+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (5806×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_75bae101b9d2.csv"}
+{"timestamp": "2026-03-06T10:00:54.319554+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T10:00:54.389949+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:01:04.633101+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' persisted DataFrame (14626×12) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_75bae101b9d2.csv"}
+{"timestamp": "2026-03-06T10:01:04.634313+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T10:01:04.801107+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_3', profile updated"}
+{"timestamp": "2026-03-06T10:01:04.875238+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:01:15.245880+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' persisted DataFrame (14626×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_75bae101b9d2.csv"}
+{"timestamp": "2026-03-06T10:01:15.247549+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: dataframe"}
+{"timestamp": "2026-03-06T10:01:15.389930+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_4', profile updated"}
+{"timestamp": "2026-03-06T10:01:15.504040+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:01:27.148388+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: dataframe"}
+{"timestamp": "2026-03-06T10:01:27.300197+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:01:39.524338+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5b' completed: scalar"}
+{"timestamp": "2026-03-06T10:01:39.647487+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:01:59.748087+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_7' completed: artifact"}
+{"timestamp": "2026-03-06T10:01:59.867181+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:02:08.820469+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_8' completed: artifact"}
+{"timestamp": "2026-03-06T10:02:08.931539+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:02:25.227912+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_9' failed: unexpected character after line continuation character (<string>, line 32), retrying..."}
+{"timestamp": "2026-03-06T10:02:25.329901+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:02:44.182384+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_9' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T10:02:44.183331+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Conditional 'node_6' → FALSE (executing: ['node_8'])"}
+{"timestamp": "2026-03-06T10:02:44.215151+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T10:02:59.095042+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to update workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_da4af3b54409', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}

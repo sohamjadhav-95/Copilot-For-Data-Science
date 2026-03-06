@@ -1,27 +1,31 @@
-# models_api/model_router.py — Simplified task-based model routing
-# Routes AI calls to the correct provider/model based on task type.
-import time
+# models_api/model_router.py — Dual-mode AI routing
+# Default: Groq gpt-oss-120b for all tasks
+# Max Power: browser-agent → GPT (reasoning/intent) + Claude (coding)
+
 from typing import Optional
 
-from core.model_plan_router import (
-    get_pro_model_config, get_pro_provider,
-    get_quickrun_model, get_quickrun_provider,
-)
+from core.model_plan_router import get_max_power_target, get_default_model
 from models_api.groq_models import groq_model
-from models_api.openrouter_models import openrouter_model
-from models_api.nvidia_models import nvidia_model
+from models_api.browser_agent_client import browser_agent_call
 from logger import app_logger, log_error
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# PROVIDER DISPATCH MAP
+# MAX MODE STATE — toggled per-request by the engine or app.py
 # ═══════════════════════════════════════════════════════════════════════
 
-_PROVIDER_FUNCTIONS = {
-    "groq":       groq_model,
-    "openrouter": openrouter_model,
-    "nvidia":     nvidia_model,
-}
+_max_mode_enabled = False
+
+
+def set_max_mode(enabled: bool) -> None:
+    """Enable/disable Max Power mode (browser-agent routing)."""
+    global _max_mode_enabled
+    _max_mode_enabled = bool(enabled)
+
+
+def get_max_mode() -> bool:
+    """Check if Max Power mode is currently active."""
+    return _max_mode_enabled
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -29,12 +33,16 @@ _PROVIDER_FUNCTIONS = {
 # ═══════════════════════════════════════════════════════════════════════
 
 class ModelRouter:
-    """Route AI calls based on task type.
+    """Route AI calls based on task type and max-mode state.
 
-    Task types:
-        reasoning — DAG planning, final reports, re-planning  → GLM-5 (thinking ON)
-        coding    — Code generation, step execution           → GLM-4.7 (no thinking)
-        intent    — Intent classification, summaries          → Nemotron-3-Nano-30B (thinking ON)
+    Default mode:
+        All tasks → Groq gpt-oss-120b
+
+    Max Power mode (toggle ON):
+        reasoning → GPT (via browser-agent)
+        coding    → Claude (via browser-agent)
+        intent    → GPT (via browser-agent)
+        Fallback  → Groq if browser-agent fails
 
     Usage:
         router = ModelRouter()
@@ -49,67 +57,46 @@ class ModelRouter:
         max_tokens: int = 4096,
         retries: int = 2,
     ) -> Optional[str]:
-        """Call a Pro/Ultra model for the given task with provider fallback.
+        """Call the appropriate model for the given task.
 
         Args:
             task:        "reasoning", "coding", or "intent"
             messages:    OpenAI-format message list
-            temperature: Sampling temperature
-            max_tokens:  Max output tokens
-            retries:     Retry attempts
+            temperature: Sampling temperature (used by Groq, not browser-agent)
+            max_tokens:  Max output tokens (used by Groq, not browser-agent)
+            retries:     Retry attempts (used by Groq, not browser-agent)
 
         Returns:
             Cleaned response text, or None if all attempts failed.
         """
-        cfg = get_pro_model_config(task)
-        model_name    = cfg["model"]
-        use_reasoning = cfg.get("reasoning", False)
-        extra_body    = cfg.get("extra_body", None)
-        provider      = get_pro_provider()
+        # ── Max Power mode: route through browser-agent ──
+        if _max_mode_enabled:
+            target = get_max_power_target(task)
+            app_logger.info(f"[ROUTER] Max Power ON → task={task} → browser-agent/{target}")
 
-        app_logger.info(
-            f"[ROUTER] task={task} → {provider}/{model_name} "
-            f"(reasoning={'ON' if use_reasoning else 'OFF'})"
-        )
+            result = browser_agent_call(messages=messages, target=target)
+            if result:
+                return result
 
-        if provider == "nvidia":
-            result = nvidia_model(
-                model_name=model_name,
-                messages=messages,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                retries=retries,
-                extra_body=extra_body,
-                use_reasoning=use_reasoning,
+            app_logger.warning(
+                f"[ROUTER] browser-agent/{target} failed for task={task}, "
+                f"falling back to Groq"
             )
-        else:
-            call_fn = _PROVIDER_FUNCTIONS.get(provider)
-            result = call_fn(
-                model_name=model_name,
-                messages=messages,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                retries=retries,
-            ) if call_fn else None
+
+        # ── Default: use Groq for everything ──
+        model_name = get_default_model()
+        app_logger.info(f"[ROUTER] task={task} → groq/{model_name}")
+
+        result = groq_model(
+            model_name=model_name,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            retries=retries,
+        )
 
         if result:
             return result
-
-        app_logger.warning(f"[ROUTER] {provider}/{model_name} failed, trying openrouter fallback")
-
-        # Fallback: openrouter with the same model ID
-        if provider != "openrouter":
-            fallback_fn = _PROVIDER_FUNCTIONS.get("openrouter")
-            if fallback_fn:
-                result = fallback_fn(
-                    model_name=model_name,
-                    messages=messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
-                    retries=retries,
-                )
-                if result:
-                    return result
 
         log_error(
             RuntimeError(f"All providers exhausted for task '{task}'"),

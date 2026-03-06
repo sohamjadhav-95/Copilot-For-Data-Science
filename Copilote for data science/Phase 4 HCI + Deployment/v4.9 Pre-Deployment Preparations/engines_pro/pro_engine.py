@@ -53,6 +53,32 @@ def _get_execution(plan_id: str) -> Optional[Dict[str, Any]]:
     return _execution_store.get(plan_id)
 
 
+def _meta_get(meta, field: str, default=None):
+    """Safely read a field from ExecutionMetadata object OR a plain dict.
+    Automatically extracts .value from enum types (e.g. NodeStatus → string)."""
+    if meta is None:
+        return default
+    if isinstance(meta, dict):
+        val = meta.get(field, default)
+    else:
+        val = getattr(meta, field, default)
+    # Unwrap enum to its value string
+    if hasattr(val, 'value'):
+        return val.value
+    return val
+
+
+def _meta_to_dict(meta) -> Optional[dict]:
+    """Safely serialize ExecutionMetadata object OR plain dict."""
+    if meta is None:
+        return None
+    if isinstance(meta, dict):
+        return meta
+    if hasattr(meta, 'to_dict'):
+        return meta.to_dict()
+    return None
+
+
 def _cleanup_old_executions(max_entries: int = 50) -> None:
     """Remove oldest entries if store exceeds max."""
     if len(_execution_store) > max_entries:
@@ -226,8 +252,24 @@ Reply with ONLY valid JSON:
         # Profile dataset
         profile = self._profiler.profile(df)
 
-        # Create execution context
-        context = ExecutionContext(df=df, dataset_profile=profile, file_path=file_path)
+        # ── Create a working copy of the dataset so transforms never mutate the original ──
+        import shutil, os as _os
+        working_file_path = file_path  # fallback = original
+        if file_path and _os.path.exists(file_path):
+            base, ext = _os.path.splitext(file_path)
+            # Generate plan_id early so we can name the working file after it
+            import uuid as _uuid
+            _tmp_plan_id = f"plan_{_uuid.uuid4().hex[:12]}"
+            working_file_path = f"{base}_wf_{_tmp_plan_id}{ext}"
+            try:
+                shutil.copy2(file_path, working_file_path)
+                app_logger.info(f"[PRO] Working copy created: {working_file_path}")
+            except Exception as _ce:
+                app_logger.warning(f"[PRO] Could not create working copy: {_ce}")
+                working_file_path = file_path  # fall back to original
+
+        # Create execution context pointing at working copy
+        context = ExecutionContext(df=df, dataset_profile=profile, file_path=working_file_path)
 
         # Generate plan
         plan = self._planner.create_plan(
@@ -287,7 +329,7 @@ Reply with ONLY valid JSON:
             remaining = [
                 n.id for n in plan.nodes
                 if plan.metadata.get(n.id, None) is None
-                or plan.metadata[n.id].status in (NodeStatus.ABORTED, NodeStatus.PENDING)
+                or _meta_get(plan.metadata.get(n.id), 'status') in (NodeStatus.ABORTED, NodeStatus.PENDING)
             ]
             new_plan = self._planner.replan(
                 original_plan=plan,
@@ -357,16 +399,8 @@ Reply with ONLY valid JSON:
                     "type": n.type.value,
                     "description": n.description,
                     "operation": n.operation,
-                    "status": (
-                        plan.metadata[n.id].status.value
-                        if n.id in plan.metadata
-                        else "pending"
-                    ),
-                    "metadata": (
-                        plan.metadata[n.id].to_dict()
-                        if n.id in plan.metadata
-                        else None
-                    ),
+                    "status": _meta_get(plan.metadata.get(n.id), "status", "pending"),
+                    "metadata": _meta_to_dict(plan.metadata.get(n.id)),
                     "output": node_outputs.get(n.id),
                 }
                 for n in plan.nodes

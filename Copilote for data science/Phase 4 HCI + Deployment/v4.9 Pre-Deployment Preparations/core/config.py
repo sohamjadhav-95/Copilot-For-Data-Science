@@ -57,14 +57,10 @@ PROVIDER_CONFIGS = {
             "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"
         ),
     },
-    "openrouter": {
-        "base_url": "https://openrouter.ai/api/v1",
-        "api_key": os.environ.get(
-            "OPENROUTER_API_KEY",
-            "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"
-        ),
-    },
 }
+
+# Browser-agent server URL (for Max Power mode — GPT/Claude via Playwright)
+BROWSER_AGENT_URL = os.environ.get("BROWSER_AGENT_URL", "http://localhost:8000")
 
 
 # ═══════════════════════════════════════════════════════════════════════

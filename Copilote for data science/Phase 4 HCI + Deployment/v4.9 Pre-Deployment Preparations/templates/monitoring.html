@@ -47,8 +47,8 @@
         </div>
         <div class="limit-item">
             <span class="material-symbols-rounded" style="font-size:16px;color:#f59e0b;">bolt</span>
-            <span class="limit-label">High Tier Toggle</span>
-            <span class="limit-value" id="lim-hightier">—</span>
+            <span class="limit-label">Max Power Toggle</span>
+            <span class="limit-value" id="lim-maxpower">—</span>
         </div>
     </div>
 </div>
@@ -299,8 +299,8 @@
             document.getElementById('lim-credits').textContent = d.limits.credits_limit;
             document.getElementById('lim-workflow').textContent = d.limits.workflow_enabled ? 'Enabled' : 'Disabled';
             document.getElementById('lim-workflow').style.color = d.limits.workflow_enabled ? 'var(--success)' : 'var(--error)';
-            document.getElementById('lim-hightier').textContent = d.limits.high_tier_toggle ? 'Available' : 'Locked';
-            document.getElementById('lim-hightier').style.color = d.limits.high_tier_toggle ? 'var(--success)' : 'var(--text-tertiary)';
+            document.getElementById('lim-maxpower').textContent = d.limits.max_power_toggle ? 'Available' : 'Locked';
+            document.getElementById('lim-maxpower').style.color = d.limits.max_power_toggle ? 'var(--success)' : 'var(--text-tertiary)';
 
             // ── Usage Metrics ──
             document.getElementById('met-datasets').textContent = d.metrics.datasets.toLocaleString();

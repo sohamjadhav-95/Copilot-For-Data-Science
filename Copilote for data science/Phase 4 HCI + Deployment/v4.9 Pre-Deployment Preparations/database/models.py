@@ -87,3 +87,38 @@ class CodeSnippet(db.Model):
             "code": self.code, "session_id": self.session_id,
             "created_at": self.created_at.isoformat(),
         }
+
+
+class WorkflowSession(db.Model):
+    """Persisted record of a Pro Mode workflow plan + execution result."""
+    __tablename__ = "workflow_sessions"
+    id = db.Column(db.Integer, primary_key=True)
+    plan_id = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    session_id = db.Column(db.Integer, db.ForeignKey("chat_sessions.id"), nullable=True)
+    goal = db.Column(db.Text, nullable=True)
+    status = db.Column(db.String(30), default="planned")
+    node_count = db.Column(db.Integer, default=0)
+    completed_nodes = db.Column(db.Integer, default=0)
+    failed_nodes = db.Column(db.Integer, default=0)
+    filename = db.Column(db.String(255), nullable=True)
+    # Full plan + execution result stored as JSON for restoration
+    plan_json = db.Column(db.Text, nullable=True)   # serialized DAGPlan
+    result_json = db.Column(db.Text, nullable=True)  # serialized execution result
+    step_outputs_json = db.Column(db.Text, nullable=True)  # {node_id: {type, data}} per-step outputs
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),
+                           onupdate=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            "plan_id": self.plan_id,
+            "goal": self.goal or "Workflow",
+            "status": self.status,
+            "node_count": self.node_count,
+            "completed": self.completed_nodes,
+            "failed": self.failed_nodes,
+            "filename": self.filename or "",
+            "session_id": self.session_id,
+            "created_at": self.created_at.isoformat(),
+        }

@@ -62,21 +62,21 @@ PLAN_LIMITS = {
         "credits_limit": "100K",
         "workflow_enabled": False,
         "monitoring_enabled": False,
-        "high_tier_toggle": False,
+        "max_power_toggle": False,
     },
     "pro": {
         "dataset_size_limit": "500 MB",
         "credits_limit": "1M",
         "workflow_enabled": True,
         "monitoring_enabled": True,
-        "high_tier_toggle": False,
+        "max_power_toggle": True,
     },
     "ultra": {
         "dataset_size_limit": "2 GB",
         "credits_limit": "Unlimited",
         "workflow_enabled": True,
         "monitoring_enabled": True,
-        "high_tier_toggle": True,
+        "max_power_toggle": True,
     },
 }
 

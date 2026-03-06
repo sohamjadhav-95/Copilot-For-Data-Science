@@ -275,12 +275,14 @@
                 const steps = `${w.node_count} step${w.node_count !== 1 ? 's' : ''}`;
                 const done = w.completed > 0 ? `<span style="color:#34d399;">✓${w.completed}</span>` : '';
                 const fail = w.failed > 0 ? `<span style="color:#f87171;">✗${w.failed}</span>` : '';
-                const href = w.session_id ? `/workflow?session=${w.session_id}` : '/workflow';
+                // Use plan_id for deep link — workflow page can restore from DB
+                const href = `/workflow?plan_id=${encodeURIComponent(w.plan_id)}`;
+                const liveBadge = w.live ? `<span style="font-size:0.58rem;background:rgba(99,102,241,0.2);color:#818cf8;padding:1px 5px;border-radius:10px;font-weight:700;letter-spacing:0.04em;">LIVE</span>` : '';
                 return `
             <div class="wf-card">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px;">
                 <div class="wf-card-goal" title="${goal}">${shortGoal}</div>
-                <span class="wf-status-pill ${statusClass}">${esc(w.status)}</span>
+                <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">${liveBadge}<span class="wf-status-pill ${statusClass}">${esc(w.status)}</span></div>
               </div>
               <div class="wf-card-meta">
                 ${file ? `<span>${file}</span>` : ''}

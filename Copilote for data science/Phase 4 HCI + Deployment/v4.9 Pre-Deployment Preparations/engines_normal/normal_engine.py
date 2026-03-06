@@ -8,27 +8,39 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
-from api_config import get_client, get_model, get_active_provider, auto_fallback_on_error
+from api_config import get_client, get_model, get_active_provider
 from logger import log_api_call, log_interaction, log_error, app_logger
 from models_api.model_router import ModelRouter
 
-# ModelRouter instance (only used when high_tier toggle is ON)
+# ModelRouter instance (only used when max_mode toggle is ON)
 _router = ModelRouter()
 
 # =====================================================================
-# HIGH-TIER TOGGLE — Ultra users can switch to Pro models in Quick Run
+# MAX POWER TOGGLE — Pro/Ultra users can switch to browser-agent models
 # =====================================================================
 
-_high_tier_enabled = False
+_max_mode_enabled = False
 
+def set_max_mode(enabled):
+    """Enable/disable Max Power mode in Quick Run (Pro/Ultra users)."""
+    global _max_mode_enabled
+    _max_mode_enabled = bool(enabled)
+    # Also sync ModelRouter state so Pro engine picks it up
+    from models_api.model_router import set_max_mode as _router_set
+    _router_set(bool(enabled))
+
+def get_max_mode():
+    """Check if Max Power mode is enabled."""
+    return _max_mode_enabled
+
+# Legacy aliases
 def set_high_tier(enabled):
-    """Enable/disable high-tier model usage in Quick Run (Ultra users only)."""
-    global _high_tier_enabled
-    _high_tier_enabled = bool(enabled)
+    """Legacy alias for set_max_mode."""
+    set_max_mode(enabled)
 
 def get_high_tier():
-    """Check if high-tier models are enabled."""
-    return _high_tier_enabled
+    """Legacy alias for get_max_mode."""
+    return get_max_mode()
 
 
 # =====================================================================
@@ -136,11 +148,11 @@ def _restricted_import(name, *args, **kwargs):
 
 def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_tokens=2048, retries=2):
     """AI call for Quick Run — always uses Groq (api_config).
-    When high_tier toggle is ON (Ultra users), routes through ModelRouter → NVIDIA.
+    When max_mode toggle is ON (Pro/Ultra users), routes through ModelRouter → browser-agent.
     """
-    # ── High-tier toggle (Ultra): use NVIDIA coding model ──
-    if _high_tier_enabled:
-        app_logger.info("[AI] High-tier ON → routing via ModelRouter (coding)")
+    # ── Max Power toggle: use browser-agent GPT/Claude ──
+    if _max_mode_enabled:
+        app_logger.info("[AI] Max Power ON → routing via ModelRouter (coding)")
         result = _router.call_with_system(
             task="coding",
             system_prompt=system_prompt,
@@ -151,7 +163,7 @@ def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_token
         )
         if result:
             return _clean_think_tags(result)
-        app_logger.warning("[AI] High-tier routing failed, falling back to Groq")
+        app_logger.warning("[AI] Max Power routing failed, falling back to Groq")
 
     # ── Default: always use Groq via api_config ──
     role = "primary"
@@ -213,18 +225,8 @@ def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_token
                     elif attempt < retries - 1:
                         time.sleep(1)
 
-        # All models failed → try switching provider
-        new_provider = auto_fallback_on_error()
-        if new_provider and provider_attempts < max_provider_switches:
-            app_logger.info(f"[AI] Switching provider: {current_provider} -> {new_provider}")
-            models_to_try = []
-            requested_new = get_model(role)
-            if requested_new != get_model("primary"):
-                models_to_try.append(requested_new)
-            models_to_try.append(get_model("primary"))
-            provider_attempts += 1
-        else:
-            break
+        # All models failed
+        break
 
     log_error(RuntimeError("All AI call attempts exhausted"),
               context=f"prompt={user_content[:100]}")
@@ -233,11 +235,11 @@ def _ai_call(system_prompt, user_content, model=None, temperature=0.2, max_token
 
 def _ai_call_messages(messages, model=None, temperature=0.2, max_tokens=2048, retries=2):
     """AI call with message list — always uses Groq.
-    When high_tier toggle is ON, routes through ModelRouter → NVIDIA.
+    When max_mode toggle is ON, routes through ModelRouter → browser-agent.
     """
-    # ── High-tier toggle (Ultra): use NVIDIA coding model ──
-    if _high_tier_enabled:
-        app_logger.info("[AI] High-tier ON → routing messages via ModelRouter (coding)")
+    # ── Max Power toggle: use browser-agent GPT/Claude ──
+    if _max_mode_enabled:
+        app_logger.info("[AI] Max Power ON → routing messages via ModelRouter (coding)")
         result = _router.call(
             task="coding",
             messages=messages,
@@ -247,7 +249,7 @@ def _ai_call_messages(messages, model=None, temperature=0.2, max_tokens=2048, re
         )
         if result:
             return _clean_think_tags(result)
-        app_logger.warning("[AI] High-tier messages routing failed, falling back")
+        app_logger.warning("[AI] Max Power messages routing failed, falling back")
 
     # ── Default: always use Groq via api_config ──
     role = "primary"
@@ -298,17 +300,8 @@ def _ai_call_messages(messages, model=None, temperature=0.2, max_tokens=2048, re
                     elif attempt < retries - 1:
                         time.sleep(1)
 
-        new_provider = auto_fallback_on_error()
-        if new_provider and provider_attempts < max_provider_switches:
-            app_logger.info(f"[AI] Switching provider: {current_provider} -> {new_provider}")
-            models_to_try = []
-            requested_new = get_model(role)
-            if requested_new != get_model("primary"):
-                models_to_try.append(requested_new)
-            models_to_try.append(get_model("primary"))
-            provider_attempts += 1
-        else:
-            break
+        # All models failed
+        break
 
     log_error(RuntimeError("All AI call_messages attempts exhausted"),
               context="messages call")

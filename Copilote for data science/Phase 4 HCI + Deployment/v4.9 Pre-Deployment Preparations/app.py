@@ -20,13 +20,13 @@ from config import (
     UPLOAD_FOLDER, MODIFIED_FOLDER, MAX_CONTENT_LENGTH, JWT_EXPIRY_HOURS,
 )
 from database import db
-from database.models import User, ChatSession, Message, Activity, CodeSnippet
+from database.models import User, ChatSession, Message, Activity, CodeSnippet, WorkflowSession
 from engines import (
     classify_intent, build_data_context, resolve_query,
     generate_display_code, generate_chart_code, generate_modify_code,
     generate_chat_response, generate_result_summary,
     fix_code, extract_code, _safe_exec,
-    set_high_tier,
+    set_max_mode,
 )
 from api_config import get_active_provider, switch_provider, PROVIDERS
 from logger import (
@@ -509,21 +509,24 @@ def register_routes(app):
     @app.route("/api/sessions/workflow")
     @login_required
     def api_workflow_sessions():
-        """Return workflow plan sessions from the in-memory execution store."""
-        from engines_pro.pro_engine import _execution_store
+        """Return workflow plan sessions — reads from DB (persistent) merged with live in-memory runs."""
+        from engines_pro.pro_engine import _execution_store, _meta_get
         uid = request.current_user.id
+        seen_plan_ids = set()
         wf_sessions = []
+
+        # 1. Live in-memory sessions (running or just completed, not yet flushed to DB)
         for plan_id, entry in _execution_store.items():
             if entry.get("user_id") != uid:
                 continue
             plan = entry.get("plan")
             if not plan:
                 continue
+            seen_plan_ids.add(plan_id)
             context = entry.get("context")
             filename = ""
             if context and hasattr(context, "file_path") and context.file_path:
                 filename = os.path.basename(context.file_path)
-            result = entry.get("result")
             wf_sessions.append({
                 "plan_id": plan_id,
                 "goal": plan.user_goal or "Workflow",
@@ -533,14 +536,23 @@ def register_routes(app):
                 "filename": filename,
                 "completed": len([n for n in plan.nodes
                                   if plan.metadata.get(n.id) and
-                                  plan.metadata[n.id].status.value == "success"]),
+                                  _meta_get(plan.metadata.get(n.id), "status") == "success"]),
                 "failed": len([n for n in plan.nodes
                                if plan.metadata.get(n.id) and
-                               plan.metadata[n.id].status.value == "failed"]),
+                               _meta_get(plan.metadata.get(n.id), "status") == "failed"]),
                 "session_id": entry.get("session_id"),
+                "live": True,
             })
-        # Sort newest first
-        wf_sessions.sort(key=lambda x: x["created_at"], reverse=True)
+
+        # 2. Persisted sessions from DB (skip any already in memory)
+        db_sessions = WorkflowSession.query.filter_by(user_id=uid)\
+            .order_by(WorkflowSession.created_at.desc()).limit(50).all()
+        for ws in db_sessions:
+            if ws.plan_id not in seen_plan_ids:
+                wf_sessions.append(ws.to_dict())
+
+        # Sort by created_at descending
+        wf_sessions.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         return jsonify({"workflow_sessions": wf_sessions})
 
     @app.route("/api/sessions/clear", methods=["DELETE"])
@@ -667,10 +679,10 @@ def register_routes(app):
         info, ctx = build_data_context(df, file_path)
 
         # AI-driven intent classification
-        # High-tier toggle: Ultra users can opt into NVIDIA models for Quick Run
-        high_tier = data.get('high_tier', False)
+        # Max Power toggle: Pro/Ultra users can opt into browser-agent models
+        max_mode = data.get('max_mode', False)
         user_plan = getattr(request.current_user, 'plan', 'free')
-        set_high_tier(high_tier and user_plan == 'ultra')
+        set_max_mode(max_mode and user_plan in ('pro', 'ultra'))
         intent = classify_intent(user_input, conversation_history)
         app_logger.info(f"[CHAT] User: '{user_input}' -> Intent: {intent}")
 
@@ -789,7 +801,14 @@ def register_routes(app):
                 "max_rows": size_check["max_rows"],
             }), 200
 
-        # Generate plan (Pro Mode always uses NVIDIA via ModelRouter)
+        # Set Max Power mode if requested
+        max_mode = data.get('max_mode', False)
+        user_plan = request.current_user.plan or 'free'
+        if max_mode and user_plan in ('pro', 'ultra'):
+            from models_api.model_router import set_max_mode as _router_set_max
+            _router_set_max(True)
+
+        # Generate plan (uses Groq by default, or browser-agent if max_mode)
         result = pro_engine.plan(
             user_input=user_input,
             df=df,
@@ -800,6 +819,35 @@ def register_routes(app):
 
         if not result:
             return jsonify({"error": "Failed to generate plan. Try rephrasing your request."}), 500
+
+        # Save to DB so it persists across restarts
+        try:
+            import json as _json
+            plan_id = result.get("plan_id", "")
+            context = entry if False else None  # will load from _execution_store
+            from engines_pro.pro_engine import _execution_store as _es
+            _entry = _es.get(plan_id)
+            _context = _entry.get("context") if _entry else None
+            _fn = ""
+            if _context and hasattr(_context, "file_path") and _context.file_path:
+                _fn = os.path.basename(_context.file_path)
+            _plan = _entry.get("plan") if _entry else None
+            if plan_id and _plan:
+                existing = WorkflowSession.query.filter_by(plan_id=plan_id).first()
+                if not existing:
+                    ws = WorkflowSession(
+                        plan_id=plan_id,
+                        user_id=request.current_user.id,
+                        session_id=session_id,
+                        goal=_plan.user_goal or user_input[:200],
+                        status=_plan.status or "planned",
+                        node_count=len(_plan.nodes),
+                        filename=_fn,
+                    )
+                    db.session.add(ws)
+                    db.session.commit()
+        except Exception as _we:
+            app_logger.warning(f"[DB] Failed to save workflow session: {_we}")
 
         _log_activity(request.current_user.id, "pro_plan", user_input)
         return jsonify(result)
@@ -830,6 +878,16 @@ def register_routes(app):
         if plan and plan.status not in ("planned", "replanned"):
             return jsonify({"error": f"Plan already executed (status: {plan.status})"}), 400
 
+        # Set Max Power mode if requested
+        max_mode = data.get('max_mode', False)
+        user_plan = request.current_user.plan or 'free'
+        if max_mode and user_plan in ('pro', 'ultra'):
+            from models_api.model_router import set_max_mode as _router_set_max
+            _router_set_max(True)
+        else:
+            from models_api.model_router import set_max_mode as _router_set_max
+            _router_set_max(False)
+
         # Mark as running before background thread starts
         entry["running"] = True
         entry["result"] = None
@@ -845,6 +903,48 @@ def register_routes(app):
                 else:
                     entry["exec_error"] = None
                     entry["result"] = result
+
+                # Persist result and full plan to DB
+                try:
+                    import json as _json
+                    _plan = entry.get("plan")
+                    _ctx = entry.get("context")
+                    _fn = ""
+                    if _ctx and hasattr(_ctx, "file_path") and _ctx.file_path:
+                        _fn = os.path.basename(_ctx.file_path)
+                    with app.app_context():
+                        ws = WorkflowSession.query.filter_by(plan_id=plan_id).first()
+                        if ws and _plan:
+                            ws.status = _plan.status or "completed"
+                            ws.node_count = len(_plan.nodes)
+                            ws.filename = _fn or ws.filename
+                            # Save full plan with per-node metadata for UI restoration
+                            try:
+                                ws.plan_json = _json.dumps(_plan.to_dict())
+                            except Exception as _pje:
+                                app_logger.warning(f"[DB] plan_json serialization failed: {_pje}")
+                            # Save per-node outputs for full session restoration
+                            if _ctx and hasattr(_ctx, "step_outputs"):
+                                try:
+                                    from engines_pro.pro_engine import _serialize_node_output
+                                    serialized_outputs = {}
+                                    for nid, out_val in _ctx.step_outputs.items():
+                                        serialized_outputs[nid] = _serialize_node_output(out_val)
+                                    ws.step_outputs_json = _json.dumps(serialized_outputs)
+                                except Exception as _soe:
+                                    app_logger.warning(f"[DB] step_outputs serialization failed: {_soe}")
+                            if result and isinstance(result, dict):
+                                ws.completed_nodes = len(result.get("completed_nodes", []))
+                                ws.failed_nodes = len(result.get("failed_nodes", []))
+                                ws.result_json = _json.dumps({
+                                    "status": result.get("status"),
+                                    "completed": result.get("completed_nodes", []),
+                                    "failed": result.get("failed_nodes", []),
+                                    "summary": (result.get("summary") or "")[:2000],
+                                })
+                            db.session.commit()
+                except Exception as _dbe:
+                    app_logger.warning(f"[DB] Failed to update workflow session: {_dbe}")
             except Exception as exc:
                 entry["running"] = False
                 entry["exec_error"] = str(exc)
@@ -865,6 +965,50 @@ def register_routes(app):
         if status is None:
             return jsonify({"error": "Plan not found"}), 404
         return jsonify(status)
+
+    @app.route("/api/pro/load/<plan_id>")
+    @login_required
+    def api_pro_load(plan_id):
+        """Load a persisted workflow session from DB.
+        Returns full plan + node metadata + result for UI restoration."""
+        ws = WorkflowSession.query.filter_by(
+            plan_id=plan_id, user_id=request.current_user.id
+        ).first()
+        if not ws:
+            return jsonify({"error": "Workflow session not found"}), 404
+        import json as _json
+        result_data = None
+        if ws.result_json:
+            try:
+                result_data = _json.loads(ws.result_json)
+            except Exception:
+                pass
+        plan_data = None
+        if ws.plan_json:
+            try:
+                plan_data = _json.loads(ws.plan_json)
+            except Exception:
+                pass
+        step_outputs = None
+        if ws.step_outputs_json:
+            try:
+                step_outputs = _json.loads(ws.step_outputs_json)
+            except Exception:
+                pass
+        return jsonify({
+            "plan_id": ws.plan_id,
+            "goal": ws.goal,
+            "status": ws.status,
+            "node_count": ws.node_count,
+            "completed": ws.completed_nodes,
+            "failed": ws.failed_nodes,
+            "filename": ws.filename,
+            "session_id": ws.session_id,
+            "result": result_data,
+            "plan": plan_data,           # Full plan with nodes + per-node metadata
+            "step_outputs": step_outputs, # {node_id: {type, data}} per-step outputs
+            "created_at": ws.created_at.isoformat(),
+        })
 
     @app.route("/api/pro/profile", methods=["POST"])
     @login_required
