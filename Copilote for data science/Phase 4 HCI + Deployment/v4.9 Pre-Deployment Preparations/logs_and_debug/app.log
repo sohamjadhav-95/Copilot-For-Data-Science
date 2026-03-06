@@ -1298,3 +1298,72 @@
 {"timestamp": "2026-03-06T10:02:44.183331+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Conditional 'node_6' → FALSE (executing: ['node_8'])"}
 {"timestamp": "2026-03-06T10:02:44.215151+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
 {"timestamp": "2026-03-06T10:02:59.095042+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[DB] Failed to update workflow session: (sqlite3.OperationalError) no such column: workflow_sessions.step_outputs_json\n[SQL: SELECT workflow_sessions.id AS workflow_sessions_id, workflow_sessions.plan_id AS workflow_sessions_plan_id, workflow_sessions.user_id AS workflow_sessions_user_id, workflow_sessions.session_id AS workflow_sessions_session_id, workflow_sessions.goal AS workflow_sessions_goal, workflow_sessions.status AS workflow_sessions_status, workflow_sessions.node_count AS workflow_sessions_node_count, workflow_sessions.completed_nodes AS workflow_sessions_completed_nodes, workflow_sessions.failed_nodes AS workflow_sessions_failed_nodes, workflow_sessions.filename AS workflow_sessions_filename, workflow_sessions.plan_json AS workflow_sessions_plan_json, workflow_sessions.result_json AS workflow_sessions_result_json, workflow_sessions.step_outputs_json AS workflow_sessions_step_outputs_json, workflow_sessions.created_at AS workflow_sessions_created_at, workflow_sessions.updated_at AS workflow_sessions_updated_at \nFROM workflow_sessions \nWHERE workflow_sessions.plan_id = ?\n LIMIT ? OFFSET ?]\n[parameters: ('plan_da4af3b54409', 1, 0)]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)"}
+{"timestamp": "2026-03-06T10:05:24.959068+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T10:05:27.009594+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T13:40:27.495148+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T13:40:32.460684+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T13:45:50.780506+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[MIGRATION] Column migration failed: name '_add_missing_columns' is not defined"}
+{"timestamp": "2026-03-06T13:45:50.781509+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T13:46:57.117744+00:00", "level": "INFO", "logger": "copilot.app", "message": "[MIGRATION] Added column workflow_sessions.step_outputs_json"}
+{"timestamp": "2026-03-06T13:46:57.118779+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T13:55:51.465048+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T13:56:13.849049+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T13:56:13.903203+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_33267770ab0f.csv"}
+{"timestamp": "2026-03-06T13:56:13.905335+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T13:56:13.907056+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:18.103541+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_8567372251d3"}
+{"timestamp": "2026-03-06T13:56:28.834011+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_8567372251d3' (4 nodes)"}
+{"timestamp": "2026-03-06T13:56:28.835869+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-06T13:56:28.837236+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:31.849826+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' failed: [Errno 2] No such file or directory: 'e:\\\\Projects\\\\Copilot-For-Data-Science\\\\Copilote for data science\\\\Phase 4 HCI + Deployment\\\\v4.9 Pre-Deployment Preparations\\\\uploads\\\\4\\\\titanic_wf_plan_33267770abf.csv', retrying..."}
+{"timestamp": "2026-03-06T13:56:31.852397+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:32.877375+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (891×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_33267770ab0f.csv"}
+{"timestamp": "2026-03-06T13:56:32.880838+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T13:56:32.923825+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_1', profile updated"}
+{"timestamp": "2026-03-06T13:56:32.961998+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:34.141949+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T13:56:34.332010+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:36.236807+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'survival_rates' is not defined, retrying..."}
+{"timestamp": "2026-03-06T13:56:36.266829+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:37.757483+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T13:56:38.231684+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:40.070536+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: name 'survival_rates' is not defined, retrying..."}
+{"timestamp": "2026-03-06T13:56:40.097929+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T13:56:43.850595+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T13:56:43.886110+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:00:01.471049+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T14:00:36.558780+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T14:04:34.860644+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T14:04:38.533563+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:04:38.585423+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_cc88b6ab0466.csv"}
+{"timestamp": "2026-03-06T14:04:38.587517+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:04:38.589713+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:04:43.353245+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_2962e9804b4d"}
+{"timestamp": "2026-03-06T14:04:46.722705+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_2962e9804b4d' (4 nodes)"}
+{"timestamp": "2026-03-06T14:04:46.725648+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-06T14:04:46.726814+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Replan triggered before node 'node_1': missing_variable: node 'node_1' needs variable 'titanic_df' which doesn't exist"}
+{"timestamp": "2026-03-06T14:04:46.728683+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Re-planning triggered: missing_variable: node 'node_1' needs variable 'titanic_df' which doesn't exist"}
+{"timestamp": "2026-03-06T14:04:59.929102+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T14:05:03.268227+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:05:03.307439+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_b8e721f43d71.csv"}
+{"timestamp": "2026-03-06T14:05:03.308620+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:05:03.309707+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:05.905102+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_2add51429bf4"}
+{"timestamp": "2026-03-06T14:05:08.203357+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_2add51429bf4' (4 nodes)"}
+{"timestamp": "2026-03-06T14:05:08.204754+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-06T14:05:08.205768+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:10.346528+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (891×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_b8e721f43d71.csv"}
+{"timestamp": "2026-03-06T14:05:10.350441+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T14:05:10.390453+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_1', profile updated"}
+{"timestamp": "2026-03-06T14:05:10.418363+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:11.337303+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T14:05:11.372300+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:13.088052+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: name 'survival_rate_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T14:05:13.300846+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:15.287982+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: artifact"}
+{"timestamp": "2026-03-06T14:05:15.320239+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:17.583001+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: name 'survival_rate_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T14:05:17.623163+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=coding → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:05:28.543286+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[VALIDATOR] CRITICAL: Node 'node_4' declared output_var='summary_text' but produced no output (output_type=NONE). Downstream variable reads will fail — aborting."}
+{"timestamp": "2026-03-06T14:05:28.580165+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T14:05:28.972610+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}

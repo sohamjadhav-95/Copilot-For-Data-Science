@@ -41,7 +41,7 @@ _DANGEROUS_PATTERNS = [
     r"\bsys\.(exit|path\.insert|path\.append|modules)\b",
     r"\bsubprocess\b", r"\b__import__\b",
     r"\bopen\s*\(", r"\bexec\s*\(", r"\beval\s*\(", r"\bcompile\s*\(",
-    r"\bglobals\s*\(", r"\blocals\s*\(",
+    # globals/locals are NOT blocked — safe shims are injected into the sandbox namespace
     r"\bimport\s+os(?!\s*,|\s*as)\b",  # block `import os` but allow `import os.path`
     r"\bimport\s+sys\b",
     r"\bimport\s+subprocess\b", r"\bimport\s+shutil\b",
@@ -107,23 +107,37 @@ def _safe_exec_with_timeout(
             "set": set, "frozenset": frozenset, "sorted": sorted, "reversed": reversed,
             "enumerate": enumerate, "zip": zip, "map": map, "filter": filter,
             "sum": sum, "min": min, "max": max, "abs": abs, "round": round, "pow": pow,
-            "any": any, "all": all, "isinstance": isinstance, "type": type,
+            "any": any, "all": all, "isinstance": isinstance, "issubclass": issubclass,
+            "type": type, "id": id, "hash": hash, "repr": repr, "hex": hex, "oct": oct,
+            "bin": bin, "ord": ord, "chr": chr, "format": format, "vars": vars,
+            "getattr": getattr, "setattr": setattr, "hasattr": hasattr, "delattr": delattr,
+            "callable": callable, "iter": iter, "next": next, "slice": slice, "object": object,
             "print": lambda *a, **k: None,  # suppress prints
             "True": True, "False": False, "None": None,
             "__import__": _restricted_import,
             "property": property, "staticmethod": staticmethod,
             "classmethod": classmethod, "super": super,
+            # Exceptions — keep this list complete so try/except blocks don't break
+            "Exception": Exception, "BaseException": BaseException,
             "ValueError": ValueError, "TypeError": TypeError,
             "KeyError": KeyError, "IndexError": IndexError,
-            "AttributeError": AttributeError, "StopIteration": StopIteration,
-            "RuntimeError": RuntimeError, "Exception": Exception,
+            "AttributeError": AttributeError, "NameError": NameError,
+            "StopIteration": StopIteration, "StopAsyncIteration": StopAsyncIteration,
+            "RuntimeError": RuntimeError, "RecursionError": RecursionError,
             "NotImplementedError": NotImplementedError, "ZeroDivisionError": ZeroDivisionError,
             "OverflowError": OverflowError, "MemoryError": MemoryError,
+            "FileNotFoundError": FileNotFoundError, "IOError": IOError,
+            "ImportError": ImportError, "ModuleNotFoundError": ModuleNotFoundError,
+            "AssertionError": AssertionError, "ArithmeticError": ArithmeticError,
+            "LookupError": LookupError, "UnicodeError": UnicodeError,
+            "UnicodeDecodeError": UnicodeDecodeError, "UnicodeEncodeError": UnicodeEncodeError,
+            "UserWarning": UserWarning, "FutureWarning": FutureWarning,
+            "DeprecationWarning": DeprecationWarning, "Warning": Warning,
         },
     }
     ns = dict(restricted_globals)
 
-    # Pre-inject common libraries
+    # Pre-inject common libraries so code never needs to import them
     import os as _os_mod
     ns["pd"] = pd
     ns["os"] = type('SafeOS', (), {
@@ -135,6 +149,10 @@ def _safe_exec_with_timeout(
     ns["np"] = np
     ns["plt"] = plt
     ns["sns"] = sns
+    # Safe globals()/locals() shims — return the sandbox namespace
+    # so patterns like `if 'x' in globals()` work without exposing __import__
+    ns["globals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
+    ns["locals"] = lambda: {k: v for k, v in ns.items() if not k.startswith('__')}
     try:
         import networkx as nx
         ns["nx"] = nx
@@ -557,27 +575,27 @@ FILE PATH: {context.file_path}
 YOUR TASK: Generate Python code for this specific operation.
 
 STRICT RULES:
-1. Import pandas as pd at the top if needed.
+1. Import only what you need. Already available without importing: pd, np, plt, sns, px, nx, os.path.
 2. Load data: df = pd.read_csv(r'{context.file_path}')
-   IMPORTANT: The CSV file is ALWAYS up-to-date — previous steps that created/modified columns
-   have already saved their changes to this file. Do NOT recreate columns that were created in
-   earlier steps — just read the file and the column will already be there.
+   IMPORTANT: The CSV file is ALWAYS up-to-date — previous transformation steps have already saved
+   their changes to this file. Do NOT recreate columns that exist in earlier steps.
 3. You have access to: pd, np, plt, sns, nx (networkx), px (plotly.express), scipy, sklearn
 4. You can also import: ast, typing, collections, math, statistics, json, re, datetime, random, pathlib
 5. Store the primary result in a variable called _result
 6. _result should be: a scalar, a DataFrame, a dict, or a matplotlib figure
 7. For visualizations: create the chart and set _result_fig = plt.gcf() — DO NOT CALL plt.show()
    - Use any chart type: bar, line, scatter, heatmap, pie, histogram, box, violin, area, bubble
-   - For complex visualizations: decision trees, network graphs (nx), dendrograms, treemaps, sunburst, chord diagrams
+   - For complex visualizations: decision trees, network graphs (nx), dendrograms, treemaps, sunburst
    - For networks/graphs: use networkx (nx) for graph construction, then matplotlib or plotly for rendering
    - For trees: use sklearn.tree.plot_tree() or draw custom trees with matplotlib patches
-   - Add proper titles, axis labels, legends, and color scales
-   - Use tight_layout() for clean spacing
+   - Add proper titles, axis labels, legends, and color scales; use tight_layout()
 8. For DataFrames that modify data: save with df.to_csv(r'{context.file_path}', index=False) and set _result = df
 9. Column names are CASE-SENSITIVE.
 10. NO print() statements.
-11. NO os/sys/subprocess imports.
-12. Return code inside ```python ... ``` block ONLY."""
+11. NEVER use globals(), locals(), vars(), dir(), or any introspection function — use hasattr() or try/except instead.
+12. NEVER use subprocess, os.system, os.popen, exec(), eval(), open() or compile().
+13. NEVER use import os, import sys, import subprocess — they are blocked.
+14. Return code inside ```python ... ``` block ONLY."""
 
         user_content = (
             f"NODE: {node.id}\n"

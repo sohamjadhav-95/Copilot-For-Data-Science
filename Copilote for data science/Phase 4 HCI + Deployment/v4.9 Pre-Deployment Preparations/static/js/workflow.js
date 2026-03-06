@@ -206,25 +206,60 @@ async function loadWorkflowByPlanId(planId) {
 
             showToast(`Restored: ${w.goal ? w.goal.slice(0, 40) : 'Workflow'} (${w.status})`, 'success');
         } else {
-            // Fallback: only basic info available — show a summary card
-            const statusColor = { completed: '#34d399', failed: '#f87171', planned: '#fbbf24', executing: '#818cf8' }[w.status] || '#94a3b8';
+            // Fallback: no plan_json (session from before full persistence was added)
+            const statusColor = {
+                completed: '#34d399', failed: '#f87171',
+                partial: '#fbbf24', planned: '#94a3b8', executing: '#818cf8'
+            }[w.status] || '#94a3b8';
+
             const outputScroll = document.getElementById('output-scroll');
             const outputEmpty = document.getElementById('output-empty');
+            const stepsEl = document.getElementById('steps-list');
+            const dagLinear = document.getElementById('dag-linear');
+            const approveBar = document.getElementById('approve-bar');
+
             if (outputEmpty) outputEmpty.style.display = 'none';
+            if (approveBar) approveBar.style.display = 'none';
+
+            // Placeholder steps in left panel
+            const n = w.node_count || 0;
+            if (stepsEl && n > 0) {
+                stepsEl.innerHTML = Array.from({ length: n }, (_, i) => `
+                <div class="step-item" style="opacity:0.6;">
+                  <div class="step-item-header">
+                    <div class="step-number">${i + 1}</div>
+                    <div class="step-name" style="font-style:italic;color:var(--text-tertiary);">Step ${i + 1}</div>
+                    <span class="step-status-icon">${i < (w.completed || 0) ? '✓' :
+                        i < (w.completed || 0) + (w.failed || 0) ? '✗' : '○'
+                    }</span>
+                  </div>
+                </div>`).join('');
+            }
+            if (dagLinear) {
+                dagLinear.style.display = 'flex';
+                dagLinear.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-tertiary);font-size:0.8rem;width:100%;">
+                  <span class="material-symbols-rounded" style="font-size:28px;display:block;margin-bottom:8px;opacity:0.4;">history</span>
+                  Detailed execution graph available for sessions run after the latest update.
+                </div>`;
+            }
+
             if (outputScroll) {
+                const completedLine = w.completed > 0 ? `<span style="color:#34d399;margin-right:10px;">✓ ${w.completed} completed</span>` : '';
+                const failedLine = w.failed > 0 ? `<span style="color:#f87171;">✗ ${w.failed} failed</span>` : '';
                 outputScroll.insertAdjacentHTML('afterbegin', `
                 <div class="output-block">
                   <div class="output-block-header">
-                    <span class="output-block-label">📋 Restored Session — ${w.node_count || 0} step${w.node_count !== 1 ? 's' : ''}</span>
-                    <span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:12px;background:${statusColor}25;color:${statusColor};text-transform:uppercase;">${w.status}</span>
+                    <span class="output-block-label">📋 Restored Session — ${n} step${n !== 1 ? 's' : ''}</span>
+                    <span style="margin-left:auto;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:12px;background:${statusColor}25;color:${statusColor};text-transform:uppercase;">${w.status}</span>
                   </div>
-                  <div class="output-block-body" style="font-size:0.8rem;color:var(--text-secondary);">
-                    ${esc(w.goal || 'Workflow')}
-                    ${w.result && w.result.summary ? '<hr style="border-color:var(--border);margin:10px 0;">' + esc(w.result.summary) : ''}
+                  <div class="output-block-body" style="font-size:0.85rem;color:var(--text-primary);line-height:1.6;">
+                    <div style="margin-bottom:8px;">${esc(w.goal || 'Workflow')}</div>
+                    ${(completedLine || failedLine) ? `<div style="font-size:0.75rem;margin-bottom:10px;">${completedLine}${failedLine}</div>` : ''}
+                    ${w.result && w.result.summary ? `<hr style="border-color:var(--border);margin:10px 0;"><div style="font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;">${esc(w.result.summary)}</div>` : ''}
                   </div>
                 </div>`);
             }
-            showToast(`Loaded: ${w.goal ? w.goal.slice(0, 40) : 'Workflow'}`, 'success');
+            showToast(`Restored: ${w.goal ? w.goal.slice(0, 40) : 'Workflow'} (${w.status})`, 'success');
         }
     } catch (e) {
         showToast('Failed to load workflow session', 'error');
@@ -557,32 +592,6 @@ function appendStepResult(stepIndex, stepData) {
     const existingId = `output-step-${stepData.id || stepIndex}`;
     if (document.getElementById(existingId)) return;
 
-    // Gather code and reasoning for action buttons
-    const nodeCode = stepData.metadata?.generated_code || '';
-    const nodeReason = stepData.reasoning || stepData.metadata?.reasoning || '';
-
-    const isUltra = window.userPlan === 'ultra';
-
-    // ── View Reasoning button (workflow only — shown to all) ──
-    const reasoningBtn = nodeReason
-        ? `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;"
-               onclick="showNodePanel('reasoning','Step ${stepIndex + 1} Reasoning',${JSON.stringify(nodeReason)})">
-               <span class="material-symbols-rounded" style="font-size:13px;">psychology</span>Reasoning
-           </button>`
-        : '';
-
-    // ── View Code button (Ultra only, others see locked state) ──
-    const codeBtn = nodeCode
-        ? (isUltra
-            ? `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;"
-                   onclick="showNodePanel('code','Step ${stepIndex + 1} • Code',${JSON.stringify(nodeCode)})">
-                   <span class="material-symbols-rounded" style="font-size:13px;">code</span>View Code
-               </button>`
-            : `<button class="topbar-action-btn secondary md-ripple" style="height:22px;font-size:0.68rem;padding:0 8px;gap:4px;opacity:0.45;position:relative;overflow:hidden;" onclick="showUpgradeRipple(this,'Ultra')">
-                   <span class="material-symbols-rounded" style="font-size:13px;">lock</span>View Code
-               </button>`)
-        : '';
-
     const block = document.createElement('div');
     block.className = 'output-block';
     block.id = existingId;
@@ -593,7 +602,6 @@ function appendStepResult(stepIndex, stepData) {
     <div class="output-block-header">
       <span class="output-block-label">Step ${stepIndex + 1} · ${esc(stepName)}</span>
       <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">
-        ${reasoningBtn}${codeBtn}
         <span style="font-size:0.65rem;color:var(--text-tertiary);">${rtype}</span>
         ${statusBadge}
       </span>

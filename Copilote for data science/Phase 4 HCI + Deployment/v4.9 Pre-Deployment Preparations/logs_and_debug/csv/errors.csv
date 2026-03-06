@@ -485,3 +485,28 @@ TypeError: 'ExecutionMetadata' object is not subscriptable
            ~^^^^^^^^^^^
 TypeError: 'ExecutionMetadata' object is not subscriptable
 ",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_f8dab9066b07,
+2026-03-06T14:04:46.741456+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,TypeError,'ExecutionMetadata' object is not subscriptable,Background execution of plan plan_2962e9804b4d,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 944, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 334, in execute
+    new_plan = self._planner.replan(
+        original_plan=plan,
+    ...<2 lines>...
+        reason=result.get(""replan_reason"", ""Unknown""),
+    )
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_planner.py"", line 93, in replan
+    + ""\n"".join(
+      ~~~~~~~~~^
+        f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        for h in (original_plan.metadata.values())
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        if hasattr(h, 'to_dict')
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_planner.py"", line 94, in <genexpr>
+    f""  - {h['node_id']}: {h['operation']} → {h['status']}""
+           ~^^^^^^^^^^^
+TypeError: 'ExecutionMetadata' object is not subscriptable
+",,,,,,,,,[TypeError] 'ExecutionMetadata' object is not subscriptable | context=Background execution of plan plan_2962e9804b4d,

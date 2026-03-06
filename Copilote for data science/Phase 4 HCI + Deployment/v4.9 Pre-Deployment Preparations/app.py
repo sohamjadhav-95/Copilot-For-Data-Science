@@ -21,6 +21,48 @@ from config import (
 )
 from database import db
 from database.models import User, ChatSession, Message, Activity, CodeSnippet, WorkflowSession
+
+
+def _add_missing_columns(db_obj):
+    """Add missing columns to existing tables (safe ALTER TABLE migrations).
+
+    SQLAlchemy's create_all() creates new tables but does NOT alter existing ones
+    to add new columns. This function handles that gap by inspecting each model's
+    columns and running ALTER TABLE ADD COLUMN IF NOT EXISTS for any that are absent.
+    """
+    import sqlalchemy as sa
+    from sqlalchemy import inspect as sa_inspect, text
+
+    inspector = sa_inspect(db_obj.engine)
+
+    # Map: table_name → {col_name: "SQL type string"}
+    _migrations = {
+        "workflow_sessions": {
+            "step_outputs_json": "TEXT",
+            "plan_json": "TEXT",
+            "result_json": "TEXT",
+            "completed_nodes": "INTEGER DEFAULT 0",
+            "failed_nodes": "INTEGER DEFAULT 0",
+        },
+    }
+
+    with db_obj.engine.connect() as conn:
+        for table_name, columns in _migrations.items():
+            try:
+                existing = {c["name"] for c in inspector.get_columns(table_name)}
+            except Exception:
+                continue  # table doesn't exist yet — create_all will handle it
+            for col_name, col_type in columns.items():
+                if col_name not in existing:
+                    try:
+                        conn.execute(text(
+                            f"ALTER TABLE {table_name} ADD COLUMN {col_name} {col_type}"
+                        ))
+                        conn.commit()
+                        app_logger.info(f"[MIGRATION] Added column {table_name}.{col_name}")
+                    except Exception as _ce:
+                        app_logger.warning(f"[MIGRATION] {table_name}.{col_name}: {_ce}")
+
 from engines import (
     classify_intent, build_data_context, resolve_query,
     generate_display_code, generate_chart_code, generate_modify_code,
@@ -59,6 +101,11 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        # ── Safe column migrations (ALTER TABLE for columns added after initial creation) ──
+        try:
+            _add_missing_columns(db)
+        except Exception as _me:
+            app_logger.warning(f"[MIGRATION] Column migration failed: {_me}")
 
     log_app_event("startup", f"App created, provider={get_active_provider()}")
     register_routes(app)
