@@ -1,12 +1,12 @@
 # models_api/model_router.py — Dual-mode AI routing
 # Default: Groq gpt-oss-120b for all tasks
-# Max Power: browser-agent → GPT (reasoning/intent) + Claude (coding)
+# Max Power: Google Gemini API (intent → flash-lite, coding → flash, reasoning → flash+thinking)
 
 from typing import Optional
 
-from core.model_plan_router import get_max_power_target, get_default_model
+from core.model_plan_router import get_default_model
 from models_api.groq_models import groq_model
-from models_api.browser_agent_client import browser_agent_call
+from models_api.gemini_models import gemini_call
 from logger import app_logger, log_error
 
 
@@ -18,7 +18,7 @@ _max_mode_enabled = False
 
 
 def set_max_mode(enabled: bool) -> None:
-    """Enable/disable Max Power mode (browser-agent routing)."""
+    """Enable/disable Max Power mode (Gemini routing)."""
     global _max_mode_enabled
     _max_mode_enabled = bool(enabled)
 
@@ -39,10 +39,10 @@ class ModelRouter:
         All tasks → Groq gpt-oss-120b
 
     Max Power mode (toggle ON):
-        reasoning → GPT (via browser-agent)
-        coding    → Claude (via browser-agent)
-        intent    → GPT (via browser-agent)
-        Fallback  → Groq if browser-agent fails
+        intent    → gemini-2.0-flash-lite  (fastest, near-zero latency)
+        coding    → gemini-2.0-flash        (best code gen)
+        reasoning → gemini-2.0-flash        (with thinking budget for planning)
+        Fallback  → Groq if Gemini fails
 
     Usage:
         router = ModelRouter()
@@ -62,25 +62,26 @@ class ModelRouter:
         Args:
             task:        "reasoning", "coding", or "intent"
             messages:    OpenAI-format message list
-            temperature: Sampling temperature (used by Groq, not browser-agent)
-            max_tokens:  Max output tokens (used by Groq, not browser-agent)
-            retries:     Retry attempts (used by Groq, not browser-agent)
+            temperature: Sampling temperature
+            max_tokens:  Max output tokens
+            retries:     Retry attempts (Groq fallback)
 
         Returns:
             Cleaned response text, or None if all attempts failed.
         """
-        # ── Max Power mode: route through browser-agent ──
+        # ── Max Power mode: route through Gemini API ──
         if _max_mode_enabled:
-            target = get_max_power_target(task)
-            app_logger.info(f"[ROUTER] Max Power ON → task={task} → browser-agent/{target}")
-
-            result = browser_agent_call(messages=messages, target=target)
+            app_logger.info(f"[ROUTER] Max Power ON → task={task} → Gemini")
+            result = gemini_call(
+                task=task,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
             if result:
                 return result
-
             app_logger.warning(
-                f"[ROUTER] browser-agent/{target} failed for task={task}, "
-                f"falling back to Groq"
+                f"[ROUTER] Gemini failed for task={task}, falling back to Groq"
             )
 
         # ── Default: use Groq for everything ──

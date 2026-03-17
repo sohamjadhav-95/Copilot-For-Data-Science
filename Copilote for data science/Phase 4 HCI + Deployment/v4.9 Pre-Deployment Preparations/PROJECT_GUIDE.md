@@ -88,7 +88,7 @@ DataCopilot is a full-stack Flask web application that lets users interact with 
               │  models_api/             │
               │  model_router.py         │
               │  groq_models.py          │
-              │  openrouter_models.py    │
+              │  gemini_models.py         │
               └──────────────────────────┘
 ```
 
@@ -96,9 +96,9 @@ DataCopilot is a full-stack Flask web application that lets users interact with 
 
 | Tier | Role | Primary Model | Fallback |
 |------|------|---------------|---------|
-| **Heavy** | DAG planning, re-planning, final summaries | Groq DeepSeek R1 | OpenRouter Gemini 2.0 Flash |
-| **Mid** | Code generation per node, retries | Groq Llama 3.3 70B | OpenRouter Llama 3.1 70B |
-| **Light** | Intent classification, complexity detection | Groq Llama 3.1 8B | OpenRouter Llama 3.1 8B |
+| **Heavy** | DAG planning, re-planning, final summaries | Groq DeepSeek R1 | Google Gemini 2.0 Flash |
+| **Mid** | Code generation per node, retries | Groq Llama 3.3 70B | Google Gemini 2.0 Flash |
+| **Light** | Intent classification, complexity detection | Groq Llama 3.1 8B | Google Gemini 2.0 Flash Lite |
 
 ### Pro Mode Execution Flow
 
@@ -147,19 +147,22 @@ v4.8 Materilistic UI + Optimization/
 │   ├── app.py                       # App factory, all routes (Normal + Pro + Pages)
 │   ├── engines.py                   # Re-export shim → engines_normal
 │   ├── config.py                    # Flask config (DB, uploads, JWT)
-│   └── api_config.py                # Legacy API config (Normal Mode)
+│   ├── api_config.py                # Legacy API config (Normal Mode)
+│   └── logger.py                    # Centralized structured logger
 │
 ├── 🧠 Core Infrastructure
 │   └── core/
 │       ├── config.py                # Pro Mode config (model tiers, limits)
 │       ├── dataset_profiler.py      # DatasetProfiler — used by both modes
-│       └── execution_context.py    # ExecutionContext — DAG execution memory
+│       ├── execution_context.py    # ExecutionContext — DAG execution memory
+│       ├── model_plan_router.py     # Default and model parameters
+│       └── plan_access.py           # Access tier checking
 │
 ├── 🤖 Model API Abstraction
 │   └── models_api/
-│       ├── model_router.py          # ModelRouter — tier routing + fallback
+│       ├── model_router.py          # ModelRouter — tier routing + fallback (Default / Max Power)
 │       ├── groq_models.py           # Groq API wrapper
-│       └── openrouter_models.py     # OpenRouter API wrapper
+│       └── gemini_models.py         # Google Gemini API wrapper
 │
 ├── ⚙️ Normal Engine (Quick Run)
 │   └── engines_normal/
@@ -295,7 +298,8 @@ pip install -r requirements.txt
 |---------|---------|
 | `flask`, `flask-sqlalchemy`, `flask-cors` | Web framework + ORM |
 | `pyjwt`, `bcrypt` | Authentication |
-| `openai` | Groq + OpenRouter API client |
+| `openai` | Groq API client |
+| `google-genai` | Google Gemini API client |
 | `pandas`, `numpy` | Data processing |
 | `matplotlib`, `seaborn` | Chart generation |
 | `scipy`, `scikit-learn` | Optional: advanced analysis in Pro nodes |
@@ -305,13 +309,13 @@ pip install -r requirements.txt
 Edit `core/config.py`:
 ```python
 GROQ_API_KEY       = "gsk_..."       # from console.groq.com
-OPENROUTER_API_KEY = "sk-or-..."     # from openrouter.ai
+GEMINI_API_KEY     = "AIza..."       # from Google AI Studio
 ```
 
 Or set as environment variables (recommended for production):
 ```bash
 set GROQ_API_KEY=gsk_...
-set OPENROUTER_API_KEY=sk-or-...
+set GEMINI_API_KEY=AIza...
 set SECRET_KEY=your-secret-key
 ```
 
@@ -689,7 +693,7 @@ OperationalError: no such table: users
 ## Deployment Checklist
 
 - [ ] Set `SECRET_KEY` environment variable (don't use the default)
-- [ ] Set `GROQ_API_KEY` and/or `OPENROUTER_API_KEY` as env vars
+- [ ] Set `GROQ_API_KEY` and/or `GEMINI_API_KEY` as env vars
 - [ ] Set `debug=False` in `run.py`
 - [ ] Use a production WSGI server: `gunicorn -w 4 "run:app"`
 - [ ] Set up HTTPS reverse proxy (nginx / caddy)
@@ -700,4 +704,4 @@ OperationalError: no such table: users
 
 ---
 
-*DataCopilot v4.8 — Material SaaS UI · Flask · SQLAlchemy · Groq · OpenRouter*
+*DataCopilot v4.8 — Material SaaS UI · Flask · SQLAlchemy · Groq · Gemini*

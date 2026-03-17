@@ -1,7 +1,17 @@
 # api_config.py -- Groq API Configuration
 # Groq (gpt-oss-120b) is the SOLE provider for default mode.
+# GEMINI_API_KEY is used when Max Power mode is enabled.
 import os
 from openai import OpenAI
+
+# ═══════════════════════════════════════════════════════════════════════
+# GEMINI API KEY  (Max Power mode — Google Gemini models)
+# ═══════════════════════════════════════════════════════════════════════
+
+GEMINI_API_KEY = os.environ.get(
+    "GEMINI_API_KEY",
+    "AIzaSyBxm9imbaUG9fDUziA5xU66NfXlx2FVtgg"   # fallback key (replace with your own)
+)
 
 # ═══════════════════════════════════════════════════════════════════════
 # PROVIDER CONFIGURATION

@@ -532,3 +532,37 @@ NameError: name 'router' is not defined
              ^^^^^^
 NameError: name 'router' is not defined
 ",,,,,,,,,[NameError] name 'router' is not defined | context=Background execution of plan plan_a550e0f57a19,
+2026-03-06T14:29:58.285263+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,[Errno 2] No such file or directory: 'titanic.csv',Exec failed during Node node_1: load_dataset,"NoneType: None
+",,,,,,,,,[RuntimeError] [Errno 2] No such file or directory: 'titanic.csv' | context=Exec failed during Node node_1: load_dataset,
+2026-03-06T14:30:04.042799+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,"'The CSV does not contain the required columns for the survival‑rate plot. Expected columns: Sex, Pclass, and SurvivalRate (or survival_rate).'",Exec failed during Node node_4: plot_survival_rates,"NoneType: None
+",,,,,,,,,"[RuntimeError] 'The CSV does not contain the required columns for the survival‑rate plot. Expected columns: Sex, Pclass, and SurvivalRate (or survival_rate).' | context=Exec failed during Node node_4: plot_survival_rates",
+2026-03-06T14:30:06.145715+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,"""The CSV does not contain a survival‑rate column. Expected either 'SurvivalRate' or 'survival_rate'.""",Exec failed during Node node_4 (retry): plot_survival_rates,"NoneType: None
+",,,,,,,,,"[RuntimeError] ""The CSV does not contain a survival‑rate column. Expected either 'SurvivalRate' or 'survival_rate'."" | context=Exec failed during Node node_4 (retry): plot_survival_rates",
+2026-03-06T14:30:19.194080+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,NameError,name 'router' is not defined,Background execution of plan plan_7f856e44ca2f,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 944, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 348, in execute
+    summary = self._executor.generate_final_summary(plan, context, result)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 590, in generate_final_summary
+    result = router.call(
+             ^^^^^^
+NameError: name 'router' is not defined
+",,,,,,,,,[NameError] name 'router' is not defined | context=Background execution of plan plan_7f856e44ca2f,
+2026-03-06T19:42:20.475877+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,"'[' was never closed (<unknown>, line 1)",Exec failed during Node node_4: aggregate_genre_counts_by_decade,"NoneType: None
+",,,,,,,,,"[RuntimeError] '[' was never closed (<unknown>, line 1) | context=Exec failed during Node node_4: aggregate_genre_counts_by_decade",
+2026-03-06T19:42:22.513146+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,name 'SyntaxError' is not defined,Exec failed during Node node_4 (retry): aggregate_genre_counts_by_decade,"NoneType: None
+",,,,,,,,,[RuntimeError] name 'SyntaxError' is not defined | context=Exec failed during Node node_4 (retry): aggregate_genre_counts_by_decade,
+2026-03-06T19:42:33.741408+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,name 'genre_trends_df' is not defined,Exec failed during Node node_5: plot_genre_trends,"NoneType: None
+",,,,,,,,,[RuntimeError] name 'genre_trends_df' is not defined | context=Exec failed during Node node_5: plot_genre_trends,
+2026-03-06T19:42:45.101930+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,RuntimeError,name 'df_with_decades' is not defined,Exec failed during Node node_5 (retry): plot_genre_trends,"NoneType: None
+",,,,,,,,,[RuntimeError] name 'df_with_decades' is not defined | context=Exec failed during Node node_5 (retry): plot_genre_trends,
+2026-03-06T19:42:59.474156+00:00,ERROR,copilot.errors,,,,,,,,,,,,,,,,,,,,,,,,NameError,name 'router' is not defined,Background execution of plan plan_4f1388c32c0e,"Traceback (most recent call last):
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\app.py"", line 944, in _run_in_background
+    result = pro_engine.execute(plan_id)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\pro_engine.py"", line 348, in execute
+    summary = self._executor.generate_final_summary(plan, context, result)
+  File ""e:\Projects\Copilot-For-Data-Science\Copilote for data science\Phase 4 HCI + Deployment\v4.9 Pre-Deployment Preparations\engines_pro\dag_executor.py"", line 590, in generate_final_summary
+    result = router.call(
+             ^^^^^^
+NameError: name 'router' is not defined
+",,,,,,,,,[NameError] name 'router' is not defined | context=Background execution of plan plan_4f1388c32c0e,

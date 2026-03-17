@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 # 2. Set API keys
 set GROQ_API_KEY=gsk_...
-set OPENROUTER_API_KEY=sk-or-...
+set GEMINI_API_KEY=AIza...
 set SECRET_KEY=your-secret-key
 
 # 3. Run
@@ -92,7 +92,7 @@ visualize the top correlations as a heatmap, and summarize the findings"
 |-------|-----------|
 | Backend | Flask 3.0, SQLAlchemy, SQLite |
 | Auth | JWT + bcrypt |
-| AI | Groq API, OpenRouter API (OpenAI-compatible) |
+| AI | Groq API, Google Gemini API (Max Power) |
 | Models | Llama 3.3 70B (mid), DeepSeek R1 (heavy), Llama 3.1 8B (light) |
 | Data | Pandas, NumPy, Matplotlib, Seaborn |
 | Frontend | Vanilla HTML/CSS/JS · 7-file split CSS design system · Material Symbols |
@@ -107,9 +107,10 @@ app.py                  App factory + all routes
 engines.py              Re-export shim → engines_normal
 config.py               Flask config (DB, uploads, JWT)
 api_config.py           Legacy API config
+logger.py               Centralized structured logger
 
-core/                   Dataset profiler, execution context, Pro config
-models_api/             Model router — Groq + OpenRouter + fallback
+core/                   Dataset profiler, execution context, config, plan access
+models_api/             Model router — Groq + Gemini + fallback
 engines_normal/         Quick Run engine (single-step AI operations)
 engines_pro/            DAG schema, planner, executor, validator
 database/               SQLAlchemy models (User, Session, Message, Activity)
@@ -147,11 +148,11 @@ PROJECT_GUIDE.md        Full developer reference
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GROQ_API_KEY` | Yes (or OpenRouter) | Groq API key |
-| `OPENROUTER_API_KEY` | Yes (or Groq) | OpenRouter API key |
+| `GROQ_API_KEY` | Yes | Groq API key |
+| `GEMINI_API_KEY` | Optional | Google Gemini API key (Max Power mode) |
 | `SECRET_KEY` | Recommended | JWT signing key (use a random string in production) |
 
-At least one of `GROQ_API_KEY` / `OPENROUTER_API_KEY` must be set. Both enables automatic fallback.
+`GROQ_API_KEY` must be set for default execution. `GEMINI_API_KEY` is required only if Max Power mode is enabled.
 
 ---
 

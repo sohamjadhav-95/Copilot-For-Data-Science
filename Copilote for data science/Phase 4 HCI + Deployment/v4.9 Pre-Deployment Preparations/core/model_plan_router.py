@@ -15,14 +15,14 @@ QUICKRUN_MODEL    = DEFAULT_MODEL
 QUICKRUN_PROVIDER = DEFAULT_PROVIDER
 
 # ═══════════════════════════════════════════════════════════════════════
-# MAX POWER MODEL TARGETS  (browser-agent → GPT for reasoning, Claude for coding)
+# MAX POWER MODEL TARGETS  (Google Gemini API)
 # Activated when Pro/Ultra users enable the Max Power toggle.
 # ═══════════════════════════════════════════════════════════════════════
 
-MAX_POWER_TARGETS = {
-    "reasoning": "gpt",   # GPT via browser-agent for reasoning/planning
-    "coding":    "gpt",   # GPT for code generation (Claude bypassed — bot check issues)
-    "intent":    "gpt",   # GPT via browser-agent for intent classification
+MAX_POWER_MODELS = {
+    "intent":    "gemini-2.0-flash-lite",  # fastest — near-zero latency for classification
+    "coding":    "gemini-2.0-flash",        # best code generation accuracy
+    "reasoning": "gemini-2.0-flash",        # planning (with thinking budget)
 }
 
 
@@ -30,9 +30,9 @@ MAX_POWER_TARGETS = {
 # HELPERS  (used by ModelRouter and engines — do NOT edit below)
 # ═══════════════════════════════════════════════════════════════════════
 
-def get_max_power_target(task: str) -> str:
-    """Return the browser-agent target ('gpt' or 'claude') for a task."""
-    return MAX_POWER_TARGETS.get(task, "gpt")
+def get_max_power_model(task: str) -> str:
+    """Return the Gemini model ID for a Max Power task."""
+    return MAX_POWER_MODELS.get(task, "gemini-2.0-flash")
 
 
 def get_default_model() -> str:

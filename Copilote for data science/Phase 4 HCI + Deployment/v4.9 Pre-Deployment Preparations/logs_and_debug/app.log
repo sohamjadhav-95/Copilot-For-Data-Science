@@ -1367,3 +1367,87 @@
 {"timestamp": "2026-03-06T14:05:28.543286+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[VALIDATOR] CRITICAL: Node 'node_4' declared output_var='summary_text' but produced no output (output_type=NONE). Downstream variable reads will fail — aborting."}
 {"timestamp": "2026-03-06T14:05:28.580165+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed — skipping and continuing."}
 {"timestamp": "2026-03-06T14:05:28.972610+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:23:03.406815+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T14:23:05.866978+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T14:23:48.556591+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T14:23:49.530214+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:23:49.572526+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_2d9f5657a7be.csv"}
+{"timestamp": "2026-03-06T14:23:49.574376+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:23:49.576542+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:23:54.023443+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 4 nodes, plan_id=plan_eb825a4c8e6d"}
+{"timestamp": "2026-03-06T14:23:56.177927+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_eb825a4c8e6d' (4 nodes)"}
+{"timestamp": "2026-03-06T14:23:56.179729+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 4 nodes"}
+{"timestamp": "2026-03-06T14:23:58.980242+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (891×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_2d9f5657a7be.csv"}
+{"timestamp": "2026-03-06T14:23:58.981663+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T14:23:59.013898+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_1', profile updated"}
+{"timestamp": "2026-03-06T14:24:03.964243+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T14:24:05.795702+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' failed: [Errno 2] No such file or directory: 'e:\\\\Projects\\\\Copilot-For-Data-Science\\\\Copilote for data science\\\\Phase 4 HCI + Deployment\\\\v4.9 Pre-Deployment Preparations\\\\uploads\\\\4\\\\titanic_wf_plan_2d5f5657a7be.csv', retrying..."}
+{"timestamp": "2026-03-06T14:24:08.278248+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: artifact"}
+{"timestamp": "2026-03-06T14:24:09.908585+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: scalar"}
+{"timestamp": "2026-03-06T14:24:41.564184+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T14:24:43.020343+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:24:43.079411+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_b0c627883dfa.csv"}
+{"timestamp": "2026-03-06T14:24:43.080651+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:24:43.082154+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → browser-agent/gpt"}
+{"timestamp": "2026-03-06T14:24:43.083322+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (3703 chars)"}
+{"timestamp": "2026-03-06T14:25:59.072483+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T14:25:59.074891+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=reasoning, falling back to Groq"}
+{"timestamp": "2026-03-06T14:25:59.078164+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:26:01.240717+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_a550e0f57a19"}
+{"timestamp": "2026-03-06T14:26:59.834314+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_a550e0f57a19' (5 nodes)"}
+{"timestamp": "2026-03-06T14:26:59.836828+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 5 nodes"}
+{"timestamp": "2026-03-06T14:27:01.073201+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (891×12) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_b0c627883dfa.csv"}
+{"timestamp": "2026-03-06T14:27:01.076657+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T14:27:02.054600+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (891×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_b0c627883dfa.csv"}
+{"timestamp": "2026-03-06T14:27:02.056569+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T14:27:02.098427+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_2', profile updated"}
+{"timestamp": "2026-03-06T14:27:03.140648+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T14:27:06.151823+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' completed: artifact"}
+{"timestamp": "2026-03-06T14:27:08.234611+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: scalar"}
+{"timestamp": "2026-03-06T14:27:54.210819+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded titanic.csv (891x12)"}
+{"timestamp": "2026-03-06T14:27:55.145319+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:27:55.176309+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_7ce7d12ac398.csv"}
+{"timestamp": "2026-03-06T14:27:55.177708+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, compute survival rate by gender and passenger class, visualize the results and"}
+{"timestamp": "2026-03-06T14:27:55.179022+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → browser-agent/gpt"}
+{"timestamp": "2026-03-06T14:27:55.180304+00:00", "level": "INFO", "logger": "copilot.app", "message": "[BROWSER-AGENT] Sending to gpt (3703 chars)"}
+{"timestamp": "2026-03-06T14:29:34.826206+00:00", "level": "ERROR", "logger": "copilot.app", "message": "[BROWSER-AGENT] gpt returned 500: {'detail': {'success': False, 'error': 'internal_error', 'detail': 'Timeout 30000ms exceeded.\\n=========================== logs ===========================\\n\"load\" event fired\\n============================================================'}}"}
+{"timestamp": "2026-03-06T14:29:34.828423+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[ROUTER] browser-agent/gpt failed for task=reasoning, falling back to Groq"}
+{"timestamp": "2026-03-06T14:29:34.835252+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] task=reasoning → groq/openai/gpt-oss-120b"}
+{"timestamp": "2026-03-06T14:29:36.759026+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 5 nodes, plan_id=plan_7f856e44ca2f"}
+{"timestamp": "2026-03-06T14:29:57.479103+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_7f856e44ca2f' (5 nodes)"}
+{"timestamp": "2026-03-06T14:29:57.480752+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 5 nodes"}
+{"timestamp": "2026-03-06T14:29:58.286283+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' failed: [Errno 2] No such file or directory: 'titanic.csv', retrying..."}
+{"timestamp": "2026-03-06T14:29:59.185116+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (891×12) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_7ce7d12ac398.csv"}
+{"timestamp": "2026-03-06T14:29:59.186923+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T14:30:00.724298+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (891×11) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\titanic_wf_plan_7ce7d12ac398.csv"}
+{"timestamp": "2026-03-06T14:30:00.726023+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T14:30:00.765066+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_2', profile updated"}
+{"timestamp": "2026-03-06T14:30:01.740705+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T14:30:04.043570+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: 'The CSV does not contain the required columns for the survival‑rate plot. Expected columns: Sex, Pclass, and SurvivalRate (or survival_rate).', retrying..."}
+{"timestamp": "2026-03-06T14:30:06.147051+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T14:30:19.174402+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' completed: scalar"}
+{"timestamp": "2026-03-06T19:40:00.332332+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T19:40:04.841626+00:00", "level": "INFO", "logger": "copilot.app", "message": "[startup] App created, provider=groq"}
+{"timestamp": "2026-03-06T19:40:40.569776+00:00", "level": "INFO", "logger": "copilot.app", "message": "[login] User: testuser05"}
+{"timestamp": "2026-03-06T19:41:16.803399+00:00", "level": "INFO", "logger": "copilot.app", "message": "[upload] User testuser05 uploaded raw_titles.csv (5806x13)"}
+{"timestamp": "2026-03-06T19:41:19.847931+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Planning for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T19:41:20.036295+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Working copy created: e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_8a012fffaf01.csv"}
+{"timestamp": "2026-03-06T19:41:20.037461+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Generating DAG plan for: Clean missing values, extract genres, compute most common genres by decade, and visualize the trends"}
+{"timestamp": "2026-03-06T19:41:20.038949+00:00", "level": "INFO", "logger": "copilot.app", "message": "[ROUTER] Max Power ON → task=reasoning → Gemini"}
+{"timestamp": "2026-03-06T19:41:20.039933+00:00", "level": "INFO", "logger": "copilot.app", "message": "[GEMINI] task=reasoning → model=gemini-3-flash-preview"}
+{"timestamp": "2026-03-06T19:41:46.584163+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PLANNER] Plan created: 6 nodes, plan_id=plan_4f1388c32c0e"}
+{"timestamp": "2026-03-06T19:42:10.440216+00:00", "level": "INFO", "logger": "copilot.app", "message": "[PRO] Executing plan 'plan_4f1388c32c0e' (6 nodes)"}
+{"timestamp": "2026-03-06T19:42:10.441987+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Starting DAG execution: 6 nodes"}
+{"timestamp": "2026-03-06T19:42:14.773525+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' persisted DataFrame (5806×13) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_8a012fffaf01.csv"}
+{"timestamp": "2026-03-06T19:42:14.774183+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_1' completed: dataframe"}
+{"timestamp": "2026-03-06T19:42:16.468107+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' persisted DataFrame (14626×14) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_8a012fffaf01.csv"}
+{"timestamp": "2026-03-06T19:42:16.468849+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_2' completed: dataframe"}
+{"timestamp": "2026-03-06T19:42:16.524984+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_2', profile updated"}
+{"timestamp": "2026-03-06T19:42:18.139427+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' persisted DataFrame (14626×15) → e:\\Projects\\Copilot-For-Data-Science\\Copilote for data science\\Phase 4 HCI + Deployment\\v4.9 Pre-Deployment Preparations\\uploads\\4\\raw_titles_wf_plan_8a012fffaf01.csv"}
+{"timestamp": "2026-03-06T19:42:18.140199+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_3' completed: dataframe"}
+{"timestamp": "2026-03-06T19:42:18.195576+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Schema changed after 'node_3', profile updated"}
+{"timestamp": "2026-03-06T19:42:20.476767+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed: '[' was never closed (<unknown>, line 1), retrying..."}
+{"timestamp": "2026-03-06T19:42:22.514753+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_4' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T19:42:33.742774+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed: name 'genre_trends_df' is not defined, retrying..."}
+{"timestamp": "2026-03-06T19:42:45.103054+00:00", "level": "WARNING", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_5' failed — skipping and continuing."}
+{"timestamp": "2026-03-06T19:42:59.309735+00:00", "level": "INFO", "logger": "copilot.app", "message": "[EXECUTOR] Node 'node_6' completed: dict"}
